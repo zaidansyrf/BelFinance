@@ -12,9 +12,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/login-belfinance', function () {
-    return view("login-belfinance", ["nama" => "fajar"]);
-})->middleware(['auth', 'verified'])->name('login-belfinance');
+    return view("login-belfinance");
+});
 
+Route::get('/dashboard-owner', function(){
+    return view("dashboard-owner",["nama" => "pengguna"]);
+});
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
