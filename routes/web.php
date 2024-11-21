@@ -2,6 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminKeuanganController;
+use App\Http\Controllers\AdminTransaksiController;
+use App\Http\Controllers\AdminLaporanKeuanganController;
+use App\Http\Controllers\AdminKeuanganInfoProfileController;
+use App\Http\Controllers\OwnerBerandaController;
+use App\Http\Controllers\OwnerLaporanKeuanganController;
+use App\Http\Controllers\OwnerInfoProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,9 +22,16 @@ Route::get('/login-belfinance', function () {
     return view("login-belfinance");
 });
 
-Route::get('/dashboard-owner', function(){
-    return view("dashboard-owner",["nama" => "pengguna"]);
-});
+Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
+Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']);
+Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
+Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
+Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
+// Route::get('/admin/hutang',[AdminHutangController::class, 'view']);
+Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
+Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
+Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
