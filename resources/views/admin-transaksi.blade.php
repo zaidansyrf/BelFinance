@@ -94,12 +94,15 @@
                   <select id="incomeSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
                     <option value="" disabled selected>Pilih Sumber</option>
                     <option value="gojek">GoFood</option>
-                    <option value="shopeefood">ShopeeFood</option>
-                    <option value="langsung">Langsung</option>
+                    <option value="grab">GrabFood</option>
+                    <option value="shopee">ShopeeFood</option>
+                    <option value="cash">Cash</option>
+                    <option value="btn">BTN</option>
+                    <option value="bni">BNI</option>
                   </select>
                 </div>
                 <!-- fields tambahan untuk shopeefoods -->
-                <div id="shopeefoodFields" class="hidden">
+                  <div id="shopeefoodFields" class="hidden">
                     <div class="mb-4">
                       <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
                       <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
@@ -117,7 +120,6 @@
                       <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
-
                   <!-- fields tambahan untuk gofoods -->
                   <div id="gofoodFields" class="hidden">
                     <div class="mb-4">
@@ -137,9 +139,65 @@
                       <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
-
+                  <!-- grabfood fields tambahan -->
+                  <div id="grabfoodFields" class="hidden">
+                    <div class="mb-4">
+                      <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
+                      <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                    </div>
+                    <div class="mb-4">
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
+                      <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
+                    </div>
+                    <div class="mb-4">
+                      <label for="itemQuantity" class="block text-sm font-medium text-gray-700">Jumlah item</label>
+                      <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
+                    </div>
+                    <div class="mb-4">
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                    </div>
+                  </div>
                   <!-- fields tambahan untuk langsung -->
-                  <div id="langsungFields" class="hidden overflow-auto">
+                  <div id="cashFields" class="hidden overflow-auto">
+                    <div class="mb-4">
+                      <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
+                      <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                    </div>
+                    <div class="mb-4">
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
+                      <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
+                    </div>
+                    <div class="mb-4">
+                      <label for="itemQuantity" class="block text-sm font-medium text-gray-700">Jumlah item</label>
+                      <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
+                    </div>
+                    <div class="mb-4">
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                    </div>
+                  </div>
+                  <!-- additional btn fields -->
+                  <div id="btnFields" class="hidden">
+                    <div class="mb-4">
+                      <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
+                      <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                    </div>
+                    <div class="mb-4">
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
+                      <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
+                    </div>
+                    <div class="mb-4">
+                      <label for="itemQuantity" class="block text-sm font-medium text-gray-700">Jumlah item</label>
+                      <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
+                    </div>
+                    <div class="mb-4">
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                    </div>
+                  </div>
+                  <!-- additional bni fields -->
+                  <div id="bniFields" class="hidden">
                     <div class="mb-4">
                       <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
                       <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
@@ -280,16 +338,25 @@
 
     // Hide all additional fields first
     document.getElementById('shopeefoodFields').classList.add('hidden');
+    document.getElementById('grabfoodFields').classList.add('hidden');
     document.getElementById('gofoodFields').classList.add('hidden');
-    document.getElementById('langsungFields').classList.add('hidden');
+    document.getElementById('cashFields').classList.add('hidden');
+    document.getElementById('btnFields').classList.add('hidden');
+    document.getElementById('bniFields').classList.add('hidden');
 
     // Show relevant fields based on the selected income source
-    if (incomeSource === 'shopeefood') {
+    if (incomeSource === 'shopee') {
       document.getElementById('shopeefoodFields').classList.remove('hidden');
     } else if (incomeSource === 'gojek') {
       document.getElementById('gofoodFields').classList.remove('hidden');
-    } else if (incomeSource === 'langsung') {
-      document.getElementById('langsungFields').classList.remove('hidden');
+    }else if (incomeSource === 'grab'){
+      document.getElementById('grabfoodFields').classList.remove('hidden');
+    }else if (incomeSource === 'cash') {
+      document.getElementById('cashFields').classList.remove('hidden');
+    }else if (incomSource === 'btn'){
+      document.getElementById('btnFields').classList.remove('hidden');
+    }else if (incomeSource === 'bni'){
+      document.getElementById('bniFields').classList.remove('hidden');
     }
   }
 
