@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminTransaksiController;
 use App\Http\Controllers\AdminLaporanKeuanganController;
 use App\Http\Controllers\AdminKeuanganInfoProfileController;
+use App\Http\Controllers\AdminKeuanganMenuController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\OwnerInfoProfileController;
@@ -27,6 +28,7 @@ Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']
 Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
+Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
 // Route::get('/admin/hutang',[AdminHutangController::class, 'view']);
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
 Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);

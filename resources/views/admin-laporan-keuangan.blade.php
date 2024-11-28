@@ -90,20 +90,22 @@
 
     <!-- Sidebar Menu Links -->
     <li>
-      <a href="{{ url('/admin/keuangan/dashboard') }}" 
-         class="{{ Request::is('admin/keuangan/dashboard') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
+      <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
         Dashboard
       </a>
     </li>
     <li>
-      <a href="{{ url('/admin/keuangan/transaksi') }}" 
-         class="{{ Request::is('admin/keuangan/transaksi') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
+      <a href="{{ url('/admin/keuangan/transaksi') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
         Transaksi
       </a>
     </li>
     <li>
-      <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" 
-         class="{{ Request::is('admin/keuangan/laporan-keuangan') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
+      <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+        Menu
+      </a>
+    </li>
+    <li>
+      <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" class="bg-[#2B7A78] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
         Laporan Keuangan
       </a>
     </li>

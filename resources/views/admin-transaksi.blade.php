@@ -55,7 +55,7 @@
                 </div>
               </div>
               <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                <li><a href="{{url('/admin/keuangan/info-profile')}}"class="text-black" id="showInfo" >Info Profile</a></li>
                 <li><a class=" text-red-700">Log Out</a></li>
               </ul>
             </div>
@@ -65,33 +65,58 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
+            
             <button onclick="toggleDropdown()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
-              + Tambah transaksi
+              + Tambah 
             </button>
             <ul id="transactionDropdown" class="absolute hidden bg-white border rounded-lg mt-6 p-2 shadow-lg w-48 z-10">
               <li>
-                <a href="#" onclick="openIncomeForm()" class="block px-4 py-2 hover:bg-gray-100 text-black">Pemasukan</a>
+                <a href="#" onclick="openPaymentForm()" class="block px-4 py-2 hover:bg-gray-100 text-black">Pembayaran</a>
+              </li>
+              <li>
+                <a href="#" onclick="openIncomeForm()" class="block px-4 py-2 hover:bg-gray-100 text-black">Pemasukkan</a>
               </li>
               <li>
                 <a href="#" onclick="openExpenseForm()" class="block px-4 py-2 hover:bg-gray-100 text-black">Pengeluaran</a>
               </li>
             </ul>
+            <div class="flex justify-center w-full px-8">
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Pemasukkan</h2>
+              </div>
+            </div>
           </div>
-
+          <div class="flex justify-center w-full px-8">
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Pembayaran</h2>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-center w-full px-8">
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+              </div>
+            </div>
+          </div>
+          </div>
+          
           <!-- Modal untuk forms -->
           <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center z-index: 20 inset: 0">
             <!-- Form Pemasukan -->
-            <div id="incomeModal" class="hidden bg-white rounded-lg w-[400px] h-auto max-w-[400px] overflow-y-auto shadow-lg p-6 ">
-              <h3 class="text-xl font-semibold mb-4">Tambah Pemasukan</h3>
+            <div id="paymentModal" class="hidden bg-white rounded-lg w-[400px] h-auto max-w-[400px] overflow-y-auto shadow-lg p-6 ">
+              <h3 class="text-xl font-semibold mb-4">Tambah Pembayaran</h3>
               <form>
                 <!-- input -->
                 <div class="mb-4">
-                  <label for="incomeDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
-                  <input type="date" id="incomeDate" class="w-full p-2 border border-gray-300 rounded-md">
+                  <label for="paymentDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
+                  <input type="date" id="paymentDate" class="w-full p-2 border border-gray-300 rounded-md">
                 </div>
                 <div class="mb-4">
-                  <label for="incomeSource" class="block text-sm font-medium text-gray-700">Sumber</label>
-                  <select id="incomeSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
+                  <label for="paymentSource" class="block text-sm font-medium text-gray-700">Sumber</label>
+                  <select id="paymentSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
                     <option value="" disabled selected>Pilih Sumber</option>
                     <option value="gojek">GoFood</option>
                     <option value="grab">GrabFood</option>
@@ -173,46 +198,30 @@
                       <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
                     </div>
                     <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
                   <!-- additional btn fields -->
                   <div id="btnFields" class="hidden">
                     <div class="mb-4">
-                      <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
-                      <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                      <label for="keteranganBtn" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                      <input type="text" id="keteranganBtn" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g Transfers">
                     </div>
                     <div class="mb-4">
-                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
-                      <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
-                    </div>
-                    <div class="mb-4">
-                      <label for="itemQuantity" class="block text-sm font-medium text-gray-700">Jumlah item</label>
-                      <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
-                    </div>
-                    <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
                   <!-- additional bni fields -->
                   <div id="bniFields" class="hidden">
                     <div class="mb-4">
-                      <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
-                      <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                      <label for="keteranganBni" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                      <input type="text" id="keteranganBni" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g Transfers">
                     </div>
                     <div class="mb-4">
-                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
-                      <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
-                    </div>
-                    <div class="mb-4">
-                      <label for="itemQuantity" class="block text-sm font-medium text-gray-700">Jumlah item</label>
-                      <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
-                    </div>
-                    <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                      <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
                 <div class="flex justify-end mt-4">
@@ -222,7 +231,29 @@
               </form>
             </div>
 
-            <!-- Form Pengeluaran -->
+            <!-- Form Pemasukkan -->
+            <div id="incomeModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
+              <h3 class="text-xl font-semibold mb-4">Tambah Pemasukkan</h3>
+              <form>
+                <!-- input -->
+                <div class="mb-4">
+                  <label for="incomeDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
+                  <input type="date" id="incomeDate" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="mb-4">
+                      <label for="incomeKeterangan" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                      <input type="text" id="incometerangan" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g Transfers">
+                    </div>
+                <div class="mb-4">
+                  <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                  <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                </div>
+                <div class="flex justify-end mt-4">
+                  <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                  <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                </div>
+              </form>
+            </div>
             <div id="expenseModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
               <h3 class="text-xl font-semibold mb-4">Tambah Pengeluaran</h3>
               <form>
@@ -237,7 +268,7 @@
                     <option value="" disabled selected>Pilih Kategori</option>
                     <option value="utilities">Tagihan Listrik & Air</option>
                     <option value="rent">Sewa</option>
-                    <option value="food">Makanan & Minuman</option>
+                    <option value="food">Belanja</option>
                   </select>
                 </div>
                 <div class="mb-4">
@@ -274,23 +305,25 @@
           </div>
          <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" 
-              class="{{ Request::is('admin/keuangan/dashboard') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/admin/keuangan/transaksi') }}" 
-              class="{{ Request::is('admin/keuangan/transaksi') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
-              Transaksi
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" 
-              class="{{ Request::is('admin/keuangan/laporan-keuangan') ? 'bg-[#2B7A78] text-white' : 'hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2">
-              Laporan Keuangan
-            </a>
-          </li>
+          <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+          Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            Transaksi
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            Menu
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" class="text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            Laporan Keuangan
+          </a>
+        </li>
         </ul>
       </div>
     </div>
@@ -304,6 +337,12 @@
   }
 
   // memunculkan modal dari form pemasukkan
+  function openPaymentForm() {
+    closeModal();
+    document.getElementById('modalOverlay').classList.remove('hidden');
+    document.getElementById('paymentModal').classList.remove('hidden');
+    closeDropdown(); // Automatically close dropdown
+  }
   function openIncomeForm() {
     closeModal();
     document.getElementById('modalOverlay').classList.remove('hidden');
@@ -322,6 +361,7 @@
   // Close All Modals
   function closeModal() {
     document.getElementById('modalOverlay').classList.add('hidden');
+    document.getElementById('paymentModal').classList.add('hidden');
     document.getElementById('incomeModal').classList.add('hidden');
     document.getElementById('expenseModal').classList.add('hidden');
   }
@@ -334,7 +374,7 @@
 
   // Toggle Additional Fields in Income Form
   function toggleAdditionalFields() {
-    const incomeSource = document.getElementById('incomeSource').value;
+    const paymentSource = document.getElementById('paymentSource').value;
 
     // Hide all additional fields first
     document.getElementById('shopeefoodFields').classList.add('hidden');
@@ -345,17 +385,17 @@
     document.getElementById('bniFields').classList.add('hidden');
 
     // Show relevant fields based on the selected income source
-    if (incomeSource === 'shopee') {
+    if (paymentSource === 'shopee') {
       document.getElementById('shopeefoodFields').classList.remove('hidden');
-    } else if (incomeSource === 'gojek') {
+    } else if (paymentSource === 'gojek') {
       document.getElementById('gofoodFields').classList.remove('hidden');
-    }else if (incomeSource === 'grab'){
+    }else if (paymentSource === 'grab'){
       document.getElementById('grabfoodFields').classList.remove('hidden');
-    }else if (incomeSource === 'cash') {
+    }else if (paymentSource === 'cash') {
       document.getElementById('cashFields').classList.remove('hidden');
-    }else if (incomSource === 'btn'){
+    }else if (paymentSource === 'btn'){
       document.getElementById('btnFields').classList.remove('hidden');
-    }else if (incomeSource === 'bni'){
+    }else if (paymentSource === 'bni'){
       document.getElementById('bniFields').classList.remove('hidden');
     }
   }

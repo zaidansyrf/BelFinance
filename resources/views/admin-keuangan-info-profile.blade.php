@@ -65,38 +65,7 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
         <div class="bg-[#D1DDD5] flex justify-center w-full ">
-                    <div class="w-5/6 " id="DivInfo"><!-- Info Porfile -->
-                        <div class="card text-primary-content">
-                            <div class="card-body">
-                                <div class="avatar justify-center">
-                                    <div class="w-24 rounded-full">
-                                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                    </div>
-                                </div>
-                                <h2 class="text-center text-black">{{ \App\models\User::where('email', Auth::user()->email)->first()->name }}
-                                </h2>
-                                <table>
-                                    <tr>
-                                        <td class="text-green-500">Nama</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-stone-400">
-                                        {{ \App\models\User::where('email', Auth::user()->email)->first()->name }}</td>
-                                    </tr>
-                                    <tr></tr>
-                                    <tr>
-                                        <td class="text-green-500">Email</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-stone-400">
-                                        {{ \App\models\User::where('email', Auth::user()->email)->first()->email }}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                  
         </div>
       </div>
 
@@ -121,23 +90,21 @@
 
     <!-- Sidebar Menu Links -->
     <li>
-      <a href="{{ url('/admin/keuangan/dashboard') }}" 
-         class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-        Dashboard
-      </a>
-    </li>
-    <li>
-      <a href="{{ url('/admin/keuangan/transaksi') }}" 
-         class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-        Transaksi
-      </a>
-    </li>
-    <li>
-      <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" 
-         class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-        Laporan Keuangan
-      </a>
-    </li>
+  <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+    Dashboard
+  </a>
+</li>
+<li>
+  <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+    Transaksi
+  </a>
+</li>
+<li>
+  <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+    Laporan Keuangan
+  </a>
+</li>
+
   </ul>
 </div>
 
