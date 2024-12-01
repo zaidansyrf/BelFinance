@@ -10,7 +10,7 @@ class CreateRekapBulananTable extends Migration
     {
         Schema::create('rekap_bulanan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_akun')->constrained('akuns');
+            $table->foreignId('id_user')->constrained('users');
             $table->date('bulan');
             $table->decimal('total_pemasukan', 15, 2);
             $table->decimal('total_pengeluaran', 15, 2);
