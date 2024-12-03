@@ -9,25 +9,22 @@ class Pemasukan extends Model
 {
     use HasFactory;
 
+    // Explicitly set the table name to 'pemasukan' (singular)
+    protected $table = 'pemasukan';
+
     protected $fillable = [
-        'id_akun', 'id_metode_transaksi', 'nominal', 'keterangan', 'tanggal',
+        'id_user', 'id_metode_transaksis', 'nominal', 'keterangan', 'tanggal',
     ];
 
-    // Relasi ke tabel Akun
-    public function akun()
+    // Relasi ke tabel User
+    public function user()
     {
-        return $this->belongsTo(Akun::class, 'id_akun');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     // Relasi ke tabel MetodeTransaksi
     public function metodeTransaksi()
     {
-        return $this->belongsTo(MetodeTransaksi::class, 'id_metode_transaksi');
-    }
-
-    // Relasi ke tabel RincianTransaksi
-    public function rincianTransaksi()
-    {
-        return $this->hasMany(RincianTransaksi::class, 'id_transaksi');
+        return $this->belongsTo(MetodeTransaksi::class, 'id_metode_transaksis');
     }
 }

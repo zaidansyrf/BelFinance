@@ -8,15 +8,17 @@ class CreateMetodeTransaksiTable extends Migration
 {
     public function up()
     {
-        Schema::create('metode_transaksi', function (Blueprint $table) {
+        Schema::create('metode_transaksis', function (Blueprint $table) {
             $table->id();
-            $table->string('metode_transaksi', 50);
+            $table->string('metode_transaksi', 50);  // Menambah kolom metode_transaksi
             $table->timestamps();
         });
     }
-
+    
     public function down()
     {
-        Schema::dropIfExists('metode_transaksi');
+        Schema::dropIfExists('metode_transaksis');
     }
+    
 }
+
