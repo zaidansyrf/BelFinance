@@ -65,7 +65,7 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            
+          <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Transaksi</h1>
             <button onclick="toggleDropdown()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
               + Tambah 
             </button>
@@ -81,12 +81,12 @@
               </li>
             </ul>
             <div class="flex justify-center w-full px-8">
-            <div class="card text-primary-content bg-white mt-4 w-full">
-              <div class="card-body">
-                <h2 class="card-title text-black">Tabel Pemasukkan</h2>
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <h2 class="card-title text-black">Tabel Pemasukkan</h2>
+                </div>
               </div>
             </div>
-          </div>
           <div class="flex justify-center w-full px-8">
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
@@ -108,7 +108,7 @@
             <!-- Form Pemasukan -->
             <div id="paymentModal" class="hidden bg-white rounded-lg w-[400px] h-auto max-w-[400px] overflow-y-auto shadow-lg p-6 ">
               <h3 class="text-xl font-semibold mb-4">Tambah Pembayaran</h3>
-              <form>
+              <form action="" method="">
                 <!-- input -->
                 <div class="mb-4">
                   <label for="paymentDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
@@ -133,7 +133,10 @@
                       <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
                     </div>
                     <div class="mb-4">
-                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama menu</label>
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Menu</label>
+                      <select id="menuName" class="w-full p-2 border border-gray-300 rounded-md">
+                      <option value="" disabled selected>Pilih Menu</option>
+                      </select>
                       <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama Menu">
                     </div>
                     <div class="mb-4">
@@ -141,7 +144,7 @@
                       <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
                     </div>
                     <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Total</label>
                       <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -160,7 +163,7 @@
                       <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
                     </div>
                     <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Total</label>
                       <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -179,7 +182,7 @@
                       <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
                     </div>
                     <div class="mb-4">
-                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="incomeAmount" class="block text-sm font-medium text-gray-700">Total</label>
                       <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -198,7 +201,7 @@
                       <input type="number" id="itemQuantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi jumlah item">
                     </div>
                     <div class="mb-4">
-                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Total</label>
                       <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -209,7 +212,7 @@
                       <input type="text" id="keteranganBtn" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g Transfers">
                     </div>
                     <div class="mb-4">
-                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Nominal</label>
                       <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -220,7 +223,7 @@
                       <input type="text" id="keteranganBni" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g Transfers">
                     </div>
                     <div class="mb-4">
-                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Nominal</label>
                       <input type="number" id="paymentAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                     </div>
                   </div>
@@ -305,25 +308,44 @@
           </div>
          <!-- Sidebar Menu Links -->
           <li>
-          <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-          Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-            Transaksi
-          </a>
-        </li>
-        <li>
-          <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-            Menu
-          </a>
-        </li>
-        <li>
-          <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" class="text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-            Laporan Keuangan
-          </a>
-        </li>
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+              Transaksi
+            </a>
+          </li>
+          <li>
+            <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+              Menu
+            </a>
+          </li>
+          <li class="relative">
+            <!-- Dropdown Kategori -->
+            <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Kategori
+            </button>
+            <!-- Dropdown Menu -->
+            <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
+            </ul>
+          </li>
+          <li class="relative">
+          <!-- Dropdown Laporan -->
+            <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Laporan Keuangan
+            </button>
+          <!-- Dropdown Menu -->
+            <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+            </ul>
+          </li>                 
         </ul>
       </div>
     </div>
@@ -406,6 +428,37 @@
       closeDropdown();
     }
   };
+  function dropdownLaporan() {
+  const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
+  dropdownLaporanMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownLaporanMenu = document.getElementById("dropdownLaporanMenu");
+      const dropdownLaporanButton = document.getElementById("dropdownLaporanButton");
 
+    // Jika elemen yang diklik bukan bagian dari dropdown
+    if (
+      !dropdownLaporanMenu.contains(event.target) &&
+      !dropdownLaporanButton.contains(event.target)
+    ) {
+      dropdownLaporanMenu.classList.add("hidden");
+    }
+  });
+  function dropdownKategori() {
+  const dropdownKategoriMenu = document.getElementById('dropdownKategoriMenu');
+  dropdownKategoriMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownKategoriMenu = document.getElementById("dropdownKategoriMenu");
+      const dropdownKategoriButton = document.getElementById("dropdownKategoriButton");
+
+      // Jika elemen yang diklik bukan bagian dari dropdown
+      if (
+        !dropdownKategoriMenu.contains(event.target) &&
+        !dropdownKategoriButton.contains(event.target)
+      ) {
+        dropdownKategoriMenu.classList.add("hidden");
+      }
+    });
 </script>
 </x-app-layout>
