@@ -4,16 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSaldoTable extends Migration
+return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
         Schema::create('saldo', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users');
-            $table->decimal('saldo_awal', 15, 2);
-            $table->decimal('saldo_akhir', 15, 2);
+            $table->foreignId('id_sumber')->constrained('sumber');
+            $table->integer('nominal');
             $table->date('tanggal');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -22,4 +25,4 @@ class CreateSaldoTable extends Migration
     {
         Schema::dropIfExists('saldo');
     }
-}
+};

@@ -4,17 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePengeluaranTable extends Migration
+return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
         Schema::create('pengeluaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users');
-            $table->foreignId('id_metode_transaksis')->constrained('metode_transaksis');
-            $table->decimal('nominal', 15, 2);
-            $table->text('keterangan')->nullable();
+            $table->foreignId('id_sumber')->constrained('sumber');
+            $table->foreignId('id_tagihan')->constrained('tagihan');
+            $table->integer('nominal');
             $table->date('tanggal');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -23,4 +26,4 @@ class CreatePengeluaranTable extends Migration
     {
         Schema::dropIfExists('pengeluaran');
     }
-}
+};

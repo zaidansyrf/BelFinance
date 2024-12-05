@@ -10,12 +10,7 @@ use App\Http\Controllers\AdminKeuanganMenuController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\OwnerInfoProfileController;
-use App\Http\Controllers\MetodeTransaksiController;
-use App\Http\Controllers\PemasukanController;
-use App\Http\Controllers\SumberSeluruhController;
-use App\Http\Controllers\PengeluaranController;
-use App\Http\Controllers\RincianTransaksiController;
-use App\Http\Controllers\RekapBulananController;
+use App\Http\Controllers\SumberController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,23 +34,14 @@ Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
 Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
 Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
-Route::resource('metode-transaksi', MetodeTransaksiController::class);
-Route::get('/pemasukan/metode/{metode}', [PemasukanController::class, 'showByMetode'])->name('pemasukan.metode');
-
-Route::resource('pemasukan', PemasukanController::class);
-// Route::resource('pengeluaran', PengeluaranController::class);
-// Route::resource('rincian-transaksi', RincianTransaksiController::class);
-// Route::resource('rekap-bulanan', RekapBulananController::class);
-
-
-Route::resource('sumber-seluruh', SumberSeluruhController::class);
-Route::get('sumber-seluruh/detail/{metode_transaksi}', [SumberSeluruhController::class, 'detailByMetode'])->name('sumber-seluruh.detail');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('sumber', SumberController::class);
+
 
 require __DIR__.'/auth.php';
