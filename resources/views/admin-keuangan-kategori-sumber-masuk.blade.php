@@ -65,47 +65,32 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-              <button onclick="toggleDropdown()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber Masuk</h1>
+            <button onclick="openSourceForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
                 + Tambah
-              </button>
-              <ul id="menuDropdown" class="absolute hidden bg-white border rounded-lg mt-6 p-2 shadow-lg w-48 z-10">
-                <li>
-                  <a href="#" onclick="openMenuForm()" class="block px-4 py-2 hover:bg-gray-100 text-black">Menu</a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Modal untuk forms -->
-            <div id="menuOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
-              <!-- Form Menu -->
-              <div id="menuModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                <form>
-                  <!-- Nama Menu -->
-                  <div class="mb-4">
-                    <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
-                    <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama menu">
-                  </div>
-                  <!-- Harga -->
-                  <div class="mb-4">
-                    <label for="menuJumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                    <input type="number" id="menuJumlah" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah">
-                  </div>
-                  <div class="mb-4">
-                    <label for="menuPrice" class="block text-sm font-medium text-gray-700">Harga</label>
-                    <input type="number" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan harga">
-                  </div>
-                  <!-- Deskripsi -->
-                  <!-- <div class="mb-4">
-                    <label for="menuDescription" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                    <textarea id="menuDescription" class="w-full p-2 border border-gray-300 rounded-md" rows="3" placeholder="Masukkan deskripsi menu"></textarea>
-                  </div> -->
-                  <div class="flex justify-end mt-4">
-                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
-                  </div>
-                </form>
+            </button>
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Sumber Masuk</h2>
               </div>
+            </div>
+            </div>
+            <div id="sourceOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+                <!-- Form Sumber -->
+                <div id="sourceModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Tambah Sumber</h3>
+                    <form>
+                    <!-- Nama Sumber -->
+                    <div class="mb-4">
+                        <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
+                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood">
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                        <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                    </div>
+                    </form>
+                </div>
             </div>
         </div>
       </div>
@@ -141,60 +126,85 @@
             </a>
             </li>
             <li>
-            <a href="{{ url('/admin/keuangan/menu') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
                 Menu
             </a>
             </li>
-            <li>
-            <a href="{{ url('/admin/keuangan/laporan-keuangan') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-                Laporan Keuangan
-            </a>
+            <li class="relative">
+            <!-- Dropdown Kategori -->
+              <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                Kategori
+              </button>
+              <!-- Dropdown Menu -->
+              <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 w-full pl-0">
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
+              </ul>
             </li>
+            <li class="relative">
+            <!-- Dropdown Laporan -->
+              <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                Laporan Keuangan
+              </button>
+            <!-- Dropdown Menu -->
+              <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 w-full pl-0">
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
+                <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+              </ul>
+            </li>  
         </ul>
         </div>
-
     </div>
   </div>
   <script>
-  // Dropdown toggle
-  function toggleDropdown() {
-    const dropdown = document.getElementById('menuDropdown');
-    dropdown.classList.toggle('hidden');
-  }
-  // Close Dropdown
-  function closeDropdown() {
-    const dropdown = document.getElementById('menuDropdown');
-    dropdown.classList.add('hidden');
-  }
-  // Open Menu Form
-  function openMenuForm() {
-    const modalOverlay = document.getElementById('menuOverlay');
-    const menuModal = document.getElementById('menuModal');
-    modalOverlay.classList.remove('hidden');
-    menuModal.classList.remove('hidden');
-    closeDropdown(); // Menutup dropdown saat membuka form
-  }
-  // Close Modal
-  function closeModal() {
-    document.getElementById('menuOverlay').classList.add('hidden');
-  }
-  // Menutup dropdown ketika klik luar area
-  window.onclick = function (event) {
-    const dropdown = document.getElementById('menuDropdown');
-    const dropdownButton = document.getElementById('dropdownButton');
-    if (!dropdown.contains(event.target) && !dropdownButton.contains(event.target)) {
-      closeDropdown();
+    // Open Sumber Form
+    function openSourceForm() {
+    const sourceOverlay = document.getElementById('sourceOverlay');
+    const sourceModal = document.getElementById('sourceModal');
+    sourceOverlay.classList.remove('hidden');
+    sourceModal.classList.remove('hidden');
     }
-  };
-  // Event handler saat pilihan dropdown diklik
-  function selectDropdownOption() {
-    closeDropdown(); 
-  }
-    // Close Dropdown When Click Outside
-    window.onclick = function (event) {
-    if (!event.target.matches('button') && !event.target.matches('.block')) {
-      closeDropdown();
+
+    // Close Modal
+    function closeSourceModal() {
+    const sourceOverlay = document.getElementById('sourceOverlay');
+    const sourceModal = document.getElementById('sourceModal');
+    sourceOverlay.classList.add('hidden');
+    sourceModal.classList.add('hidden');
     }
-  };
+  function dropdownLaporan() {
+  const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
+  dropdownLaporanMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownLaporanMenu = document.getElementById("dropdownLaporanMenu");
+      const dropdownLaporanButton = document.getElementById("dropdownLaporanButton");
+
+    // Jika elemen yang diklik bukan bagian dari dropdown
+    if (
+      !dropdownLaporanMenu.contains(event.target) &&
+      !dropdownLaporanButton.contains(event.target)
+    ) {
+      dropdownLaporanMenu.classList.add("hidden");
+    }
+  });
+  function dropdownKategori() {
+  const dropdownKategoriMenu = document.getElementById('dropdownKategoriMenu');
+  dropdownKategoriMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownKategoriMenu = document.getElementById("dropdownKategoriMenu");
+      const dropdownKategoriButton = document.getElementById("dropdownKategoriButton");
+
+      // Jika elemen yang diklik bukan bagian dari dropdown
+      if (
+        !dropdownKategoriMenu.contains(event.target) &&
+        !dropdownKategoriButton.contains(event.target)
+      ) {
+        dropdownKategoriMenu.classList.add("hidden");
+      }
+    });
   </script>
 </x-app-layout>
