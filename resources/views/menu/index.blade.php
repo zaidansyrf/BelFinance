@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuPrice" class="block text-sm font-medium text-gray-700">Harga</label>
-                                        <input type="number" name="harga" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp ,." required>
+                                        <input type="number" name="harga" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp " required step="1" min="0" inputmode="numeric">
                                     </div>
                                     <div class="flex justify-end mt-4">
                                         <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
@@ -200,21 +200,31 @@
             </div>
         </div>
         <script>
-                   function contoh(event) {
-        event.preventDefault(); // Mencegah pengiriman form
+   function contoh(event) {
+    event.preventDefault(); // Mencegah pengiriman form
 
+    // Menampilkan SweetAlert untuk konfirmasi sukses
+    swal({
+        title: "Berhasil!",
+        text: "Data berhasil disimpan",
+        icon: "success",
+        button: "OK"
+    }).then((willProceed) => {
+        if (willProceed) {
+            // Jika pengguna mengklik OK, kirim form
+            event.target.submit();
+        }
+    }).catch((error) => {
+        // Menampilkan SweetAlert untuk kesalahan
         swal({
-            title: "Berhasil!",
-            text: "Data berhasil disimpan",
-            icon: "success",
-            button: "OK"
-        }).then((willProceed) => {
-            if (willProceed) {
-                // Jika pengguna mengklik OK, kirim form
-                event.target.submit();
-            }
+            title: "Gagal!",
+            text: "Terjadi kesalahan saat menyimpan data.",
+            icon: "error",
+            button: "Coba Lagi"
         });
-    }
+    });
+}
+
             // Open Menu Form
             function openMenuForm() {
                 const modalOverlay = document.getElementById('menuOverlay');

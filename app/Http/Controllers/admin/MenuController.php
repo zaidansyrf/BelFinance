@@ -29,7 +29,7 @@ class MenuController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:0',
-            'harga' => 'required|integer|min:1',
+            'harga' => 'required|numeric|min:1',
         ]);
 
         // Create a new menu item
