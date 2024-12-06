@@ -19,7 +19,8 @@ use App\Http\Controllers\AdminKeuanganKategoriSumberKeluarController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\OwnerInfoProfileController;
-use App\Http\Controllers\SumberController;
+use App\Http\Controllers\admin\MenuController;
+use App\Http\Controllers\admin\SumberController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,13 +41,13 @@ Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukk
 Route::get('/admin/keuangan/transaksi/create-pengeluaran',[AdminTransaksiPengeluaranController::class, 'view']);
 // Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
+// Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
 Route::get('/admin/keuangan/kategori/sumber-masuk',[AdminKeuanganKategoriSumberMasukController::class, 'view']);
 Route::get('/admin/keuangan/kategori/sumber-keluar',[AdminKeuanganKategoriSumberKeluarController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pembayaran',[AdminKeuanganLaporanPembayaranController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pemasukkan',[AdminKeuanganLaporanPemasukkanController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pengeluaran',[AdminKeuanganLaporanPengeluaranController::class, 'view']);
-Route::get('/admin/keuangan/laporan-keuangan/sumber',[AdminKeuanganLaporanSumberController::class, 'view']);
+// Route::get('/admin/keuangan/laporan-keuangan/sumber',[AdminKeuanganLaporanSumberController::class, 'view']);
 // Route::get('/admin/hutang',[AdminHutangController::class, 'view']);
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
 Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
@@ -58,7 +59,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('sumber', SumberController::class);
 
+// Route::prefix('menu')->name('menu.')->group(function() {
+//     Route::get('/', [MenuController::class, 'index'])->name('index');
+//     Route::get('/create', [MenuController::class, 'create'])->name('create');
+//     Route::post('/', [MenuController::class, 'store'])->name('store');
+//     Route::get('/{id}/edit', [MenuController::class, 'edit'])->name('edit');
+//     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
+//     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
+// });
+Route::get('/admin/keuangan/menu', [MenuController::class, 'index'])->name('menu.index');
+Route::post('/admin/keuangan/menu', [MenuController::class, 'store'])->name('menu.store');
+
+
+Route::resource('admin/keuangan/laporan-keuangan/sumber', SumberController::class);
 
 require __DIR__.'/auth.php';
