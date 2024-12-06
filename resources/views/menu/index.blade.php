@@ -110,7 +110,7 @@
                             <!-- Form Menu -->
                             <div id="menuModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
                                 <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                                <form method="POST" action="{{ route('menu.store') }}">
+                                <form method="POST" action="{{ route('menu.store') }}" onsubmit="return contoh(event)">
                                     @csrf
                                     <div class="mb-4">
                                         <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
@@ -200,6 +200,21 @@
             </div>
         </div>
         <script>
+                   function contoh(event) {
+        event.preventDefault(); // Mencegah pengiriman form
+
+        swal({
+            title: "Berhasil!",
+            text: "Data berhasil disimpan",
+            icon: "success",
+            button: "OK"
+        }).then((willProceed) => {
+            if (willProceed) {
+                // Jika pengguna mengklik OK, kirim form
+                event.target.submit();
+            }
+        });
+    }
             // Open Menu Form
             function openMenuForm() {
                 const modalOverlay = document.getElementById('menuOverlay');
