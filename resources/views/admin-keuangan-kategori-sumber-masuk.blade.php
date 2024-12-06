@@ -65,43 +65,32 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Menu</h1>
-            <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
-              + Tambah
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber Masuk</h1>
+            <button onclick="openSourceForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
+                + Tambah
             </button>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
-                <h2 class="card-title text-black">Tabel Menu</h2>
+                <h2 class="card-title text-black">Tabel Sumber Masuk</h2>
               </div>
             </div>
-        </div>
-
-            <!-- Modal untuk forms -->
-            <div id="menuOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
-              <!-- Form Menu -->
-              <div id="menuModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                <form>
-                  <!-- Nama Menu -->
-                  <div class="mb-4">
-                    <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
-                    <input type="text" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng">
-                  </div>
-                  <!-- Harga -->
-                  <div class="mb-4">
-                    <label for="menuJumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                    <input type="number" id="menuJumlah" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 10">
-                  </div>
-                  <div class="mb-4">
-                    <label for="menuPrice" class="block text-sm font-medium text-gray-700">Harga</label>
-                    <input type="number" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp ,.">
-                  </div>
-                  <div class="flex justify-end mt-4">
-                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
-                  </div>
-                </form>
-              </div>
+            </div>
+            <div id="sourceOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+                <!-- Form Sumber -->
+                <div id="sourceModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Tambah Sumber</h3>
+                    <form>
+                    <!-- Nama Sumber -->
+                    <div class="mb-4">
+                        <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
+                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood">
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                        <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                    </div>
+                    </form>
+                </div>
             </div>
         </div>
       </div>
@@ -137,13 +126,13 @@
             </a>
             </li>
             <li>
-            <a href="{{ url('/admin/keuangan/menu') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
                 Menu
             </a>
             </li>
             <li class="relative">
             <!-- Dropdown Kategori -->
-              <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
                 Kategori
               </button>
               <!-- Dropdown Menu -->
@@ -167,40 +156,24 @@
             </li>  
         </ul>
         </div>
-
     </div>
   </div>
   <script>
-  // Open Menu Form
-  function openMenuForm() {
-    const modalOverlay = document.getElementById('menuOverlay');
-    const menuModal = document.getElementById('menuModal');
-    modalOverlay.classList.remove('hidden');
-    menuModal.classList.remove('hidden');
-    closeDropdown(); // Menutup dropdown saat membuka form
-  }
-  // Close Modal
-  function closeModal() {
-    document.getElementById('menuOverlay').classList.add('hidden');
-  }
-  // Menutup dropdown ketika klik luar area
-  window.onclick = function (event) {
-    const dropdown = document.getElementById('menuDropdown');
-    const dropdownButton = document.getElementById('dropdownButton');
-    if (!dropdown.contains(event.target) && !dropdownButton.contains(event.target)) {
-      closeDropdown();
+    // Open Sumber Form
+    function openSourceForm() {
+    const sourceOverlay = document.getElementById('sourceOverlay');
+    const sourceModal = document.getElementById('sourceModal');
+    sourceOverlay.classList.remove('hidden');
+    sourceModal.classList.remove('hidden');
     }
-  };
-  // Event handler saat pilihan dropdown diklik
-  function selectDropdownOption() {
-    closeDropdown(); 
-  }
-    // Close Dropdown When Click Outside
-    window.onclick = function (event) {
-    if (!event.target.matches('button') && !event.target.matches('.block')) {
-      closeDropdown();
+
+    // Close Modal
+    function closeSourceModal() {
+    const sourceOverlay = document.getElementById('sourceOverlay');
+    const sourceModal = document.getElementById('sourceModal');
+    sourceOverlay.classList.add('hidden');
+    sourceModal.classList.add('hidden');
     }
-  };
   function dropdownLaporan() {
   const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
   dropdownLaporanMenu.classList.toggle('hidden');

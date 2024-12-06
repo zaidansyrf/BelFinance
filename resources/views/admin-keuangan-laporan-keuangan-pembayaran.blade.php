@@ -61,74 +61,77 @@
             </div>
           </div>
         </div>
+
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-          
+          <div class="sticky justify-between items-center mt-12 px-8">
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Laporan Pembayaran</h1>
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Laporan Pembayaran</h2>
+              </div>
+            </div>
+          </div>  
         </div>
       </div>
      <!-- sidebar content -->
-  <div class="drawer-side">
-    <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-    <ul class="menu text-black min-h-full w-80 p-4 bg-white">
-      <div class="lg:hidden flex justify-end mb-4">
-        <label for="my-drawer-2" class="cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </label>
-      </div>
-      <!-- Sidebar Logo -->
-      <div class="text-[#2B7A78] text-center mb-4 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-10 mb-6 h-8 w-8 mr-2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-        <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
-      </div>
-        <!-- Sidebar Menu Links -->
-            <li>
-              <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="{{ url('/admin/keuangan/transaksi') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-                Transaksi
-              </a>
-            </li>
-            <li>
-              <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-                Menu
-              </a>
-            </li>
-            <li class="relative">
-              <!-- Dropdown Kategori -->
-              <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                Kategori
-              </button>
-              <!-- Dropdown Menu -->
-              <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Sumber Masuk</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Sumber Keluar</a></li>
-              </ul>
-            </li>
-            <li class="relative">
-              <!-- Dropdown Laporan -->
-              <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                Laporan Keuangan
-              </button>
-                <!-- Dropdown Menu -->
-              <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pembayaran</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pemasukan</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pengeluaran</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Sumber</a></li>
-              </ul>
-            </li>
+      <div class="drawer-side">
+        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu text-black min-h-full w-80 p-4 bg-white">
+          <div class="lg:hidden flex justify-end mb-4">
+            <label for="my-drawer-2" class="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </label>
+          </div>
+          <!-- Sidebar Logo -->
+          <div class="text-[#2B7A78] text-center mb-4 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-10 mb-6 h-8 w-8 mr-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
+          </div>
+          <!-- Sidebar Menu Links -->
+                <li>
+                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
+                </li>
+                <li>
+                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
+                </li>
+                <li>
+                  <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Menu</a>
+                </li>
+                <li class="relative">
+                  <!-- Dropdown Kategori -->
+                  <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                    Kategori
+                  </button>
+
+                  <!-- Dropdown Menu -->
+                  <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 p-0">
+                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
+                  </ul>
+                </li>
+                <li class="relative">
+                  <!-- Dropdown Laporan -->
+                  <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                    Laporan Keuangan
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 pt-0">
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+                  </ul>
+                </li>
           </ul>
-        </div>
+      </div>
     </div>
   </div>
-  <script>
+<script>
   function dropdownLaporan() {
   const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
   dropdownLaporanMenu.classList.toggle('hidden');

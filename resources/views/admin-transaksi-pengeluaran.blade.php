@@ -61,15 +61,43 @@
             </div>
           </div>
         </div>
-
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <div class="mb-4">
+                <!-- Tombol Kembali -->
+                <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()"><</button>
+            </div>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Tambah Pengeluaran</h1>
+            <div class="px-8 py-6">
+              <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-[#2B7A78] mb-4"></h2>
+                <form>
+                <!-- input -->
+                <div class="mb-4">
+                  <label for="expenseDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
+                  <input type="date" id="expenseDate" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="mb-4">
+                  <label for="expenseCategory" class="block text-sm font-medium text-gray-700">Kategori Pengeluaran</label>
+                  <select id="expenseCategory" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="" disabled selected>Pilih Sumber</option>
+                    <option value="utilities">Tagihan Listrik & Air</option>
+                  </select>
+                </div>
+                <div class="mb-4">
+                  <label for="expenseAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                  <input type="number" id="expenseAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
+                </div>
+                <div class="flex justify-end mt-4">
+                  <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                  <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                </div>
+              </form>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -91,10 +119,10 @@
           </div>
           <!-- Sidebar Menu Links -->
                 <li>
-                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
+                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
                 </li>
                 <li>
-                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
+                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78]  text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
                 </li>
                 <li>
                   <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Menu</a>
