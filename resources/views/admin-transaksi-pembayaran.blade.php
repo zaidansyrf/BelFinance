@@ -61,15 +61,82 @@
             </div>
           </div>
         </div>
-
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <div class="mb-4">
+                <!-- Tombol Kembali -->
+                <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()"><</button>
+            </div>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Tambah Pembayaran</h1>
+            <div class="px-8 py-6">
+              <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-[#2B7A78] mb-4"></h2>
+                <form>
+                  <!-- input -->
+                  <div class="mb-4">
+                    <label for="paymentDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
+                    <input type="date" id="paymentDate" class="w-full p-2 border border-gray-300 rounded-md">
+                  </div>
+                  <div class="mb-4">
+                    <label for="paymentSource" class="block text-sm font-medium text-gray-700">Sumber</label>
+                    <select id="paymentSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
+                      <option value="" disabled selected>Pilih Sumber</option>
+                      <option value="shopee">ShopeeFood</option>
+                    </select>
+                  </div>
+                  <!-- Additional Fields for ShopeeFood -->
+                  <div id="orderMenu" class="hidden">
+                  <div class="mb-4">
+                    <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
+                    <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                  </div>
+                  <div id="orderForm">
+                    <div class="mb-4">
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
+                      <select id="menuName" class="w-full p-2 border border-gray-300 rounded-md" onchange="updatePrice()">
+                        <option value="" disabled selected>Pilih Menu</option>
+                        <option value="ayamBakar" data-price="20000">Ayam Bakar</option>
+                        <option value="nasiGoreng" data-price="15000">Nasi Goreng</option>
+                        <option value="mieAyam" data-price="12000">Mie Ayam</option>
+                      </select>
+                    </div>
+                    <div class="mb-4">
+                      <label for="price" class="block text-sm font-medium text-gray-700">Harga</label>
+                      <input type="text" id="price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tampilan Harga (readOnly)" readonly>
+                    </div>
+                    <div class="mb-4">
+                      <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah" oninput="updateTotal()">
+                    </div>
+                    <div class="flex justify-end space-x-2 mb-4">
+                      <button id="resetButton" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-md" onclick="resetForm()">Hapus</button>
+                      <button id="addButton" class="flex-1 px-4 py-2 bg-green-500 text-white rounded-md" onclick="addToOrder()">Tambah</button>
+                    </div>
+                    <div class="mb-4">
+                      <label for="total" class="block text-sm font-medium text-gray-700">Total</label>
+                      <input type="text" id="total" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp .." readonly>
+                    </div>
+                    <div class="mb-4">
+                      <label for="payment" class="block text-sm font-medium text-gray-700">Bayar</label>
+                      <input type="number" id="payment" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah bayar" oninput="calculateChange()">
+                    </div>
+                    <div class="mb-4">
+                      <label for="change" class="block text-sm font-medium text-gray-700">Kembalian</label>
+                      <input type="text" id="change" class="w-full p-2 border border-gray-300 rounded-md" readonly>
+                    </div>
+                  </div>
+                </div>
+                
+                  <div class="flex justify-end mt-4">
+                    <button type="button" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -91,10 +158,10 @@
           </div>
           <!-- Sidebar Menu Links -->
                 <li>
-                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
+                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
                 </li>
                 <li>
-                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
+                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78]  text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
                 </li>
                 <li>
                   <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Menu</a>
