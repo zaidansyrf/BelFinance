@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use App\Models\Sumber;
+use App\Http\Controllers\Controller;  // pastikan Controller di-extend dengan benar
 use Illuminate\Http\Request;
 
 class SumberController extends Controller
@@ -23,14 +24,17 @@ class SumberController extends Controller
     // Menyimpan data baru
     public function store(Request $request)
     {
-        // Validasi input
+        // Validate input data
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
-
-        // Menyimpan data ke database
-        Sumber::create($request->all());
-
+    
+        // Create a new Sumber entry
+        Sumber::create([
+            'nama' => $request->nama,
+        ]);
+    
+        // Redirect back with success message
         return redirect()->route('sumber.index')->with('success', 'Sumber berhasil ditambahkan!');
     }
 
@@ -60,4 +64,12 @@ class SumberController extends Controller
         $sumber->delete();
         return redirect()->route('sumber.index')->with('success', 'Sumber berhasil dihapus!');
     }
+
+    // Menampilkan data berdasarkan filter
+    public function filter(Request $request)
+    {
+        $sumber = Sumber::where('nama', 'LIKE', '%' . $request->cari . '%')->get();
+        return view('sumber.index', compact('sumber'));
+    }
 }
+
