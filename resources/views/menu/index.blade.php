@@ -72,6 +72,11 @@
                             <div class="card text-primary-content bg-white mt-4 w-full">
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
+                                    @if($menus->isEmpty())
+                                    <div class="flex justify-center items-center h-full bg-white">
+                                        <h1 class="text-black text-center">Belum ada data</h1>
+                                    </div>
+                                    @else
                                     <table class="min-w-full bg-white">
                                         <thead>
                                             <tr>
@@ -85,11 +90,11 @@
                                         <tbody>
                                             @foreach ($menus as $menu)
                                             <tr>
-                                                <td class="py-2 px-4 border-b">{{ $loop->iteration }}</td>
-                                                <td class="py-2 px-4 border-b">{{ $menu->nama }}</td>
-                                                <td class="py-2 px-4 border-b">{{ $menu->jumlah }}</td>
-                                                <td class="py-2 px-4 border-b">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
-                                                <td class="py-2 px-4 border-b">
+                                                <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->nama }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->jumlah }}</td>
+                                                <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
+                                                <td class="py-2 px-4 border-b text-black">
                                                     <a href="#" class="text-blue-500 hover:underline">Edit</a>
                                                     <form action="#" method="POST" class="inline-block">
                                                         @csrf
@@ -101,6 +106,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -200,30 +206,30 @@
             </div>
         </div>
         <script>
-   function contoh(event) {
-    event.preventDefault(); // Mencegah pengiriman form
+            function contoh(event) {
+                event.preventDefault(); // Mencegah pengiriman form
 
-    // Menampilkan SweetAlert untuk konfirmasi sukses
-    swal({
-        title: "Berhasil!",
-        text: "Data berhasil disimpan",
-        icon: "success",
-        button: "OK"
-    }).then((willProceed) => {
-        if (willProceed) {
-            // Jika pengguna mengklik OK, kirim form
-            event.target.submit();
-        }
-    }).catch((error) => {
-        // Menampilkan SweetAlert untuk kesalahan
-        swal({
-            title: "Gagal!",
-            text: "Terjadi kesalahan saat menyimpan data.",
-            icon: "error",
-            button: "Coba Lagi"
-        });
-    });
-}
+                // Menampilkan SweetAlert untuk konfirmasi sukses
+                swal({
+                    title: "Berhasil!",
+                    text: "Data berhasil disimpan",
+                    icon: "success",
+                    button: "OK"
+                }).then((willProceed) => {
+                    if (willProceed) {
+                        // Jika pengguna mengklik OK, kirim form
+                        event.target.submit();
+                    }
+                }).catch((error) => {
+                    // Menampilkan SweetAlert untuk kesalahan
+                    swal({
+                        title: "Gagal!",
+                        text: "Terjadi kesalahan saat menyimpan data.",
+                        icon: "error",
+                        button: "Coba Lagi"
+                    });
+                });
+            }
 
             // Open Menu Form
             function openMenuForm() {

@@ -109,9 +109,9 @@
                       <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah</label>
                       <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah" oninput="updateTotal()">
                     </div>
-                    <div class="flex justify-end space-x-2 mb-4">
-                      <button id="resetButton" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-md" onclick="resetForm()">Hapus</button>
-                      <button id="addButton" class="flex-1 px-4 py-2 bg-green-500 text-white rounded-md" onclick="addToOrder()">Tambah</button>
+                    <div class="flex justify-end space-x-2 mt-4">
+                      <button id="resetButton" class=" px-4 py-2 bg-red-500 text-white rounded-md" onclick="resetForm()">Hapus</button>
+                      <button id="addButton" class=" px-4 py-2 bg-green-500 text-white rounded-md" onclick="addToOrder()">Tambah</button>
                     </div>
                     <div class="mb-4">
                       <label for="total" class="block text-sm font-medium text-gray-700">Total</label>
