@@ -87,7 +87,7 @@
                   <input type="number" id="incomeAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
                 </div>
                 <div class="flex justify-end mt-4">
-                  <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                  <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                   <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
                 </div>
               </form>
