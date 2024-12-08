@@ -14,13 +14,13 @@ use App\Http\Controllers\AdminKeuanganLaporanPengeluaranController;
 use App\Http\Controllers\AdminKeuanganLaporanSumberController;
 use App\Http\Controllers\AdminKeuanganInfoProfileController;
 use App\Http\Controllers\AdminKeuanganMenuController;
-use App\Http\Controllers\AdminKeuanganKategoriSumberMasukController;
-use App\Http\Controllers\AdminKeuanganKategoriSumberKeluarController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\OwnerInfoProfileController;
 use App\Http\Controllers\admin\MenuController;
 use App\Http\Controllers\admin\SumberController;
+use App\Http\Controllers\admin\TagihanController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,13 +37,14 @@ Route::get('/login-belfinance', function () {
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']);
 Route::get('/admin/keuangan/transaksi/create-pembayaran',[AdminTransaksiPembayaranController::class, 'view']);
-Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukkanController::class, 'view']);
+// Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukkanController::class, 'view']);
+Route::resource('/admin/keuangan/kategori/sumber-masuk', SumberController::class);
+Route::resource('/admin/keuangan/kategori/sumber-keluar', TagihanController::class);
 Route::get('/admin/keuangan/transaksi/create-pengeluaran',[AdminTransaksiPengeluaranController::class, 'view']);
 // Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
 // Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
-Route::get('/admin/keuangan/kategori/sumber-masuk',[AdminKeuanganKategoriSumberMasukController::class, 'view']);
-Route::get('/admin/keuangan/kategori/sumber-keluar',[AdminKeuanganKategoriSumberKeluarController::class, 'view']);
+// Route::get('/admin/keuangan/kategori/sumber-keluar',[AdminKeuanganKategoriSumberKeluarController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pembayaran',[AdminKeuanganLaporanPembayaranController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pemasukkan',[AdminKeuanganLaporanPemasukkanController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pengeluaran',[AdminKeuanganLaporanPengeluaranController::class, 'view']);
@@ -72,6 +73,5 @@ Route::get('/admin/keuangan/menu', [MenuController::class, 'index'])->name('menu
 Route::post('/admin/keuangan/menu', [MenuController::class, 'store'])->name('menu.store');
 
 
-Route::resource('admin/keuangan/laporan-keuangan/sumber', SumberController::class);
 
 require __DIR__.'/auth.php';
