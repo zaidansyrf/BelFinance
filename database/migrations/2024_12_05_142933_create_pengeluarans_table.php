@@ -9,23 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('pengeluaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('Users')->onDelete('cascade');
-            $table->foreignId('id_metode_transaksi')->constrained('MetodeTransaksi')->onDelete('cascade');
-            $table->decimal('nominal', 15,2);
-            $table->text('keterangan')->nullable();
+            $table->foreignId('id_sumber')->constrained('sumber');
+            $table->foreignId('id_tagihan')->constrained('tagihan');
+            $table->integer('nominal');
             $table->date('tanggal');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('pengeluaran');
     }
