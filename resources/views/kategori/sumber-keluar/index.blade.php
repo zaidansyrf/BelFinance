@@ -65,13 +65,34 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber Masuk</h1>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber Keluar</h1>
             <button onclick="openSourceForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
                 + Tambah
             </button>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
-                <h2 class="card-title text-black">Tabel Sumber Masuk</h2>
+                <h2 class="card-title text-black">Tabel Sumber keluar</h2>
+                <table class="table w-full">
+                  <thead>
+                    <tr>
+                      <th class="bg-[#2B7A78] text-white">No</th>
+                      <th class="bg-[#2B7A78] text-white">Nama Sumber</th>
+                      <th class="bg-[#2B7A78] text-white">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($tagihans as $tagihan)
+                    <tr>
+                      <th>{{ $loop->iteration }}</th>
+                      <td>{{ $tagihan->nama }}</td>
+                      <td>
+                        <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
+                        <button onclick="" class="btn btn-sm btn-outline btn-error">Hapus</button>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
               </div>
             </div>
             </div>
@@ -79,11 +100,12 @@
                 <!-- Form Sumber -->
                 <div id="sourceModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
                     <h3 class="text-xl font-semibold mb-4">Tambah Sumber</h3>
-                    <form>
+                    <form action="{{ route('sumber-keluar.store') }}" method="POST">
+                    @csrf
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood">
+                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="nama" placeholder="cth. Belanja">
                     </div>
                     <div class="flex justify-end mt-4">
                         <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
