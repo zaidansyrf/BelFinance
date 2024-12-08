@@ -131,7 +131,7 @@
                                         <input type="number" name="harga" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp " required step="1" min="0" inputmode="numeric">
                                     </div>
                                     <div class="flex justify-end mt-4">
-                                        <button type="button" onclick="closeModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                                        <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                                         <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
                                     </div>
                                 </form>

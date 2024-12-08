@@ -110,8 +110,8 @@
                       <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah" oninput="updateTotal()">
                     </div>
                     <div class="flex justify-end space-x-2 mt-4">
-                      <button id="resetButton" class=" px-4 py-2 bg-red-500 text-white rounded-md" onclick="resetForm()">Hapus</button>
-                      <button id="addButton" class=" px-4 py-2 bg-green-500 text-white rounded-md" onclick="addToOrder()">Tambah</button>
+                      <button id="resetButton" class=" px-4 py-2 bg-[#db5461] text-white rounded-md" onclick="resetForm()">Hapus</button>
+                      <button id="addButton" class=" px-4 py-2 bg-[#2B7A78] text-white rounded-md" onclick="addToOrder()">Tambah</button>
                     </div>
                     <div class="mb-4">
                       <label for="total" class="block text-sm font-medium text-gray-700">Total</label>
@@ -128,8 +128,8 @@
                   </div>
                 </div>
                 
-                  <div class="flex justify-end mt-4">
-                    <button type="button" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                  <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                     <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
                   </div>
                 </form>
