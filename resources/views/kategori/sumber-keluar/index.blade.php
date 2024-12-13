@@ -84,8 +84,8 @@
                     @foreach ($Bills as $bill)
                     <tr>
 <<<<<<< HEAD
-                      <th class="text-black">{{ $loop->iteration }}</th>
-                      <td class="text-black">{{ $bill->name }}</td>
+                      <th>{{ $loop->iteration }}</th>
+                      <td>{{ $bill->name }}</td>
 =======
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $bill->name }}</td>
