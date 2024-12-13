@@ -7,21 +7,19 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Jalankan migrasi.
+     * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('tagihan', function (Blueprint $table) {
+        Schema::create('sources', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 255);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse (kembalikan) migrasi.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('tagihan');
+        Schema::dropIfExists('sources');
     }
 };

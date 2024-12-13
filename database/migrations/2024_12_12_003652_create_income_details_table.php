@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('saldo', function (Blueprint $table) {
+        Schema::create('income_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_sumber')->constrained('sumber');
-            $table->integer('nominal');
-            $table->date('tanggal');
-            $table->text('keterangan')->nullable();
+            $table->foreignId('income_id')->constrained('incomes');
+            $table->foreignId('item_id')->constrained('items');
+            $table->integer('quantity');
+            $table->integer('subtotal');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('saldo');
+        Schema::dropIfExists('income_details');
     }
 };

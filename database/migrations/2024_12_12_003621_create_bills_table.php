@@ -6,19 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
-        Schema::create('menu', function (Blueprint $table) {
+        Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 255);
-            $table->integer('harga');
-            $table->integer('jumlah')->default(0);
+            $table->string('name', 255);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('menu');
+        Schema::dropIfExists('bills');
     }
 };
