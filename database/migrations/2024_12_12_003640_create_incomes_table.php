@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pemasukkan', function (Blueprint $table) {
+        Schema::create('incomes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_sumber')->constrained('sumber');
-            $table->string('nama', 255);
-            $table->integer('nominal');
-            $table->date('tanggal');
-            $table->text('keterangan')->nullable();
+            $table->foreignId('source_id')->constrained('sources');
+            $table->string('name', 255);
+            $table->integer('amount');
+            $table->date('date');
+            $table->text('description');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('pemasukkan');
+        Schema::dropIfExists('incomes');
     }
 };

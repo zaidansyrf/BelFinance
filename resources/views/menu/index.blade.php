@@ -72,7 +72,7 @@
                             <div class="card text-primary-content bg-white mt-4 w-full">
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
-                                    @if($menus->isEmpty())
+                                    @if($items->isEmpty())
                                     <div class="flex justify-center items-center h-full bg-white">
                                         <h1 class="text-black text-center">Belum ada data</h1>
                                     </div>
@@ -88,12 +88,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($menus as $menu)
+                                            @foreach ($items as $menu)
                                             <tr>
                                                 <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
-                                                <td class="py-2 px-4 border-b text-black">{{ $menu->nama }}</td>
-                                                <td class="py-2 px-4 border-b text-black">{{ $menu->jumlah }}</td>
-                                                <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
+                                                <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
                                                 <td class="py-2 px-4 border-b text-black">
                                                     <a href="#" class="text-blue-500 hover:underline">Edit</a>
                                                     <form action="#" method="POST" class="inline-block">
@@ -116,19 +116,19 @@
                             <!-- Form Menu -->
                             <div id="menuModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
                                 <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                                <form method="POST" action="{{ route('menu.store') }}" onsubmit="return contoh(event)">
+                                <form method="POST" action="{{ route('menu.store') }}">
                                     @csrf
                                     <div class="mb-4">
                                         <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
-                                        <input type="text" name="nama" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng" required>
+                                        <input type="text" name="name" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng" required>
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuJumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                                        <input type="number" name="jumlah" id="menuJumlah" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 10" required value="0">
+                                        <input type="number" name="quantity" id="menuJumlah" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 10" required value="0">
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuPrice" class="block text-sm font-medium text-gray-700">Harga</label>
-                                        <input type="number" name="harga" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp " required step="1" min="0" inputmode="numeric">
+                                        <input type="number" name="price" id="menuPrice" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp " required step="1" min="0" inputmode="numeric">
                                     </div>
                                     <div class="flex justify-end mt-4">
                                         <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
