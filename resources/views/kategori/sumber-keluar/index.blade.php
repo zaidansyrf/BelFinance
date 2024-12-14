@@ -83,8 +83,13 @@
                   <tbody>
                     @foreach ($Bills as $bill)
                     <tr>
+<<<<<<< HEAD
                       <th class="text-black">{{ $loop->iteration }}</th>
                       <td class="text-black">{{ $bill->name }}</td>
+=======
+                      <th>{{ $loop->iteration }}</th>
+                      <td>{{ $bill->name }}</td>
+>>>>>>> 92f433f (revisi migrasi)
                       <td>
                         <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
                         <button onclick="" class="btn btn-sm btn-outline btn-error">Hapus</button>

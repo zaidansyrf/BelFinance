@@ -83,8 +83,13 @@
                   <tbody>
                     @foreach ($sources as $source)
                     <tr>
+<<<<<<< HEAD
                       <th class="text-black">{{ $loop->iteration }}</th>
                       <td class="text-black">{{ $source->name }}</td>
+=======
+                      <th>{{ $loop->iteration }}</th>
+                      <td>{{ $source->name }}</td>
+>>>>>>> 92f433f (revisi migrasi)
                       <td>
                         <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
                         <button onclick="" class="btn btn-sm btn-outline btn-error">Hapus</button>
@@ -105,7 +110,11 @@
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
+<<<<<<< HEAD
                         <input type="text" id="sourceName" name="name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
+=======
+                        <input type="text" id="sourceName" name="name " class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
+>>>>>>> 92f433f (revisi migrasi)
                     </div>
                     <div class="flex justify-end mt-4">
                         <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
