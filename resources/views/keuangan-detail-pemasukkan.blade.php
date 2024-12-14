@@ -61,43 +61,22 @@
             </div>
           </div>
         </div>
+
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-          <div class="sticky justify-between items-center mt-12 px-8">
-            <div class="mb-4">
-                <!-- Tombol Kembali -->
-                <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()"><</button>
-            </div>
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Tambah Pengeluaran</h1>
-            <div class="px-8 py-6">
-              <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-xl font-semibold text-[#2B7A78] mb-4"></h2>
-                <form>
-                <!-- input -->
-                <div class="mb-4">
-                  <label for="expenseDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
-                  <input type="date" id="expenseDate" class="w-full p-2 border border-gray-300 rounded-md">
+        <div class="sticky justify-between items-center mt-12 px-8">
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Detail Pemasukkan</h1>
+
+            <div class="flex justify-center w-full px-8">
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <h2 class="card-title text-black">Tabel Pemasukkan</h2>
                 </div>
-                <div class="mb-4">
-                  <label for="expenseCategory" class="block text-sm font-medium text-gray-700">Kategori Pengeluaran</label>
-                  <select id="expenseCategory" class="w-full p-2 border border-gray-300 rounded-md">
-                    <option value="" disabled selected>Pilih Sumber</option>
-                    <option value="utilities">Tagihan Listrik & Air</option>
-                  </select>
-                </div>
-                <div class="mb-4">
-                  <label for="expenseAmount" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                  <input type="number" id="expenseAmount" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Isi nominal">
-                </div>
-                <div class="flex justify-end mt-4">
-                  <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
-                  <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
-                </div>
-              </form>
               </div>
             </div>
           </div>
         </div>
+
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -118,40 +97,54 @@
             <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
           </div>
           <!-- Sidebar Menu Links -->
-                <li>
-                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
-                </li>
-                <li>
-                  <a href="{{ url('/admin/keuangan/transaksi') }}" class="bg-[#2B7A78]  text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Transaksi</a>
-                </li>
-                <li>
-                  <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Menu</a>
-                </li>
-                <li class="relative">
-                  <!-- Dropdown Kategori -->
-                  <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                    Kategori
-                  </button>
-
-                  <!-- Dropdown Menu -->
-                  <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 p-0">
-                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
-                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
-                  </ul>
-                </li>
-                <li class="relative">
-                  <!-- Dropdown Laporan -->
-                  <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                    Laporan Keuangan
-                  </button>
-                  <!-- Dropdown Menu -->
-                  <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 pt-0">
-                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
-                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
-                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
-                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
-                  </ul>
-                </li>
+          <li>
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            Dashboard
+            </a>
+          </li>
+          <li class="relative">
+            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Pemasukkan
+            </button>
+            <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/detail-pemasukkan') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Detail Pemasukkan</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+              Pengeluaran
+            </a>
+          </li>
+          <li>
+            <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+              Menu
+            </a>
+          </li>
+          <li class="relative">
+            <!-- Dropdown Kategori -->
+            <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Kategori
+            </button>
+            <!-- Dropdown Menu -->
+            <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
+            </ul>
+          </li>
+          <li class="relative">
+            <!-- Dropdown Laporan -->
+            <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Laporan Keuangan
+            </button>
+            <!-- Dropdown Menu -->
+            <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+            </ul>
+          </li>    
           </ul>
       </div>
     </div>
@@ -189,7 +182,7 @@
         dropdownKategoriMenu.classList.add("hidden");
       }
     });
-    function toggleAdditionalFields() {
+  function toggleAdditionalFields() {
     const paymentSource = document.getElementById('paymentSource').value;
 
     // Hide all additional fields first
@@ -200,5 +193,21 @@
       document.getElementById('orderMenu').classList.remove('hidden');
     } 
   }
+  function dropdownPemasukkan() {
+  const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
+  dropdownPemasukkanMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
+      const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
+
+    // Jika elemen yang diklik bukan bagian dari dropdown
+    if (
+      !dropdownPemasukkanMenu.contains(event.target) &&
+      !dropdownPemasukkanButton.contains(event.target)
+    ) {
+      dropdownPemasukkanMenu.classList.add("hidden");
+    }
+  });
 </script>
 </x-app-layout>
