@@ -89,6 +89,9 @@
 =======
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $source->name }}</td>
+<<<<<<< HEAD
+>>>>>>> 92f433f (revisi migrasi)
+=======
 >>>>>>> 92f433f (revisi migrasi)
                       <td>
                         <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
@@ -111,7 +114,11 @@
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <input type="text" id="sourceName" name="name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
+=======
+                        <input type="text" id="sourceName" name="name " class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
+>>>>>>> 92f433f (revisi migrasi)
 =======
                         <input type="text" id="sourceName" name="name " class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
 >>>>>>> 92f433f (revisi migrasi)

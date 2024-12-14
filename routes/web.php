@@ -18,8 +18,11 @@ use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\OwnerInfoProfileController;
 use App\Http\Controllers\SourceController;
+use App\Http\Controllers\SourceController;
 use App\Http\Controllers\admin\MenuController;
 use App\Http\Controllers\admin\TagihanController;
+use App\Http\Controllers\BillController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\ItemController;
 
@@ -36,10 +39,9 @@ Route::get('/login-belfinance', function () {
 });
 
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
-Route::get('/keuangan/pembayaran',[PembayaranController::class, 'view']);
-Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
-Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
-Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
+Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']);
+Route::get('/admin/keuangan/transaksi/create-pembayaran',[AdminTransaksiPembayaranController::class, 'view']);
+// Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukkanController::class, 'view']);
 Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
 Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
 Route::get('/admin/keuangan/transaksi/create-pengeluaran',[AdminTransaksiPengeluaranController::class, 'view']);
@@ -71,6 +73,8 @@ Route::middleware('auth')->group(function () {
 //     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
 //     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
 // });
+Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
+Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
 Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
 Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
 

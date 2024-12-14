@@ -89,6 +89,9 @@
 =======
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $bill->name }}</td>
+<<<<<<< HEAD
+>>>>>>> 92f433f (revisi migrasi)
+=======
 >>>>>>> 92f433f (revisi migrasi)
                       <td>
                         <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
