@@ -91,7 +91,7 @@
           </div>
           <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#116A71] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
             Dashboard
             </a>
           </li>
