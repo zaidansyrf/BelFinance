@@ -83,6 +83,8 @@
                   <tbody>
                     @foreach ($sources as $source)
                     <tr>
+                      <th class="text-black">{{ $loop->iteration }}</th>
+                      <td class="text-black">{{ $source->name }}</td>
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $source->name }}</td>
                       <td>
@@ -138,15 +140,24 @@
 
             <!-- Sidebar Menu Links -->
             <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
                 Dashboard
             </a>
             </li>
-            <li>
-            <a href="{{ url('/admin/keuangan/transaksi') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-                Transaksi
+            <li class="relative">
+            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+              Pemasukkan
+            </button>
+            <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/detail-pemasukkan') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Detail Pemasukkan</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+              Pengeluaran
             </a>
-            </li>
+          </li>
             <li>
             <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
                 Menu
@@ -228,5 +239,21 @@
         dropdownKategoriMenu.classList.add("hidden");
       }
     });
+    function dropdownPemasukkan() {
+  const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
+  dropdownPemasukkanMenu.classList.toggle('hidden');
+  }
+  document.addEventListener("click", function (event) {
+      const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
+      const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
+
+    // Jika elemen yang diklik bukan bagian dari dropdown
+    if (
+      !dropdownPemasukkanMenu.contains(event.target) &&
+      !dropdownPemasukkanButton.contains(event.target)
+    ) {
+      dropdownPemasukkanMenu.classList.add("hidden");
+    }
+  });
   </script>
 </x-app-layout>
