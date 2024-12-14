@@ -83,10 +83,8 @@
                   <tbody>
                     @foreach ($sources as $source)
                     <tr>
-<<<<<<< HEAD
                       <th class="text-black">{{ $loop->iteration }}</th>
                       <td class="text-black">{{ $source->name }}</td>
-=======
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $source->name }}</td>
                       <td>
