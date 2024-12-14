@@ -61,15 +61,82 @@
             </div>
           </div>
         </div>
-
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <div class="mb-4">
+                <!-- Tombol Kembali -->
+                <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()"><</button>
+            </div>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Tambah Pembayaran</h1>
+            <div class="px-8 py-6">
+              <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-[#2B7A78] mb-4"></h2>
+                <form>
+                  <!-- input -->
+                  <div class="mb-4">
+                    <label for="paymentDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
+                    <input type="date" id="paymentDate" class="w-full p-2 border border-gray-300 rounded-md">
+                  </div>
+                  <div class="mb-4">
+                    <label for="paymentSource" class="block text-sm font-medium text-gray-700">Sumber</label>
+                    <select id="paymentSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
+                      <option value="" disabled selected>Pilih Sumber</option>
+                      <option value="shopee">ShopeeFood</option>
+                    </select>
+                  </div>
+                  <!-- Additional Fields for ShopeeFood -->
+                  <div id="orderMenu" class="hidden">
+                  <div class="mb-4">
+                    <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
+                    <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
+                  </div>
+                  <div id="orderForm">
+                    <div class="mb-4">
+                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
+                      <select id="menuName" class="w-full p-2 border border-gray-300 rounded-md" onchange="updatePrice()">
+                        <option value="" disabled selected>Pilih Menu</option>
+                        <option value="ayamBakar" data-price="20000">Ayam Bakar</option>
+                        <option value="nasiGoreng" data-price="15000">Nasi Goreng</option>
+                        <option value="mieAyam" data-price="12000">Mie Ayam</option>
+                      </select>
+                    </div>
+                    <div class="mb-4">
+                      <label for="price" class="block text-sm font-medium text-gray-700">Harga</label>
+                      <input type="text" id="price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tampilan Harga (readOnly)" readonly>
+                    </div>
+                    <div class="mb-4">
+                      <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah</label>
+                      <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah" oninput="updateTotal()">
+                    </div>
+                    <div class="flex justify-end space-x-2 mt-4">
+                      <button id="resetButton" class=" px-4 py-2 bg-[#db5461] text-white rounded-md" onclick="resetForm()">Hapus</button>
+                      <button id="addButton" class=" px-4 py-2 bg-[#2B7A78] text-white rounded-md" onclick="addToOrder()">Tambah</button>
+                    </div>
+                    <div class="mb-4">
+                      <label for="total" class="block text-sm font-medium text-gray-700">Total</label>
+                      <input type="text" id="total" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp .." readonly>
+                    </div>
+                    <div class="mb-4">
+                      <label for="payment" class="block text-sm font-medium text-gray-700">Bayar</label>
+                      <input type="number" id="payment" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah bayar" oninput="calculateChange()">
+                    </div>
+                    <div class="mb-4">
+                      <label for="change" class="block text-sm font-medium text-gray-700">Kembalian</label>
+                      <input type="text" id="change" class="w-full p-2 border border-gray-300 rounded-md" readonly>
+                    </div>
+                  </div>
+                </div>
+                
+                  <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                    <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -96,7 +163,7 @@
             </a>
           </li>
           <li class="relative">
-            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
               Pemasukkan
             </button>
             <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
@@ -116,11 +183,11 @@
           </li>
           <li class="relative">
             <!-- Dropdown Kategori -->
-            <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+            <button id="dropdownKategoriButton" onclick="dropdownKategori()" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
               Kategori
             </button>
             <!-- Dropdown Menu -->
-            <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+            <ul id="dropdownKategoriMenu" class="hidden rounded text-black shadow-lg left-0 m-0 pl-0">
               <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
               <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
             </ul>
@@ -175,7 +242,7 @@
         dropdownKategoriMenu.classList.add("hidden");
       }
     });
-  function toggleAdditionalFields() {
+    function toggleAdditionalFields() {
     const paymentSource = document.getElementById('paymentSource').value;
 
     // Hide all additional fields first

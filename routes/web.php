@@ -3,10 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminKeuanganController;
-use App\Http\Controllers\AdminTransaksiController;
-use App\Http\Controllers\AdminTransaksiPembayaranController;
-use App\Http\Controllers\AdminTransaksiPengeluaranController;
-use App\Http\Controllers\AdminTransaksiPemasukkanController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\DetailPemasukkanController;
+use App\Http\Controllers\KeuanganCreatePembayaranController;
 use App\Http\Controllers\AdminLaporanKeuanganController;
 use App\Http\Controllers\AdminKeuanganLaporanPembayaranController;
 use App\Http\Controllers\AdminKeuanganLaporanPemasukkanController;
@@ -36,11 +36,12 @@ Route::get('/login-belfinance', function () {
 });
 
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
-Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']);
-Route::get('/admin/keuangan/transaksi/create-pembayaran',[AdminTransaksiPembayaranController::class, 'view']);
-Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukkanController::class, 'view']);
-Route::resource('/admin/keuangan/kategori/sumber-masuk', SumberController::class);
-Route::resource('/admin/keuangan/kategori/sumber-keluar', TagihanController::class);
+Route::get('/keuangan/pembayaran',[PembayaranController::class, 'view']);
+Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
+Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
+Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
+Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
+Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
 Route::get('/admin/keuangan/transaksi/create-pengeluaran',[AdminTransaksiPengeluaranController::class, 'view']);
 // Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
 Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
