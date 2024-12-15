@@ -83,10 +83,8 @@
                   <tbody>
                     @foreach ($Bills as $bill)
                     <tr>
-<<<<<<< HEAD
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $bill->name }}</td>
-=======
                       <th>{{ $loop->iteration }}</th>
                       <td>{{ $bill->name }}</td>
                       <td>
