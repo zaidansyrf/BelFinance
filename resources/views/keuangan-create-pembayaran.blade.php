@@ -72,67 +72,34 @@
             <div class="px-8 py-6">
               <div class="bg-white shadow-md rounded-lg p-6">
                 <h2 class="text-xl font-semibold text-[#2B7A78] mb-4"></h2>
-                <form>
-                  <!-- input -->
-                  <div class="mb-4">
-                    <label for="paymentDate" class="block text-sm font-medium text-gray-700">Tanggal Transaksi</label>
-                    <input type="date" id="paymentDate" class="w-full p-2 border border-gray-300 rounded-md">
-                  </div>
-                  <div class="mb-4">
-                    <label for="paymentSource" class="block text-sm font-medium text-gray-700">Sumber</label>
-                    <select id="paymentSource" class="w-full p-2 border border-gray-300 rounded-md" onchange="toggleAdditionalFields()">
-                      <option value="" disabled selected>Pilih Sumber</option>
-                      <option value="shopee">ShopeeFood</option>
-                    </select>
-                  </div>
-                  <!-- Additional Fields for ShopeeFood -->
-                  <div id="orderMenu" class="hidden">
-                  <div class="mb-4">
-                    <label for="buyerName" class="block text-sm font-medium text-gray-700">Nama pembeli</label>
-                    <input type="text" id="buyerName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan nama pembeli">
-                  </div>
-                  <div id="orderForm">
-                    <div class="mb-4">
-                      <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
-                      <select id="menuName" class="w-full p-2 border border-gray-300 rounded-md" onchange="updatePrice()">
-                        <option value="" disabled selected>Pilih Menu</option>
-                        <option value="ayamBakar" data-price="20000">Ayam Bakar</option>
-                        <option value="nasiGoreng" data-price="15000">Nasi Goreng</option>
-                        <option value="mieAyam" data-price="12000">Mie Ayam</option>
-                      </select>
-                    </div>
-                    <div class="mb-4">
-                      <label for="price" class="block text-sm font-medium text-gray-700">Harga</label>
-                      <input type="text" id="price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tampilan Harga (readOnly)" readonly>
-                    </div>
-                    <div class="mb-4">
-                      <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah</label>
-                      <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah" oninput="updateTotal()">
-                    </div>
-                    <div class="flex justify-end space-x-2 mt-4">
-                      <button id="resetButton" class=" px-4 py-2 bg-[#db5461] text-white rounded-md" onclick="resetForm()">Hapus</button>
-                      <button id="addButton" class=" px-4 py-2 bg-[#2B7A78] text-white rounded-md" onclick="addToOrder()">Tambah</button>
-                    </div>
-                    <div class="mb-4">
-                      <label for="total" class="block text-sm font-medium text-gray-700">Total</label>
-                      <input type="text" id="total" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp .." readonly>
-                    </div>
-                    <div class="mb-4">
-                      <label for="payment" class="block text-sm font-medium text-gray-700">Bayar</label>
-                      <input type="number" id="payment" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan jumlah bayar" oninput="calculateChange()">
-                    </div>
-                    <div class="mb-4">
-                      <label for="change" class="block text-sm font-medium text-gray-700">Kembalian</label>
-                      <input type="text" id="change" class="w-full p-2 border border-gray-300 rounded-md" readonly>
-                    </div>
-                  </div>
-                </div>
-                
-                  <div class="flex justify-end space-x-2 mt-4">
-                    <button type="button" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
-                    <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
-                  </div>
-                </form>
+                <div class="container">
+    <h1>Pesanan Baru</h1>
+    <form action="{{ route('income.store') }}" method="POST">
+        @csrf
+        <div class="mb-3">
+            <label for="name" class="form-label">Nama Pemesan</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+        </div>
+
+        <div id="items-container">
+            <!-- Item Default -->
+            <div class="item-row mb-3">
+                <label for="item_1" class="form-label">Pilih Item</label>
+                <select name="items[0][item_id]" class="form-select" required>
+                    <option value="" selected disabled>Pilih Item</option>
+                    @foreach ($items as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
+                    @endforeach
+                </select>
+                <input type="number" name="items[0][quantity]" class="form-control mt-2" placeholder="Jumlah" min="1" required>
+            </div>
+        </div>
+
+        <button type="button" id="add-item" class="btn btn-secondary">Tambah Item</button>
+        <button type="submit" class="btn btn-primary">Simpan Pesanan</button>
+    </form>
+</div>
+
               </div>
             </div>
           </div>
@@ -269,5 +236,27 @@
       dropdownPemasukkanMenu.classList.add("hidden");
     }
   });
+  document.addEventListener('DOMContentLoaded', function () {
+        let itemIndex = 1;
+
+        document.getElementById('add-item').addEventListener('click', function () {
+            const container = document.getElementById('items-container');
+
+            const newRow = document.createElement('div');
+            newRow.classList.add('item-row', 'mb-3');
+            newRow.innerHTML = `
+                <label for="item_${itemIndex}" class="form-label">Pilih Item</label>
+                <select name="items[${itemIndex}][item_id]" class="form-select" required>
+                    <option value="" selected disabled>Pilih Item</option>
+                    @foreach ($items as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
+                    @endforeach
+                </select>
+                <input type="number" name="items[${itemIndex}][quantity]" class="form-control mt-2" placeholder="Jumlah" min="1" required>
+            `;
+            container.appendChild(newRow);
+            itemIndex++;
+        });
+    });
 </script>
 </x-app-layout>

@@ -66,7 +66,7 @@
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
         <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pembayaran</h1>
-            <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/create-pembayaran')}}'">
+            <button class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700" onclick="window.location.href='{{url('/keuangan/create-pembayaran')}}';">
             + Tambah
         </button>
             <div class="flex justify-center w-full px-8">
