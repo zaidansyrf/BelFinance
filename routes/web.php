@@ -36,9 +36,10 @@ Route::get('/login-belfinance', function () {
 });
 
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
-Route::get('/admin/keuangan/transaksi',[AdminTransaksiController::class, 'view']);
-Route::get('/admin/keuangan/transaksi/create-pembayaran',[AdminTransaksiPembayaranController::class, 'view']);
-// Route::get('/admin/keuangan/transaksi/create-pemasukkan',[AdminTransaksiPemasukkanController::class, 'view']);
+Route::get('/keuangan/pembayaran',[PembayaranController::class, 'view']);
+Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
+Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
+Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
 Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
 Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
 Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
