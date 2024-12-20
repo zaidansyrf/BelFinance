@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Models\Expense;
+use App\Models\Source;
 
-class ItemController extends Controller
+class ExpenseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-      // Retrieve all item items from the database
-      $items = Item::all();
-      return view('item.index', compact('items'));
+        $expenses = Expense::with(['source', 'bill'])->get();
+        return view('expenses.index', compact('expenses'));
     }
 
     /**
@@ -30,21 +30,7 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:0',
-            'price' => 'required|numeric|min:1',
-        ]);
-
-        // Create a new item item
-        Item::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-        ]);
-
-        // Redirect back with a success message
-        return redirect()->route('item.index')->with('success', 'item item added successfully!');
+        //
     }
 
     /**

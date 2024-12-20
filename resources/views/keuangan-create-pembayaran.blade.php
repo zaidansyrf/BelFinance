@@ -3,7 +3,7 @@
     <!-- sidebar -->
     <div class="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-      
+
       <!-- drawer content -->
       <div class="drawer-content flex flex-col h-screen">
         <!-- wrapper for spacing -->
@@ -62,52 +62,80 @@
           </div>
         </div>
         <!-- main content -->
+        <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
             <div class="mb-4">
-                <!-- Tombol Kembali -->
-                <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()"><</button>
+              <!-- Tombol Kembali -->
+              <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()">
+                &larr; Kembali
+              </button>
+
             </div>
             <div class="container">
               <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Pesanan Baru</h1>
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                    <form action="" method="POST">
-                        @csrf
-                        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Nama Pesanan -->
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-black form-label">Nama Pesanan</label>
-                                <input type="text" name="name" id="name" placeholder="cth. online/offline" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
-                            </div>
-                            <!-- Pilih Item -->
-                            <div>
-                                <label for="item_1" class="block text-sm font-medium text-black form-label">Pilih Item</label>
-                                <select name="items[0][item_id]" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
-                                    <option class="text-black" value="" selected disabled>Pilih Item</option>
-                                    @foreach ($allItems as $item)
-                                    <option class="text-black" value="{{ $item->id }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
-                                    @endforeach
-                                </select>
-                                <label for="item_1" class="block text-sm font-medium text-black form-label">Jumlah Item</label>
-                                <input type="number" name="items[0][quantity]" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control mt-2" placeholder="Jumlah" min="1" required>
-                            </div>
-                        </div>
-                        <!-- Buttons -->
-                        <div class="flex justify-end gap-4 mt-4">
-                            <button type="button" id="add-item" 
-                                class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah Item</button>
-                            <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                  <form action="{{ route('pembayaran.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-4" id="items-container">
+                      <!-- Nama Pesanan -->
+                      <div>
+                        <label for="name" class="block text-sm font-medium text-black form-label">Nama Pesanan</label>
+                        <input type="text" name="name" id="name" placeholder="cth. online/offline" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
+                      </div>
 
+                      <!-- Pilih Sumber -->
+                      <div class="item-row mb-3">
+                        <label for="source" class="block text-sm font-medium text-black form-label mt-2">Dari Sumber</label>
+                        <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                          <option class="text-black" value="" selected disabled>Pilih Sumber</option>
+                          @if ($allSources->count())
+                          @foreach ($allSources as $source)
+                          <option value="{{ $source->id }}">{{ $source->name }}</option>
+                          @endforeach
+                          @else
+                          <option disabled>Data sumber tidak tersedia</option>
+                          @endif
+
+                        </select>
+                      </div>
+
+                      <!-- Pilih Item -->
+                      <div class="item-row mb-3">
+                        <label for="item_0" class="block text-sm font-medium text-black form-label">Pilih Item</label>
+                        <select name="items[0][item_id]" id="item_0" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                          <option class="text-black" value="" selected disabled>Pilih Item</option>
+                          @foreach ($allItems as $item)
+                          @if ($item->price != 0)
+                          <option class="text-black" value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
+                          @endif
+                          @endforeach
+                        </select>
+                        <label for="quantity_0" class="block text-sm font-medium text-black form-label mt-2">Jumlah Item</label>
+                        <input type="number" name="items[0][quantity]" id="quantity_0" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" placeholder="Jumlah" min="1" required>
+                      </div>
+                    </div>
+
+                    <!-- Menampilkan Total -->
+                    <div class="mt-4">
+                      <p class="text-black font-medium">Total Harga: <span id="total">Rp 0</span></p>
+                    </div>
+                  
+                    <!-- Buttons -->
+                    <div class="flex justify-end gap-4 mt-4">
+                      <button type="button" id="add-item" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah Item</button>
+                      <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-     <!-- sidebar content -->
+      <!-- sidebar content -->
       <div class="drawer-side">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu text-black min-h-full w-80 p-4 bg-white">
@@ -128,7 +156,7 @@
           <!-- Sidebar Menu Links -->
           <li>
             <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
-            Dashboard
+              Dashboard
             </a>
           </li>
           <li class="relative">
@@ -173,92 +201,65 @@
               <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
               <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
             </ul>
-          </li>    
-          </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
-<script>
-  function dropdownLaporan() {
-  const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
-  dropdownLaporanMenu.classList.toggle('hidden');
-  }
-  document.addEventListener("click", function (event) {
-      const dropdownLaporanMenu = document.getElementById("dropdownLaporanMenu");
-      const dropdownLaporanButton = document.getElementById("dropdownLaporanButton");
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const addItemButton = document.getElementById('add-item');
+  const itemsContainer = document.getElementById('items-container');
+  let itemCount = 1;
 
-    // Jika elemen yang diklik bukan bagian dari dropdown
-    if (
-      !dropdownLaporanMenu.contains(event.target) &&
-      !dropdownLaporanButton.contains(event.target)
-    ) {
-      dropdownLaporanMenu.classList.add("hidden");
-    }
+  addItemButton.addEventListener('click', function () {
+    const newItemRow = document.createElement('div');
+    newItemRow.classList.add('item-row', 'mb-3');
+
+    newItemRow.innerHTML = `
+      <!-- Pilih Item -->
+      <label for="item_${itemCount}" class="block text-sm font-medium text-black form-label">Pilih Item</label>
+      <select name="items[${itemCount}][item_id]" id="item_${itemCount}" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+        <option class="text-black" value="" selected disabled>Pilih Item</option>
+        @foreach ($allItems as $item)
+          @if ($item->price != 0)
+          <option class="text-black" value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
+          @endif
+        @endforeach
+      </select>
+
+      <!-- Jumlah Item -->
+      <label for="quantity_${itemCount}" class="block text-sm font-medium text-black form-label mt-2">Jumlah Item</label>
+      <input type="number" name="items[${itemCount}][quantity]" id="quantity_${itemCount}" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" placeholder="Jumlah" min="1" required>
+
+      </select>
+    `;
+
+    itemsContainer.appendChild(newItemRow);
+    itemCount++;
   });
-  function dropdownKategori() {
-  const dropdownKategoriMenu = document.getElementById('dropdownKategoriMenu');
-  dropdownKategoriMenu.classList.toggle('hidden');
-  }
-  document.addEventListener("click", function (event) {
-      const dropdownKategoriMenu = document.getElementById("dropdownKategoriMenu");
-      const dropdownKategoriButton = document.getElementById("dropdownKategoriButton");
+});
 
-      // Jika elemen yang diklik bukan bagian dari dropdown
-      if (
-        !dropdownKategoriMenu.contains(event.target) &&
-        !dropdownKategoriButton.contains(event.target)
-      ) {
-        dropdownKategoriMenu.classList.add("hidden");
-      }
+    const calculateTotal = () => {
+      const itemRows = document.querySelectorAll('.item-row');
+      let total = 0;
+
+      itemRows.forEach(itemRow => {
+        const selectElement = itemRow.querySelector('select');
+        const quantityElement = itemRow.querySelector('input[type="number"]');
+        const price = Number(selectElement.selectedOptions[0].dataset.price);
+        const quantity = Number(quantityElement.value);
+
+        total += price * quantity;
+      });
+
+      document.getElementById('total').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+    };
+
+    document.querySelectorAll('.item-row input, .item-row select').forEach(element => {
+      element.addEventListener('change', calculateTotal);
     });
-    function toggleAdditionalFields() {
-    const paymentSource = document.getElementById('paymentSource').value;
 
-    // Hide all additional fields first
-    document.getElementById('orderMenu').classList.add('hidden');
-
-    // Show relevant fields based on the selected income source
-    if (paymentSource === 'shopee') {
-      document.getElementById('orderMenu').classList.remove('hidden');
-    } 
-  }
-  function dropdownPemasukkan() {
-  const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
-  dropdownPemasukkanMenu.classList.toggle('hidden');
-  }
-  document.addEventListener("click", function (event) {
-      const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
-      const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
-
-    // Jika elemen yang diklik bukan bagian dari dropdown
-    if (
-      !dropdownPemasukkanMenu.contains(event.target) &&
-      !dropdownPemasukkanButton.contains(event.target)
-    ) {
-      dropdownPemasukkanMenu.classList.add("hidden");
-    }
-  });
-  document.addEventListener('DOMContentLoaded', function () {
-        let itemIndex = 1;
-
-        document.getElementById('add-item').addEventListener('click', function () {
-            const container = document.getElementById('items-container');
-
-            const newRow = document.createElement('div');
-            newRow.classList.add('item-row', 'mb-3');
-            newRow.innerHTML = `
-                <label for="item_${itemIndex}" class="form-label">Pilih Item</label>
-                <select name="items[${itemIndex}][item_id]" class="form-select" required>
-                    <option value="" selected disabled>Pilih Item</option>
-                    @foreach ($allItems as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
-                    @endforeach
-                </select>
-                <input type="number" name="items[${itemIndex}][quantity]" class="form-control mt-2" placeholder="Jumlah" min="1" required>
-            `;
-            container.appendChild(newRow);
-            itemIndex++;
-        });
-    });
-</script>
+    calculateTotal();
+  </script>
 </x-app-layout>

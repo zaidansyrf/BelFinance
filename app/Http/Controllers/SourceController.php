@@ -14,7 +14,7 @@ class SourceController extends Controller
     public function index()
     {
         $sources = Source::all();
-        return view('kategori.sumber-masuk.index', compact('sources'));
+        return view('kategori.source.index', compact('sources'));
     }
 
     /**
