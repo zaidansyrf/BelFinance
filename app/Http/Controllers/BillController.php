@@ -10,7 +10,7 @@ class BillController extends Controller
     public function index()
     {
         $Bills = Bill::all();
-        return view('kategori.sumber-keluar.index', compact('Bills'));
+        return view('kategori.bill.index', compact('Bills'));
     }
     public function store(Request $request)
     {
@@ -19,7 +19,8 @@ class BillController extends Controller
             'name' => 'required|max:255',
         ]);
         Bill::create($request->all());
-        return redirect()->route('sumber-keluar.index')->with('success', 'Tagihan berhasil ditambahkan.');
+        return redirect()->route('sumber-keluar.index')->with('success', 'Bill berhasil ditambahkan.');
     }
 
 }
+

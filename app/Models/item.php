@@ -13,4 +13,12 @@ class item extends Model
 
         // Define the fillable columns
         protected $fillable = ['name', 'price', 'quantity'];
+        
+        // Define the relationship with income details
+        public function incomeDetails()
+        {
+            return $this->hasMany(IncomeDetail::class);
+        }
+        
 }
+
