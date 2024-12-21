@@ -80,10 +80,7 @@ Route::middleware('auth')->group(function () {
 //     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
 //     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
 // });
-Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
-Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
-Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
-Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
+Route::resource('/admin/keuangan/menu', ItemController::class);
 
 
 

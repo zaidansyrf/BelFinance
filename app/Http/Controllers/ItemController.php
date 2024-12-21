@@ -44,7 +44,8 @@ class ItemController extends Controller
         ]);
 
         // Redirect back with a success message
-        return redirect()->route('item.index')->with('success', 'item item added successfully!');
+        // Kembali ke halaman admin/keuangan/menu
+        return redirect()->route('menu.index');
     }
 
     /**
@@ -79,3 +80,4 @@ class ItemController extends Controller
         //
     }
 }
+
