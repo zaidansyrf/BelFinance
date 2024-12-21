@@ -17,6 +17,10 @@ class Expense extends Model
         'description',
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+    
     // Relationships
     public function source()
     {

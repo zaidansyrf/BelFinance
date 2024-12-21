@@ -74,32 +74,33 @@
                   <table class="table w-full">
                     <thead>
                       <tr>  
-                        <th>Sember</th>
-                        <th>tagihan</th>
-                        <th>Jumlah</th>
+                        <th>Nomer</th>
+                        <th>Sumber</th>
+                        <th>Tagihan</th>
+                        <th>Nominal</th>
                         <th>Keterangan</th>
+                        <th>Tanggal</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($expenses as $expense)
+                      @foreach ($expenses as $key => $expense)
                       <tr>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $expense->source->name }}</td>
                         <td>{{ $expense->bill->name }}</td>
                         <td>Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         <td>{{ $expense->description }}</td>
+                        <td>{{ $expense->date->format('d-m-Y') }}</td>
                         <td>
-                          <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                          <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
+                          <a href="" class="btn btn-sm btn-primary">Edit</a>
                             <button type="submit" class="btn btn-sm btn-error">Hapus</button>
-                          </form>
+                          
                         </td>
                       </tr>
                       @endforeach
                     </tbody>
-                    </table>
+                  </table>
                 </div>
               </div>
             </div>
