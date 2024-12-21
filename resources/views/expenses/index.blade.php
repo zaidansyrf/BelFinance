@@ -70,7 +70,7 @@
             <div class="flex justify-center w-full px-8">
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                  <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+                  <h2 class="card-title text-black">Tabel Pengeluaran </h2>
                   <table class="table w-full">
                     <thead>
                       <tr>  
