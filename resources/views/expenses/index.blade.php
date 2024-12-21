@@ -73,7 +73,7 @@
                   <h2 class="card-title text-black">Tabel Pemasukkan</h2>
                   <table class="table w-full">
                     <thead>
-                      <tr>
+                      <tr>  
                         <th>Sember</th>
                         <th>tagihan</th>
                         <th>Jumlah</th>
