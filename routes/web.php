@@ -45,11 +45,11 @@ Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view'])
 // Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
 
 Route::resource('keuangan/pembayaran', PembayaranController::class);
-Route::resource('expenses', ExpenseController::class);
+Route::resource('keuangan/pengeluaran', ExpenseController::class);
 
 // Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
 Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
-Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
+// Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
 Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
 Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
 // Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);

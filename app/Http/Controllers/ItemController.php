@@ -36,6 +36,11 @@ class ItemController extends Controller
             'price' => 'required|numeric|min:1',
         ]);
 
+        // Coba jika inputan tidak berupa angka
+        if (!is_numeric($request->quantity)) {
+            return redirect()->back()->with('error', 'Harus berupa angka');
+        }
+
         // Create a new item item
         Item::create([
             'name' => $request->name,
@@ -45,7 +50,7 @@ class ItemController extends Controller
 
         // Redirect back with a success message
         // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index');
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
     }
 
     /**
