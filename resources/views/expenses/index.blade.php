@@ -70,7 +70,7 @@
             <div class="flex justify-center w-full px-8">
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                  <h2 class="card-title text-black">Tabel Pengeluaran </h2>
+                  <h2 class="card-title text-black">Tabel Penegeluaran</h2>
                   <table class="table w-full">
                     <thead>
                       <tr>  
@@ -101,9 +101,6 @@
                       @endforeach
                     </tbody>
                   </table>
-                  <div class="total-tagihan mt-4">
-                    <strong>Total Tagihan: Rp. {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</strong>
-                  </div>
                 </div>
               </div>
             </div>
