@@ -44,10 +44,11 @@ Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
 // Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
 
 Route::resource('keuangan/pembayaran', PembayaranController::class);
-Route::resource('keuangan/expenses', ExpenseController::class);
+Route::resource('keuangan/pengeluaran', ExpenseController::class);
 
 // Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
 Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
+// Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
 Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
 Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
 // Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
@@ -78,10 +79,7 @@ Route::middleware('auth')->group(function () {
 //     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
 //     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
 // });
-Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
-Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
-Route::get('/admin/keuangan/menu', [ItemController::class, 'index'])->name('menu.index');
-Route::post('/admin/keuangan/menu', [ItemController::class, 'store'])->name('menu.store');
+Route::resource('/admin/keuangan/menu', ItemController::class);
 
 
 

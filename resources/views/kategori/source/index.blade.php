@@ -105,7 +105,7 @@
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" name="name " class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
+                        <input type="text" id="sourceName" name="name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
                     </div>
                     <div class="flex justify-end mt-4">
                         <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
