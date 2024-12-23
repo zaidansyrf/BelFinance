@@ -72,6 +72,11 @@
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
                 <h2 class="card-title text-black">Tabel Sumber keluar</h2>
+                @if($Bills->isEmpty())
+                <div class="flex justify-center items-center h-full bg-white">
+                    <h1 class="text-black text-center">Belum ada data</h1>
+                </div>
+                @else
                 <table class="table w-full">
                   <thead>
                     <tr>
@@ -93,6 +98,7 @@
                     @endforeach
                   </tbody>
                 </table>
+                @endif
               </div>
             </div>
             </div>
@@ -148,7 +154,7 @@
             </button>
             <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
               <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/detail-pemasukkan') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Detail Pemasukkan</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/uang-masuk') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Uang Masuk</a></li>
             </ul>
           </li>
           <li>
