@@ -62,7 +62,6 @@
           </div>
         </div>
         <!-- main content -->
-        <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
             <div class="mb-4">
@@ -77,62 +76,60 @@
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                 <form action="{{ route('pembayaran.store') }}" method="POST">
-    @csrf
-    <div class="mb-4" id="items-container">
-        <!-- Nama Pesanan -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-black form-label">Nama Pesanan</label>
-            <input type="text" name="name" id="name" placeholder="cth. online/offline" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
-        </div>
+                @csrf
+                  <div class="mb-4" id="items-container">
+                      <!-- Nama Pesanan -->
+                      <div>
+                          <label for="name" class="block text-sm font-medium text-black form-label">Nama Pesanan</label>
+                          <input type="text" name="name" id="name" placeholder="cth. online/offline" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
+                      </div>
 
-        <!-- Pilih Sumber -->
-        <div class="item-row mb-3">
-            <label for="source" class="block text-sm font-medium text-black form-label mt-2">Dari Sumber</label>
-            <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
-                <option class="text-black" value="" selected disabled>Pilih Sumber</option>
-                @if ($allSources->count())
-                    @foreach ($allSources as $source)
-                        <option value="{{ $source->id }}">{{ $source->name }}</option>
-                    @endforeach
-                @else
-                    <option disabled>Data sumber tidak tersedia</option>
-                @endif
-            </select>
-        </div>
+                      <!-- Pilih Sumber -->
+                      <div class="item-row mb-3">
+                          <label for="source" class="block text-sm font-medium text-black form-label mt-2">Dari Sumber</label>
+                          <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                              <option class="text-black" value="" selected disabled>Pilih Sumber</option>
+                              @if ($allSources->count())
+                                  @foreach ($allSources as $source)
+                                      <option value="{{ $source->id }}">{{ $source->name }}</option>
+                                  @endforeach
+                              @else
+                                  <option disabled>Data sumber tidak tersedia</option>
+                              @endif
+                          </select>
+                      </div>
 
-        <!-- Pilih Item -->
-        <div class="item-row mb-3" id="item-row-0">
-            <label for="item_0" class="block text-sm font-medium text-black form-label">Pilih Item</label>
-            <select name="items[0][item_id]" id="item_0" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
-                <option class="text-black" value="" selected disabled>Pilih Item</option>
-                @foreach ($allItems as $item)
-                    @if ($item->price != 0)
-                        <option class="text-black" value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
-                    @endif
-                @endforeach
-            </select>
+                      <!-- Pilih Item -->
+                      <div class="item-row mb-3" id="item-row-0">
+                          <label for="item_0" class="block text-sm font-medium text-black form-label">Pilih Item</label>
+                          <select name="items[0][item_id]" id="item_0" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                              <option class="text-black" value="" selected disabled>Pilih Item</option>
+                              @foreach ($allItems as $item)
+                                  @if ($item->price != 0)
+                                      <option class="text-black" value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
+                                  @endif
+                              @endforeach
+                          </select>
 
-            <label for="quantity_0" class="block text-sm font-medium text-black form-label mt-2">Jumlah</label>
-            <input type="number" name="items[0][quantity]" min="1" id="quantity_0" required class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+                          <label for="quantity_0" class="block text-sm font-medium text-black form-label mt-2">Jumlah</label>
+                          <input type="number" name="items[0][quantity]" min="1" id="quantity_0" required class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
 
-            <!-- Tombol Hapus -->
-            <button type="button" class="remove-item-btn bg-red-500 text-white font-semibold py-1 px-4 rounded-lg hover:bg-red-700 mt-2" data-index="0">Hapus</button>
-        </div>
-    </div>
+                          <!-- Tombol Hapus -->
+                          <button type="button" class="remove-item-btn bg-red-500 text-white font-semibold py-1 px-4 rounded-lg hover:bg-red-700 mt-2" data-index="0">Hapus</button>
+                      </div>
+                  </div>
 
-    <!-- Menampilkan Total -->
-    <div class="mt-4">
-        <p class="text-black font-medium">Total Harga: <span id="total">Rp 0</span></p>
-    </div>
+                  <!-- Menampilkan Total -->
+                  <div class="mt-4">
+                      <p class="text-black font-medium">Total Harga: <span id="total">Rp 0</span></p>
+                  </div>
 
-    <!-- Buttons -->
-    <div class="flex justify-end gap-4 mt-4">
-        <button type="button" id="add-item" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah Item</button>
-        <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
-    </div>
-</form>
-
-
+                  <!-- Buttons -->
+                  <div class="flex justify-end gap-4 mt-4">
+                      <button type="button" id="add-item" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah Item</button>
+                      <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
+                  </div>
+                </form>
                 </div>
               </div>
             </div>
