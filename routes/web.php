@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\DetailPemasukkanController;
 use App\Http\Controllers\KeuanganCreatePembayaranController;
 use App\Http\Controllers\AdminLaporanKeuanganController;
@@ -41,7 +40,7 @@ Route::get('/login-belfinance', function () {
 });
 
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
-// Route::get('/keuangan/pembayaran',[PembayaranController::class, 'view']);
+Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
 // Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
 
 Route::resource('keuangan/pembayaran', PembayaranController::class);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Income extends Model
 {
     use HasFactory;
+    protected $table = 'incomes';
 
     protected $fillable = [
         'source_id',
@@ -19,6 +20,6 @@ class Income extends Model
 
     public function details()
     {
-        return $this->hasMany(IncomeDetail::class);
+        return $this->hasMany(IncomeDetail::class, 'income_id');
     }
 }
