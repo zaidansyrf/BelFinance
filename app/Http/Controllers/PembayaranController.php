@@ -96,4 +96,14 @@ class PembayaranController extends Controller
 
         return view('keuangan-create-pembayaran', compact('allItems', 'allSources'));
     }
+    public function deleteItem($incomeDetailId)
+{
+    // Temukan income detail berdasarkan ID
+    $incomeDetail = IncomeDetail::findOrFail($incomeDetailId);
+
+    // Hapus income detail
+    $incomeDetail->delete();
+
+    return redirect()->route('pembayaran.view')->with('success', 'Item berhasil dihapus');
+}
 }
