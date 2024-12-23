@@ -106,7 +106,7 @@
                   </ul>
                 </li>
                 <li>
-                  <a href="{{ url('/keuangan/expenses') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+                  <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
                     Pengeluaran
                   </a>
                 </li>

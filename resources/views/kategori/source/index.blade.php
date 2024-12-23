@@ -75,16 +75,16 @@
                 <table class="table w-full">
                   <thead>
                     <tr>
-                      <th class="bg-[#2B7A78] text-white">No</th>
-                      <th class="bg-[#2B7A78] text-white">Nama Sumber</th>
-                      <th class="bg-[#2B7A78] text-white">Aksi</th>
+                      <th class="py-2 px-4 border-b text-black">No</th>
+                      <th class="py-2 px-4 border-b text-black">Nama Sumber</th>
+                      <th class="py-2 px-4 border-b text-black">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     @foreach ($sources as $source)
                     <tr>
-                      <th class="text-black">{{ $loop->iteration }}</th>
-                      <td class="text-black">{{ $source->name }}</td>
+                      <th class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</th>
+                      <td class="py-2 px-4 border-b text-black">{{ $source->name }}</td>
                       <td>
                         <button onclick="" class="btn btn-sm btn-outline btn-success">Edit</button>
                         <button onclick="" class="btn btn-sm btn-outline btn-error">Hapus</button>
@@ -108,7 +108,7 @@
                         <input type="text" id="sourceName" name="name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood" required>
                     </div>
                     <div class="flex justify-end mt-4">
-                        <button type="button" onclick="closeSourceModal()" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                        <button type="button" onclick="closeSourceModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                         <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
                     </div>
                     </form>
@@ -152,7 +152,7 @@
             </ul>
           </li>
           <li>
-            <a href="{{ url('/keuangan/expenses') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
               Pengeluaran
             </a>
           </li>
