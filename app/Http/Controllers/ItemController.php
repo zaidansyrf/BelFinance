@@ -84,5 +84,13 @@ class ItemController extends Controller
     {
         //
     }
+    public function search(Request $request)
+{
+    $query = $request->input('search');
+    $items = Item::where('name', 'like', '%' . $query . '%')->get();
+
+    return view('menu.index', compact('items'));
+}
+
 }
 
