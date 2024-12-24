@@ -65,9 +65,48 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pengeluaran</h1>
+            <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pengeluaran/create')}}'">
+              + Tambah              
+            </button>
           </div>
+          <div class="flex justify-center w-full px-8">
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+                  <table class="table w-full">
+                    <thead>
+                      <tr>  
+                        <th>Nomer</th>
+                        <th>Sumber</th>
+                        <th>Tagihan</th>
+                        <th>Nominal</th>
+                        <th>Keterangan</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($expenses as $key => $expense)
+                      <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $expense->source->name }}</td>
+                        <td>{{ $expense->bill->name }}</td>
+                        <td>Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                        <td>{{ $expense->description }}</td>
+                        <td>{{ $expense->date->format('d-m-Y') }}</td>
+                        <td>
+                          <a href="" class="btn btn-sm btn-primary">Edit</a>
+                            <button type="submit" class="btn btn-sm btn-error">Hapus</button>
+                          
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
         </div>
 
       </div>
@@ -91,7 +130,7 @@
           </div>
           <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#116A71] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
             Dashboard
             </a>
           </li>
@@ -105,7 +144,7 @@
             </ul>
           </li>
           <li>
-            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/pengeluaran') }}" class=" bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
               Pengeluaran
             </a>
           </li>
