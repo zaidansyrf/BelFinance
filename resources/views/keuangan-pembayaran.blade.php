@@ -64,12 +64,13 @@
 
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-        <div class="sticky justify-between items-center mt-12 px-8">
+          <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pembayaran</h1>
             <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pembayaran/create')}}'">
               + Tambah
             </button>
-            <div class="flex justify-center w-full px-8">
+          </div>
+          <div class="flex justify-center w-full px-8">
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                   <h2 class="card-title text-black">Tabel Pemasukkan</h2>
@@ -90,7 +91,6 @@
                 </div>
               </div>
             </div>
-          </div>
         </div>
 
       </div>
