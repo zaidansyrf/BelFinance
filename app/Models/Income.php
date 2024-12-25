@@ -17,9 +17,16 @@ class Income extends Model
         'date',
         'description',
     ];
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     public function details()
     {
         return $this->hasMany(IncomeDetail::class, 'income_id');
+    }
+    public function source()
+    {
+        return $this->belongsTo(Source::class);
     }
 }

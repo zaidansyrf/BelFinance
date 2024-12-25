@@ -77,7 +77,28 @@
                 <div class="card-body">
                   <h2 class="card-title text-black">Tabel Uang Masuk</h2>
                   <table class="table w-full">
-                    
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Sumber</th>
+                        <th>Nominal</th>
+                        <th>Tanggal</th>
+                        <th>Diskripsi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($income as $i)
+                        <tr>
+                          <td>{{ $loop->iteration }}</td>
+                          <td>{{ $i->name }}</td>
+                          <td>{{ $i->source->name }}</td>
+                          <td>Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
+                          <td>{{ $i->date->format('d-m-Y') }}</td>
+                          <td>{{ $i->description }}</td>
+                        </tr>
+                      @endforeach
+                    </tbody>
                   </table>
                 </div>
               </div>
