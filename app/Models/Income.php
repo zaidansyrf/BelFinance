@@ -17,6 +17,9 @@ class Income extends Model
         'date',
         'description',
     ];
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     public function details()
     {

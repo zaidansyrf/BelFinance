@@ -84,6 +84,7 @@
                         <th>Sumber</th>
                         <th>Nominal</th>
                         <th>Tanggal</th>
+                        <th>Diskripsi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -93,7 +94,8 @@
                           <td>{{ $i->name }}</td>
                           <td>{{ $i->source->name }}</td>
                           <td>Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
-                          <td>{{ $i->created_at->format('d-m-Y') }}</td>
+                          <td>{{ $i->date->format('d-m-Y') }}</td>
+                          <td>{{ $i->description }}</td>
                         </tr>
                       @endforeach
                     </tbody>
