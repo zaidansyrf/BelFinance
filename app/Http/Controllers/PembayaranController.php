@@ -28,6 +28,8 @@ class PembayaranController extends Controller
         'items.*.quantity' => 'required|integer|min:1',
     ]);
 
+    
+
     // Persiapan data
     $selectedItems = $request->items;
     $totalAmount = 0;
@@ -42,6 +44,9 @@ class PembayaranController extends Controller
         if ($itemData) {
             $subtotal = $itemData->price * $item['quantity'];
             $totalAmount += $subtotal;
+
+            // Tambahkan quantity ke item
+            $itemData->increment('quantity', $item['quantity']);
 
             $items[] = [
                 'item_id' => $item['item_id'],
@@ -87,7 +92,6 @@ class PembayaranController extends Controller
         return redirect()->back()->withErrors(['error' => 'Gagal menyimpan data. Silakan coba lagi.']);
     }
 }
-
 
     public function create(Request $request)
     {

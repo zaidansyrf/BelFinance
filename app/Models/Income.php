@@ -22,4 +22,8 @@ class Income extends Model
     {
         return $this->hasMany(IncomeDetail::class, 'income_id');
     }
+    public function source()
+    {
+        return $this->belongsTo(Source::class);
+    }
 }
