@@ -27,10 +27,9 @@ use App\Http\Controllers\ExpenseController;
 
 
 
-
-
-Route::get('/', function () {
-    return view('welcome');
+// Fallback route
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
 
 Route::get('/dashboard', function () {
