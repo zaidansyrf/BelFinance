@@ -103,6 +103,14 @@
                   <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
                   <input type="date" name="tanggal" id="tanggal" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
+                <div class="mb-4">
+                  <label for="nominal" class="block text-sm font-medium text-gray-700">Nominal</label>
+                  <input type="number" name="nominal" id="nominal" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp. " required>
+                </div>
+                <div class="mb-4">
+                  <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                  <textarea name="deskripsi" id="deskripsi" rows="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan Deskripsi"></textarea>
+                </div>
                 <div class="flex justify-end mt-4">
                   <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                   <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
