@@ -44,6 +44,7 @@ Route::get('/login-belfinance', function () {
 Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
 Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
 Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
+Route::resource('keuangan/uang-masuk', UangMasukController::class);
 // Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
 
 Route::resource('keuangan/pembayaran', PembayaranController::class);

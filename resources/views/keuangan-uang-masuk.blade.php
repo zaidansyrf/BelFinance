@@ -108,7 +108,7 @@
             <!-- Form Menu -->
             <div id="uangMasukModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
               <h3 class="text-xl font-semibold mb-4">Uang Masuk</h3>
-              <form method="" action="">
+              <form method="POST" action="{{ route('uang-masuk.store') }}">
                 @csrf
                 <div class="mb-4">
                   <label for="tagihanName" class="block text-sm font-medium text-gray-700">Nama</label>
@@ -122,15 +122,15 @@
                 </div>
                 <div class="mb-4">
                   <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
-                  <input type="date" name="tanggal" id="tanggal" class="w-full p-2 border border-gray-300 rounded-md" required>
+                  <input type="date" name="date" id="tanggal" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
                 <div class="mb-4">
                   <label for="nominal" class="block text-sm font-medium text-gray-700">Nominal</label>
-                  <input type="number" name="nominal" id="nominal" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp. " required>
+                  <input type="number" name="amount" id="nominal" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp. " required>
                 </div>
                 <div class="mb-4">
                   <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                  <textarea name="deskripsi" id="deskripsi" rows="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan Deskripsi"></textarea>
+                  <textarea name="description" id="deskripsi" rows="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan Deskripsi"></textarea>
                 </div>
                 <div class="flex justify-end mt-4">
                   <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
