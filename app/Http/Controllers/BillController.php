@@ -33,7 +33,4 @@ class BillController extends Controller
     
         return redirect()->route('sumber-keluar.index')->with('success', 'Data berhasil dihapus.');
     }
-       
-
 }
-
