@@ -125,6 +125,9 @@
                   <label for="source_id" class="block text-sm font-medium text-gray-700">Sumber</label>
                   <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
                     <option class="text-black" value="" selected disabled>Pilih Sumber</option>
+                    @foreach ($sources as $source)
+                      <option class="text-black" value="{{ $source->id }}">{{ $source->name }}</option>
+                    @endforeach
                   </select>
                 </div>
                 <div class="mb-4">
