@@ -72,33 +72,34 @@
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
                 <h2 class="card-title text-black">Tabel Sumber keluar</h2>
-                @if($Bills->isEmpty())
-                <div class="flex justify-center items-center h-full bg-white">
-                    <h1 class="text-black text-center">Belum ada data</h1>
+                <div class="overflow-x-auto">
+                  <table class="table w-full">
+                    <thead>
+                      <tr>
+                        <th class="py-2 px-4 border-b text-black">No</th>
+                        <th class="py-2 px-4 border-b text-black">Nama Sumber</th>
+                        <th class="py-2 px-4 border-b text-black">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($Bills as $bill)
+                      <tr>
+                        <th class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</th>
+                        <td class="py-2 px-4 border-b text-black">{{ $bill->name }}</td>
+                        <td>
+                          <button onclick="" class="text-blue-500 hover:underline">Edit</button>
+                          <button onclick="" class="text-red-500 hover:underline ml-2">Hapus</button>
+                        </td>
+                      </tr>
+                      @endforeach
+                      @if($Bills->isEmpty())
+                        <tr>
+                          <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                        </tr>
+                      @endif
+                    </tbody>
+                  </table>
                 </div>
-                @else
-                <table class="table w-full">
-                  <thead>
-                    <tr>
-                      <th class="py-2 px-4 border-b text-black">No</th>
-                      <th class="py-2 px-4 border-b text-black">Nama Sumber</th>
-                      <th class="py-2 px-4 border-b text-black">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($Bills as $bill)
-                    <tr>
-                      <th class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</th>
-                      <td class="py-2 px-4 border-b text-black">{{ $bill->name }}</td>
-                      <td>
-                        <button onclick="" class="text-blue-500 hover:underline">Edit</button>
-                        <button onclick="" class="text-red-500 hover:underline ml-2">Hapus</button>
-                      </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-                @endif
               </div>
             </div>
             </div>

@@ -72,12 +72,8 @@
                             <div class="card text-primary-content bg-white mt-4 w-full">
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
-                                    @if($items->isEmpty())
-                                    <div class="flex justify-center items-center h-full bg-white">
-                                        <h1 class="text-black text-center">Belum ada data</h1>
-                                    </div>
-                                    @else
-                                    <table class="min-w-full bg-white">
+                                    <div class="overflow-x-auto">
+                                    <table class="table w-full table-auto">
                                         <thead>
                                             <tr>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
@@ -89,7 +85,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($items as $menu)
-                                            <tr>
+                                            <tr class="hover:bg-gray-100/50">
                                                 <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
                                                 <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
                                                 <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
@@ -104,9 +100,14 @@
                                                 </td>
                                             </tr>
                                             @endforeach
+                                            @if($items->isEmpty())
+                                            <tr>
+                                                <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                                            </tr>
+                                            @endif
                                         </tbody>
                                     </table>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
