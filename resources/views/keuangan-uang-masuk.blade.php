@@ -76,30 +76,37 @@
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                   <h2 class="card-title text-black">Tabel Uang Masuk</h2>
-                  <table class="table w-full">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Sumber</th>
-                        <th>Nominal</th>
-                        <th>Tanggal</th>
-                        <th>Diskripsi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($income as $i)
-                        <tr>
-                          <td>{{ $loop->iteration }}</td>
-                          <td>{{ $i->name }}</td>
-                          <td>{{ $i->source->name }}</td>
-                          <td>Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
-                          <td>{{ $i->date->format('d-m-Y') }}</td>
-                          <td>{{ $i->description }}</td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
+                  <div class="overflow-x-auto">
+                    <table class="table w-full table-auto">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="px-4 py-2 w-10">No</th>
+                                <th class="px-4 py-2 w-40">Nama</th>
+                                <th class="px-4 py-2 w-40">Sumber</th>
+                                <th class="px-4 py-2 w-32">Nominal</th>
+                                <th class="px-4 py-2 w-32">Tanggal</th>
+                                <th class="px-4 py-2">Deskripsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($income as $i)
+                                <tr class="hover:bg-gray-100/50">
+                                    <td class="text-black px-4 py-2 text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->name }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->source->name }}</td>
+                                    <td class="text-black px-4 py-2 text-right">Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
+                                    <td class="text-black px-4 py-2 text-center">{{ $i->date->format('d-m-Y') }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->description }}</td>
+                                </tr>
+                            @endforeach
+                            @if ($income->isEmpty())
+                                <tr>
+                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
