@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Source extends Model
 {
     use HasFactory;
+    
 
     // Tentukan nama tabel (opsional, jika nama tabel berbeda dari default plural)
     protected $table = 'sources';

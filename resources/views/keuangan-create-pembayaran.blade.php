@@ -67,7 +67,7 @@
           <div class="sticky justify-between items-center mt-12 px-8">
             <div class="mb-4">
               <!-- Tombol Kembali -->
-              <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.history.back()">
+              <button type="button" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pembayaran')}}'">
                 &larr; Kembali
               </button>
 
@@ -131,8 +131,6 @@
                       <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
                     </div>
                   </form>
-
-
                 </div>
               </div>
             </div>

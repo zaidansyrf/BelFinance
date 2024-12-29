@@ -74,6 +74,7 @@
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                   <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+                  <div class="overflow-x-auto">
                   <table class="table w-full">
                     <thead>
                       <tr>  
@@ -102,8 +103,14 @@
                         </td>
                       </tr>
                       @endforeach
+                      @if($expenses->isEmpty())
+                      <tr>
+                          <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                        </tr>
+                      @endif
                     </tbody>
                   </table>
+                  </div>
                 </div>
               </div>
             </div>
