@@ -74,7 +74,7 @@
               <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Pengeluaran</h1>
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                <form action="" method="POST">
+                <form action="{{ route('pengeluaran.store') }}" method="POST">
                   @csrf
                   <div class="mb-4" id="items-container">
                     <!-- Sumber -->
@@ -102,7 +102,7 @@
                     <!-- Nominal -->
                     <div class="mt-4">
                       <label for="nominal" class="block text-sm font-medium text-black form-label">Nominal</label>
-                      <input type="number" name="nominal" id="nominal" min="1" placeholder="Rp. " class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
+                      <input type="number" name="amount" id="nominal" min="1" placeholder="Rp. " class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
                     </div>
 
                     <!-- Tanggal -->

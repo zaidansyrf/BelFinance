@@ -37,15 +37,14 @@ class ExpenseController extends Controller
             'source_id' => 'required|exists:sources,id',
             'bill_id' => 'required|exists:bills,id',
             'amount' => 'required|numeric|min:1',
+            'description' => 'nullable|string|max:255',
             'date' => 'required|date',
-            'description' => 'nullable|string|max:255'
         ]);
 
-        $expense = Expense::create($validatedData);
-
-        if ($expense) {
+        try {
+            Expense::create($validatedData);
             return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil ditambahkan!');
-        } else {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran!');
         }
     }
