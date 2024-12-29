@@ -21,6 +21,10 @@ class BillController extends Controller
         Bill::create($request->all());
         return redirect()->route('sumber-keluar.index')->with('success', 'Bill berhasil ditambahkan.');
     }
+    public function edit(string $id)
+    {
+        
+    }
 
 }
 
