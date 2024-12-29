@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Expense;
 use App\Models\Source;
+use App\Models\Bill;
 
 class ExpenseController extends Controller
 {
@@ -22,7 +23,9 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        //
+        $bills = Bill::all();
+        $sources = Source::all();
+        return view('keuangan-create-pengeluaran', compact('sources', 'bills'));
     }
 
     /**
@@ -30,7 +33,20 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'source_id' => 'required|exists:sources,id',
+            'bill_id' => 'required|exists:bills,id',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'nullable|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        try {
+            Expense::create($validatedData);
+            return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran!');
+        }
     }
 
     /**

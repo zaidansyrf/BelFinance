@@ -11,14 +11,16 @@ class UangMasukController extends Controller
     public function index()
     {
         $income = Income::with(['source'])->get();
-        return view('keuangan-uang-masuk', compact('income'));
+        $sources = Source::all();
+        return view('keuangan-uang-masuk', compact('income', 'sources'));
     }
     
     public function store(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string|max:255',
-            'source_id' => 'required|exists:sources.id',
+            'source_id' => 'required|exists:sources,id',
             'date' => 'required|date',
             'amount' => 'required|integer',
             'description' => 'nullable|string'
