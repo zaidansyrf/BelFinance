@@ -74,28 +74,29 @@
               <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Pengeluaran</h1>
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                <form action="" method="">
+                <form action="" method="POST">
                   @csrf
                   <div class="mb-4" id="items-container">
                     <!-- Sumber -->
                     <div>
-                      <label for="source" class="block text-sm font-medium text-black form-label">Sumber</label>
-                      <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                      <label for="source_id" class="block text-sm font-medium text-black form-label">Sumber</label>
+                      <select name="source_id" id="source_id" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
                         <option class="text-black" value="" selected disabled>Pilih Sumber</option>
-                        <!-- @if ($allSources->count())
-                        @foreach ($allSources as $source)
-                        <option value="{{ $source->id }}">{{ $source->name }}</option>
+                        @foreach($sources as $source)
+                          <option class="text-black" value="{{ $source->id }}">{{ $source->name }}</option>
                         @endforeach
-                        @else
-                        <option disabled>Data sumber tidak tersedia</option>
-                        @endif -->
                       </select>
                     </div>
 
                     <!-- Nama Tagihan -->
                     <div class="mt-4">
-                      <label for="name" class="block text-sm font-medium text-black form-label">Nama Tagihan</label>
-                      <input type="text" name="name" id="name" placeholder="cth. Bayar Listrik" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
+                      <label for="bill_id" class="block text-sm font-medium text-black form-label">Nama Tagihan</label>
+                      <select name="bill_id" id="bill_id" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                        <option class="text-black" value="" selected disabled>Pilih Tagihan</option>
+                        @foreach($bills as $bill)
+                          <option class="text-black" value="{{ $bill->id }}">{{ $bill->name }}</option>
+                        @endforeach
+                      </select>
                     </div>
 
                     <!-- Nominal -->

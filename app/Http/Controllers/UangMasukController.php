@@ -17,6 +17,7 @@ class UangMasukController extends Controller
     
     public function store(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'source_id' => 'required|exists:sources,id',
