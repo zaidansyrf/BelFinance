@@ -92,10 +92,10 @@
                                                 <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
                                                 <td class="py-2 px-4 border-b text-black">
                                                     <a href="#" class="text-blue-500 hover:underline">Edit</a>
-                                                    <form action="#" method="POST" class="inline-block">
+                                                    <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="inline-block">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="text-red-500 hover:underline ml-2">Hapus</button>
+                                                        <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
                                                     </form>
                                                 </td>
                                             </tr>

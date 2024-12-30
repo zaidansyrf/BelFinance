@@ -82,7 +82,11 @@ class ItemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Item::destroy($id);
+
+        // Redirect back with a success message
+        // Kembali ke halaman admin/keuangan/menu
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
     }
     public function search(Request $request)
 {
