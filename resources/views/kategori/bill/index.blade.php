@@ -93,13 +93,10 @@
                       <td>
                         <button onclick="" class="text-blue-500 hover:underline">Edit</button>
                         <form action="{{ route('sumber-keluar.destroy', $bill->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded">Hapus</button>
-</form>
-
-
-
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded">Hapus</button>
+                        </form>
                       </td>
                     </tr>
                     @endforeach

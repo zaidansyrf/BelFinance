@@ -77,26 +77,26 @@
                   <div class="overflow-x-auto">
                   <table class="table w-full">
                     <thead>
-                      <tr>  
-                        <th>Nomer</th>
-                        <th>Sumber</th>
-                        <th>Tagihan</th>
-                        <th>Nominal</th>
-                        <th>Keterangan</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
+                      <tr class="text-left">  
+                        <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Tagihan</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Keterangan</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       @foreach ($expenses as $key => $expense)
-                      <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $expense->source->name }}</td>
-                        <td>{{ $expense->bill->name }}</td>
-                        <td>Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
-                        <td>{{ $expense->description }}</td>
-                        <td>{{ $expense->date->format('d-m-Y') }}</td>
-                        <td>
+                      <tr class="hover:bg-gray-100/50">
+                        <td class="text-black px-4 py-2">{{ $key + 1 }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->source->name }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->bill->name }}</td>
+                        <td class="text-black px-4 py-2">Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->description }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->date->format('d-m-Y') }}</td>
+                        <td class="text-black px-4 py-2">
                           <a href="" class="btn btn-sm btn-primary">Edit</a>
                             <button type="submit" class="btn btn-sm btn-error">Hapus</button>
                           

@@ -80,22 +80,22 @@
                     <table class="table w-full table-auto">
                         <thead>
                             <tr class="text-left">
-                                <th class="px-4 py-2 w-10">No</th>
-                                <th class="px-4 py-2 w-40">Nama</th>
-                                <th class="px-4 py-2 w-40">Sumber</th>
-                                <th class="px-4 py-2 w-32">Nominal</th>
-                                <th class="px-4 py-2 w-32">Tanggal</th>
-                                <th class="px-4 py-2">Deskripsi</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Nama</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Deskripsi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($income as $i)
                                 <tr class="hover:bg-gray-100/50">
-                                    <td class="text-black px-4 py-2 text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-black px-4 py-2">{{ $loop->iteration }}</td>
                                     <td class="text-black px-4 py-2">{{ $i->name }}</td>
                                     <td class="text-black px-4 py-2">{{ $i->source->name }}</td>
-                                    <td class="text-black px-4 py-2 text-right">Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
-                                    <td class="text-black px-4 py-2 text-center">{{ $i->date->format('d-m-Y') }}</td>
+                                    <td class="text-black px-4 py-2">Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->date->format('d-m-Y') }}</td>
                                     <td class="text-black px-4 py-2">{{ $i->description }}</td>
                                 </tr>
                             @endforeach
