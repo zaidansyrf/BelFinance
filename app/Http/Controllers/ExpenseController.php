@@ -78,6 +78,14 @@ class ExpenseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+    try {
+        $expense = Expense::findOrFail($id);
+        $expense->delete();
+
+        return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil dihapus!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menghapus data pengeluaran!');
+    }
+
     }
 }
