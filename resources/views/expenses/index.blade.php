@@ -98,8 +98,12 @@
                         <td>{{ $expense->date->format('d-m-Y') }}</td>
                         <td>
                           <a href="" class="btn btn-sm btn-primary">Edit</a>
-                            <button type="submit" class="btn btn-sm btn-error">Hapus</button>
-                          
+                            <form action="{{ url('/keuangan/pengeluaran/' . $expense->id) }}" method="POST">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-sm btn-error">Hapus</button>
+                            </form>
+
                         </td>
                       </tr>
                       @endforeach
