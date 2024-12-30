@@ -66,6 +66,7 @@ class SourceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Source::findOrFail($id)->delete();
+        return redirect()->route('sumber-masuk.index')->with('success', 'Sumber berhasil dihapus.');
     }
 }
