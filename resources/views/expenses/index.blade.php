@@ -65,9 +65,59 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pengeluaran</h1>
+            <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pengeluaran/create')}}'">
+              + Tambah              
+            </button>
           </div>
+          <div class="flex justify-center w-full px-8">
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+                  <div class="overflow-x-auto">
+                  <table class="table w-full">
+                    <thead>
+                      <tr class="text-left">  
+                        <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Tagihan</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Keterangan</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($expenses as $key => $expense)
+                      <tr class="hover:bg-gray-100/50">
+                        <td class="text-black px-4 py-2">{{ $key + 1 }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->source->name }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->bill->name }}</td>
+                        <td class="text-black px-4 py-2">Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->description }}</td>
+                        <td class="text-black px-4 py-2">{{ $expense->date->format('d-m-Y') }}</td>
+                        <td class="text-black px-4 py-2">
+                          <a href="" class="btn btn-sm btn-primary">Edit</a>
+                            <form action="{{ url('/keuangan/pengeluaran/' . $expense->id) }}" method="POST">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-sm btn-error">Hapus</button>
+                            </form>
+
+                        </td>
+                      </tr>
+                      @endforeach
+                      @if($expenses->isEmpty())
+                      <tr>
+                          <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                        </tr>
+                      @endif
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
 
       </div>
@@ -91,7 +141,7 @@
           </div>
           <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#116A71] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
             Dashboard
             </a>
           </li>
@@ -105,7 +155,7 @@
             </ul>
           </li>
           <li>
-            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/pengeluaran') }}" class=" bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
               Pengeluaran
             </a>
           </li>

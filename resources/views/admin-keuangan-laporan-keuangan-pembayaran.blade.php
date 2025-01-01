@@ -65,11 +65,14 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
-          </div>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Laporan Pembayaran</h1>
+            <div class="card text-primary-content bg-white mt-4 w-full">
+              <div class="card-body">
+                <h2 class="card-title text-black">Tabel Laporan Pembayaran</h2>
+              </div>
+            </div>
+          </div>  
         </div>
-
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -90,54 +93,51 @@
             <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
           </div>
           <!-- Sidebar Menu Links -->
-          <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#116A71] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
-            Dashboard
-            </a>
-          </li>
-          <li class="relative">
-            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-              Pemasukkan
-            </button>
-            <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/uang-masuk') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Uang Masuk</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
-              Pengeluaran
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
-              Menu
-            </a>
-          </li>
-          <li class="relative">
-            <!-- Dropdown Kategori -->
-            <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-              Kategori
-            </button>
-            <!-- Dropdown Menu -->
-            <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
-            </ul>
-          </li>
-          <li class="relative">
-            <!-- Dropdown Laporan -->
-            <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-              Laporan Keuangan
-            </button>
-            <!-- Dropdown Menu -->
-            <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
-            </ul>
-          </li>    
+                <li>
+                  <a href="{{ url('/admin/keuangan/dashboard') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Dashboard</a>
+                </li>
+                <li class="relative">
+                  <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                    Pemasukkan
+                  </button>
+                  <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+                    <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+                    <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/uang-masuk') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Uang Masuk</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+                    Pengeluaran
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url('/admin/keuangan/menu') }}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">Menu</a>
+                </li>
+                <li class="relative">
+                  <!-- Dropdown Kategori -->
+                  <button id="dropdownKategoriButton" onclick="dropdownKategori()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                    Kategori
+                  </button>
+
+                  <!-- Dropdown Menu -->
+                  <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 p-0">
+                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+                    <li class="w-full px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
+                  </ul>
+                </li>
+                <li class="relative">
+                  <!-- Dropdown Laporan -->
+                  <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="bg-[#2B7A78] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+                    Laporan Keuangan
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0 pt-0">
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
+                    <li class="w-full cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+                  </ul>
+                </li>
           </ul>
       </div>
     </div>
@@ -175,18 +175,7 @@
         dropdownKategoriMenu.classList.add("hidden");
       }
     });
-  function toggleAdditionalFields() {
-    const paymentSource = document.getElementById('paymentSource').value;
-
-    // Hide all additional fields first
-    document.getElementById('orderMenu').classList.add('hidden');
-
-    // Show relevant fields based on the selected income source
-    if (paymentSource === 'shopee') {
-      document.getElementById('orderMenu').classList.remove('hidden');
-    } 
-  }
-  function dropdownPemasukkan() {
+    function dropdownPemasukkan() {
   const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
   dropdownPemasukkanMenu.classList.toggle('hidden');
   }
