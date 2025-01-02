@@ -87,8 +87,9 @@
                         <th class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</th>
                         <td class="py-2 px-4 border-b text-black">{{ $source->name }}</td>
                         <td>
-                          <button onclick="" class="text-blue-500 hover:underline">Edit</button>
-                          <form action="{{ route('sumber-masuk.destroy', $source->id) }}" method="POST" onsubmit="return confirm('Apa anda yakin?')">
+                        <a href="{{ route('sumber-masuk.edit', $source->id) }}" class="text-blue-500 hover:underline">Edit</a>
+
+                          <form action="{{ route('sumber-masuk.destroy', $source->id) }}" method="POST" onsubmit="return confirm('Apa anda yakin menghapus sumber {{ $source->name }}?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-red-500 hover:underline ml-2">Hapus</button>

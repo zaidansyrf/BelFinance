@@ -69,12 +69,13 @@
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
                 <div class="overflow-x-auto">
-                <form action="{{ route('sumber-keluar.store') }}" method="POST">
+                <form action="{{ route('sumber-keluar.update', ['sumber_keluar' => $bills->id]) }}" method="POST">
                     @csrf 
+                    @method('PUT')
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="name" placeholder="cth. Belanja">
+                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $bills->name }}" placeholder="cth. Belanja">
                     </div>
                     <div class="flex justify-end mt-4">
                         <button type="button" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>

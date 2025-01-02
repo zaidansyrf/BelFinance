@@ -50,7 +50,10 @@ class SourceController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $source = Source::findOrFail($id);
+        
+
+        return view('keuangan-source-edit', compact('source'));
     }
 
     /**
@@ -58,7 +61,12 @@ class SourceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+        $source = Source::findOrFail($id);
+        $source->update($request->all());
+        return redirect()->route('sumber-masuk.index')->with('success', 'Sumber berhasil diupdate.');
     }
 
     /**
