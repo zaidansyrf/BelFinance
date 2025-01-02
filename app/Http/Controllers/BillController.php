@@ -33,4 +33,20 @@ class BillController extends Controller
     
         return redirect()->route('sumber-keluar.index')->with('success', 'Data berhasil dihapus.');
     }
+    public function edit(string $id)
+    {
+        $bills = bill::findOrFail($id);
+        
+
+        return view('keuangan-bill-edit', compact('bills'));
+    }
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+        $bills = bill::findOrFail($id);
+        $bills->update($request->all());
+        return redirect()->route('sumber-keluar.index')->with('success', 'Sumber berhasil diupdate.');
+    }
 }
