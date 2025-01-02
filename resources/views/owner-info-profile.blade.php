@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <div class="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-      
+
       <!-- Drawer Content -->
       <div class="drawer-content flex flex-col h-screen">
         <!-- Header Wrapper -->
@@ -17,17 +17,12 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </label>
-              <!-- Greeting Text for Mobile View -->
               <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, </span>
             </div>
+
+            <!-- Desktop Navigation Links -->
             <div class="hidden lg:flex items-center w-full justify-between">
               <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, </span>
-              <!-- Navigation Links -->
-              <div class="flex space-x-6">
-                <a href="{{url('/owner/beranda')}}" class="nav-link text-white bg-[#2B7A78] rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Beranda</a>
-                <a href="#" class="nav-link hover:bg-[#2B7A78] hover:text-[#DEF2F1] text-gray-600 rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Button</a>
-                <a href="{{url('/owner/laporan-keuangan')}}" class="nav-link hover:bg-[#2B7A78] hover:text-[#DEF2F1] text-gray-600 rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Laporan Keuangan</a>
-              </div>
               <!-- Profile Dropdown Menu -->
               <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button">
@@ -43,26 +38,84 @@
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
                   <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
-                  <li><a class=" text-red-700">Log Out</a></li>
+                  <li><a class="text-red-700">Log Out</a></li>
                 </ul>
+              </div>
+            </div>
+
+            <!-- Mobile Profile Icon -->
+            <div class="flex items-center lg:hidden relative">
+              <div class="avatar">
+                <div class="w-10 h-10 rounded-full">
+                  <button class="inline-flex items-center justify-center p-2 hover:text-[#000000]" id="profile-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <ul id="mobile-profile-dropdown" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg hidden absolute right-0">
+                    <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                    <li><a class="text-red-700">Log Out</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 bg-[#D1DDD5] overflow-hidden">
-          
-         
-        </div>
+        <div class="flex-1 bg-[#D1DDD5] overflow-hidden flex items-center justify-center">
+          <div class="card text-primary-content bg-white mt-4 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-lg shadow-lg px-3 py-4">
+            <div class="flex items-center justify-center mb-6">
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <!-- Profile Picture with margin-bottom -->
+                  <div class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-lg font-semibold">Profile Pict</span>
+                  </div>
+                  
+                  <!-- Section with name, email, and status -->
+                  <div class="mb-6">
+                    <p class="text-black text-lg">Nama: </p>
+                    <p class="text-black text-lg">Email:</p>
+                    <p class="text-black text-lg">Status: Owner</p>
+                  </div>
 
-        <!-- Footer -->
-        <footer class="footer footer-center bg-[#D1DDD5] p-4">
-          <div class="flex items-center justify-center">
-            <p class="opacity-40 text-lg mr-1" style="font-size: 15px;">Copyright <span class="opacity-30 text-current" style="font-size: 18px;">&copy;</span> 
-            BelindoKitchen 2024</p>
+                  <a href="{{ url('/profile/edit') }}" class="bg-[#2B7A78] text-white py-3 px-6 rounded-md text-center block hover:bg-[#22665c] text-lg font-semibold">Edit</a>
+                </div>
+              </div>
+            </div>
           </div>
-        </footer>
+        </div>
+      </div>
+      <div class="drawer-side">
+        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu text-black min-h-full w-80 p-4 bg-white">
+          <div class="lg:hidden flex justify-end mb-4">
+            <label for="my-drawer-2" class="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </label>
+          </div>
+          <!-- Sidebar Logo -->
+          <div class="text-[#2B7A78] text-center mb-4 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-10 mb-6 h-8 w-8 mr-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
+          </div>
+          <!-- Sidebar Menu Links -->
+          <li>
+          <a href="{{url('/owner/beranda')}}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2" onclick="setActiveLink(event)">Beranda</a>
+          </li>
+          <li>
+          <a href="#" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2" onclick="setActiveLink(event)">Button</a>
+          </li>
+          <li>
+          <a href="{{url('/owner/laporan-keuangan')}}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left" onclick="setActiveLink(event)">Laporan Keuangan</a>
+          </li>   
+        </ul>
       </div>
     </div>
   </div>
@@ -72,12 +125,29 @@
   function setActiveLink(event) {
     // hapus link aktif modal
     document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('bg-[#2B7A78]', 'text-white', 'rounded-lg');
+      link.classList.remove('bg-[#2B7A78]', 'text-white', 'rounded-md');
       link.classList.add('text-gray-600', 'rounded-md');
     });
 
-     // efek aktif pada modal
+    // efek aktif pada modal
     event.target.classList.add('bg-[#2B7A78]', 'text-white', 'rounded-md');
     event.target.classList.remove('text-gray-600');
   }
+
+  // Show/Hide Profile Dropdown on Mobile
+  document.getElementById('profile-icon').addEventListener('click', function(event) {
+    event.stopPropagation(); // Prevent click event from bubbling up
+    const dropdown = document.getElementById('mobile-profile-dropdown');
+    dropdown.classList.toggle('hidden');
+  });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('mobile-profile-dropdown');
+    const profileIcon = document.getElementById('profile-icon');
+
+    if (!profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
+      dropdown.classList.add('hidden');
+    }
+  });
 </script>
