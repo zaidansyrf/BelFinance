@@ -65,11 +65,90 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Uang Masuk</h1>
+            <div class="mb-4">
+            <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="openModal()">
+              + Tambah              
+            </button>
+            </div>
           </div>
+          <div class="flex justify-center w-full px-8">
+              <div class="card text-primary-content bg-white mt-4 w-full">
+                <div class="card-body">
+                  <h2 class="card-title text-black">Tabel Uang Masuk</h2>
+                  <div class="overflow-x-auto">
+                    <table class="table w-full table-auto">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Nama</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Deskripsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($income as $i)
+                                <tr class="hover:bg-gray-100/50">
+                                    <td class="text-black px-4 py-2">{{ $loop->iteration }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->name }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->source->name }}</td>
+                                    <td class="text-black px-4 py-2">Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->date->format('d-m-Y') }}</td>
+                                    <td class="text-black px-4 py-2">{{ $i->description }}</td>
+                                </tr>
+                            @endforeach
+                            @if ($income->isEmpty())
+                                <tr>
+                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
-
+        <div id="menuOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+            <!-- Form Menu -->
+            <div id="uangMasukModal" class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
+              <h3 class="text-xl font-semibold mb-4">Uang Masuk</h3>
+              <form method="POST" action="{{ route('uang-masuk.store') }}">
+                @csrf
+                <div class="mb-4">
+                  <label for="tagihanName" class="block text-sm font-medium text-gray-700">Nama</label>
+                  <input type="text" name="name" id="tagihanName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama" required>
+                </div>
+                <div class="mb-4">
+                  <label for="source_id" class="block text-sm font-medium text-gray-700">Sumber</label>
+                  <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                    <option class="text-black" value="" selected disabled>Pilih Sumber</option>
+                    @foreach ($sources as $source)
+                      <option class="text-black" value="{{ $source->id }}">{{ $source->name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="mb-4">
+                  <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
+                  <input type="date" name="date" id="tanggal" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div class="mb-4">
+                  <label for="nominal" class="block text-sm font-medium text-gray-700">Nominal</label>
+                  <input type="number" name="amount" id="nominal" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp. " required>
+                </div>
+                <div class="mb-4">
+                  <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                  <textarea name="description" id="deskripsi" rows="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Masukkan Deskripsi"></textarea>
+                </div>
+                <div class="flex justify-end mt-4">
+                  <button type="button" onclick="closeModal()" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                  <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
@@ -91,21 +170,21 @@
           </div>
           <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class="bg-[#116A71] text-white  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
             Dashboard
             </a>
           </li>
           <li class="relative">
-            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
+            <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
               Pemasukkan
             </button>
-            <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+            <ul id="dropdownPemasukkanMenu" class=" hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
               <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
               <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/uang-masuk') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Uang Masuk</a></li>
             </ul>
           </li>
           <li>
-            <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/pengeluaran') }}" class="hover:bg-[#2B7A78] text-black hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
               Pengeluaran
             </a>
           </li>
@@ -143,6 +222,31 @@
     </div>
   </div>
 <script>
+  // Fungsi untuk menampilkan modal
+function openModal() {
+    const menuOverlay = document.getElementById('menuOverlay');
+    const uangMasukModal = document.getElementById('uangMasukModal');
+
+    menuOverlay.classList.remove('hidden');
+    uangMasukModal.classList.remove('hidden');
+}
+
+// Fungsi untuk menutup modal
+function closeModal() {
+    const menuOverlay = document.getElementById('menuOverlay');
+    const uangMasukModal = document.getElementById('uangMasukModal');
+
+    menuOverlay.classList.add('hidden');
+    uangMasukModal.classList.add('hidden');
+}
+
+// Menutup modal ketika area overlay di-klik
+document.getElementById('menuOverlay').addEventListener('click', function (e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
   function dropdownLaporan() {
   const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
   dropdownLaporanMenu.classList.toggle('hidden');
