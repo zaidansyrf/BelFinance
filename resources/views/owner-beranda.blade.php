@@ -23,11 +23,6 @@
             <!-- Desktop Navigation Links -->
             <div class="hidden lg:flex items-center w-full justify-between">
               <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, </span>
-              <div class="flex space-x-6">
-                <a href="{{url('/owner/beranda')}}" class="nav-link text-white bg-[#2B7A78] rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Beranda</a>
-                <a href="#" class="nav-link hover:bg-[#2B7A78] hover:text-[#DEF2F1] text-gray-600 rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Button</a>
-                <a href="{{url('/owner/laporan-keuangan')}}" class="nav-link hover:bg-[#2B7A78] hover:text-[#DEF2F1] text-gray-600 rounded-md px-4 py-2 font-semibold" onclick="setActiveLink(event)">Laporan Keuangan</a>
-              </div>
               <!-- Profile Dropdown Menu -->
               <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button">
@@ -100,14 +95,35 @@
             </div>
           </div>
         </div>
-
-        <!-- footer -->
-        <footer class="footer footer-center bg-[#D1DDD5] p-4">
-          <div class="flex items-center justify-center">
-            <p class="opacity-40 text-lg mr-1" style="font-size: 15px;">Copyright <span class="opacity-30 text-current" style="font-size: 18px;">&copy;</span> 
-            BelindoKitchen 2024</p>
+      </div>
+      <div class="drawer-side">
+        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu text-black min-h-full w-80 p-4 bg-white">
+          <div class="lg:hidden flex justify-end mb-4">
+            <label for="my-drawer-2" class="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </label>
           </div>
-        </footer>
+          <!-- Sidebar Logo -->
+          <div class="text-[#2B7A78] text-center mb-4 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-10 mb-6 h-8 w-8 mr-2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
+          </div>
+          <!-- Sidebar Menu Links -->
+          <li>
+          <a href="{{url('/owner/beranda')}}" class="bg-[#116A71] text-white hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2" onclick="setActiveLink(event)">Beranda</a>
+          </li>
+          <li>
+          <a href="#" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2" onclick="setActiveLink(event)">Button</a>
+          </li>
+          <li>
+          <a href="{{url('/owner/laporan-keuangan')}}" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left" onclick="setActiveLink(event)">Laporan Keuangan</a>
+          </li>   
+        </ul>
       </div>
     </div>
   </div>
@@ -143,4 +159,3 @@
     }
   });
 </script>
-
