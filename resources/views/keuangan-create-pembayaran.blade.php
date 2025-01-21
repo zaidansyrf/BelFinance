@@ -82,7 +82,11 @@
                       <!-- Nama Pesanan -->
                       <div>
                         <label for="name" class="block text-sm font-medium text-black form-label">Nama Pesanan</label>
-                        <input type="text" name="name" id="name" placeholder="cth. online/offline" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control" required>
+                        <select name="name" id="name" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+                          <option class="text-black" value="" selected disabled>Pilih Jenis Pesanan</option>
+                          <option value="Pesanan Offline">Pesanan Offline</option>
+                          <option value="Pesanan Online">Pesanan Online</option>
+                        </select>
                       </div>
 
                       <!-- Pilih Sumber -->

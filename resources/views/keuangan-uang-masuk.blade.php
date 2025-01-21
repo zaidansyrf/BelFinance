@@ -86,6 +86,7 @@
                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
                                 <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
                                 <th class="py-2 px-4 border-b text-left text-gray-800">Deskripsi</th>
+                                <th class="py-2 px-4 border-b text-left text-gray-800">Detail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +98,10 @@
                                     <td class="text-black px-4 py-2">Rp {{ number_format($i->amount, 0, ',', '.') }}</td>
                                     <td class="text-black px-4 py-2">{{ $i->date->format('d-m-Y') }}</td>
                                     <td class="text-black px-4 py-2">{{ $i->description }}</td>
+                                    <td class="text-black px-4 py-2">
+                                        <a href="{{ url('keuangan/uang-masuk/' . $i->id) }}" class="btn btn-sm btn-primary">Detail</a>
+                                    </td>
+                                    
                                 </tr>
                             @endforeach
                             @if ($income->isEmpty())
