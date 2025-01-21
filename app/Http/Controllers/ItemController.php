@@ -34,23 +34,25 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
+            'code' => 'required|string|max:255|unique:items,code',
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ]);
+        try {
+            // Create a new item
+            Item::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'code' => $request->code
+            ]);
 
-        // Coba jika inputan tidak berupa angka
-        if (!is_numeric($request->quantity)) {
-            return redirect()->back()->with('error', 'Harus berupa angka');
+            // Redirect back with a success message
+            return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
         }
-
-        // Create a new item item
-        Item::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-        ]);
-
-        // Redirect back with a success message
-        // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
     }
 
     /**

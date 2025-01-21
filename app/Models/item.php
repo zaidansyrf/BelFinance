@@ -12,7 +12,7 @@ class item extends Model
         protected $table = 'items';
 
         // Define the fillable columns
-        protected $fillable = ['name', 'price', 'quantity'];
+        protected $fillable = ['name', 'price', 'quantity', 'code'];
         
         // Define the relationship with income details
         public function incomeDetails()

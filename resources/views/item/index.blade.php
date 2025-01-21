@@ -77,6 +77,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
@@ -87,6 +88,7 @@
                                             @foreach ($items as $menu)
                                             <tr class="hover:bg-gray-100/50">
                                                 <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
                                                 <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
                                                 <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
                                                 <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
@@ -122,6 +124,10 @@
                                     <div class="mb-4">
                                         <label for="menuName" class="block text-sm font-medium text-gray-700">Nama Menu</label>
                                         <input type="text" name="name" id="menuName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="menuCode" class="block text-sm font-medium text-gray-700">Kode Menu</label>
+                                        <input type="text" name="code" id="menuCode" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng" required>
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuJumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
