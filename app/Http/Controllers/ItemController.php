@@ -4,26 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $perPage = $request->input('perPage', 10); // Default 10 item per halaman
-        $search = $request->input('search'); // Ambil input pencarian
-    
-        // Query pencarian + pagination
-        $items = Item::where('name', 'like', "%{$search}%")
-                     ->orWhere('price', 'like', "%{$search}%")
-                     ->paginate($perPage)
-                     ->appends(['perPage' => $perPage, 'search' => $search]); // Menyimpan filter di pagination
-    
-        return view('item.index', compact('items', 'perPage', 'search'));
-    }
+      // Retrieve all item items from the database
+      return view('item.index', [
+        'items' => DB::table('items')->paginate(10)
+      ]);
 
+    }
     /**
      * Show the form for creating a new resource.
      */
