@@ -73,19 +73,19 @@
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
                                     <div class="overflow-x-auto">
-                                    <form method="GET" action="{{ route('menu.index') }}" class="text-black">
-    <label for="search">Cari:</label>
-    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari item..." />
-    
-    <label for="perPage">Tampilkan:</label>
-    <select name="perPage" id="perPage" onchange="this.form.submit()">
-        <option value="5" {{ request('perPage') == 5 ? 'selected' : '' }}>5</option>
-        <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
-        <option value="15" {{ request('perPage') == 15 ? 'selected' : '' }}>15</option>
-    </select>
+                                        <form method="GET" action="{{ route('menu.index') }}" class="text-black">
+                                            <label for="search">Cari:</label>
+                                            <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari item..." />
 
-    <button type="submit">Cari</button>
-</form>
+                                            <label for="perPage">Tampilkan:</label>
+                                            <select name="perPage" id="perPage" onchange="this.form.submit()">
+                                                <option value="5" {{ request('perPage') == 5 ? 'selected' : '' }}>5</option>
+                                                <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
+                                                <option value="15" {{ request('perPage') == 15 ? 'selected' : '' }}>15</option>
+                                            </select>
+
+                                            <button type="submit">Cari</button>
+                                        </form>
                                         <table class="table w-full table-auto">
                                             <thead>
                                                 <tr>
