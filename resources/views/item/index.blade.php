@@ -1,4 +1,4 @@
-    <x-app-layout>
+<x-app-layout>
         <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
             <!-- sidebar -->
             <div class="drawer lg:drawer-open">
@@ -13,9 +13,9 @@
                             <!-- menu hamburger mobile view -->
                             <div class="flex items-center lg:hidden">
                                 <label for="my-drawer-2" class="cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+                                    <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
+                                </svg>
                                 </label>
                                 <!-- "Halo Pengguna" text mobile view -->
                                 <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, </span>
@@ -66,67 +66,64 @@
                     <div class="flex-1 bg-[#D1DDD5] overflow-auto">
                         <div class="sticky justify-between items-center mt-12 px-8">
                             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Menu</h1>
-                            <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
-                                + Tambah
-                            </button>
+                            <div class="flex items-center space-x-4">
+                                <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D] flex items-center">
+                                    <span class="hidden sm:inline">+</span> Tambah
+                                </button>
+                                <form action="#" class="flex items-center w-full max-w-md">
+                                    <div class="relative w-full">
+                                        <label for="search" class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cari Menu</label>
+                                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                                            </svg>
+                                        </div>
+                                        <input class="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-l-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Cari Menu" type="search" id="search" name="search">
+                                    </div>
+                                    <button type="submit" class="py-3 px-5 text-sm font-medium text-white bg-primary-700 border border-primary-600 rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Cari</button>
+                                </form>
+                            </div>
                             <div class="card text-primary-content bg-white mt-4 w-full">
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
                                     <div class="overflow-x-auto">
-                                        <form method="GET" action="{{ route('menu.index') }}" class="text-black">
-                                            <label for="search">Cari:</label>
-                                            <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari item..." />
-
-                                            <label for="perPage">Tampilkan:</label>
-                                            <select name="perPage" id="perPage" onchange="this.form.submit()">
-                                                <option value="5" {{ request('perPage') == 5 ? 'selected' : '' }}>5</option>
-                                                <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
-                                                <option value="15" {{ request('perPage') == 15 ? 'selected' : '' }}>15</option>
-                                            </select>
-
-                                            <button type="submit">Cari</button>
-                                        </form>
-                                        <table class="table w-full table-auto">
-                                            <thead>
-                                                <tr>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)</th>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
-                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($items as $menu)
-                                                <tr class="hover:bg-gray-100/50">
-                                                    <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">
-                                                        <a href="#" class="text-blue-500 hover:underline">Edit</a>
-                                                        <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="inline-block">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?')">Hapus</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                                @if($items->isEmpty())
-                                                <tr>
-                                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
-                                                </tr>
-                                                @endif
-                                            </tbody>
-                                        </table>
-
-                                        <!-- Tambahkan Navigasi Pagination -->
-                                        <div>
-                                            {{ $items->appends(['perPage' => $perPage])->links() }}
-                                        </div>
+                                    <table class="table w-full table-auto">
+                                        <thead>
+                                            <tr>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($items as $menu)
+                                            <tr class="hover:bg-gray-100/50">
+                                                <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
+                                                <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
+                                                <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
+                                                <td class="py-2 px-4 border-b text-black">
+                                                    <a href="#" class="text-blue-500 hover:underline">Edit</a>
+                                                    <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?')">Hapus</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                            @if($items->isEmpty())
+                                            <tr>
+                                                <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                                            </tr>
+                                            @endif
+                                        </tbody>
+                                        {{ $items->links() }}
+                                    </table>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +142,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuCode" class="block text-sm font-medium text-gray-700">Kode Menu</label>
-                                        <input type="text" name="code" id="menuCode" class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. Ayam Goreng" required>
+                                        <input type="text" name="code" id="menuCode" class="w-full p-2 border border-gray-300 rounded-md" placeholder="" required>
                                     </div>
                                     <div class="mb-4">
                                         <label for="menuJumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
@@ -193,7 +190,7 @@
                         </li>
                         <li class="relative">
                             <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                                Pemasukkan
+                            Pemasukkan
                             </button>
                             <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
                                 <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
@@ -202,7 +199,7 @@
                         </li>
                         <li>
                             <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
-                                Pengeluaran
+                            Pengeluaran
                             </a>
                         </li>
                         <li>
@@ -329,21 +326,20 @@
                     dropdownKategoriMenu.classList.add("hidden");
                 }
             });
-
             function dropdownPemasukkan() {
-                const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
-                dropdownPemasukkanMenu.classList.toggle('hidden');
+            const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
+            dropdownPemasukkanMenu.classList.toggle('hidden');
             }
-            document.addEventListener("click", function(event) {
+            document.addEventListener("click", function (event) {
                 const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
                 const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
 
                 // Jika elemen yang diklik bukan bagian dari dropdown
                 if (
-                    !dropdownPemasukkanMenu.contains(event.target) &&
-                    !dropdownPemasukkanButton.contains(event.target)
+                !dropdownPemasukkanMenu.contains(event.target) &&
+                !dropdownPemasukkanButton.contains(event.target)
                 ) {
-                    dropdownPemasukkanMenu.classList.add("hidden");
+                dropdownPemasukkanMenu.classList.add("hidden");
                 }
             });
         </script>
