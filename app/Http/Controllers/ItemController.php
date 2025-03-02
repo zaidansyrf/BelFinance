@@ -10,11 +10,18 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-      // Retrieve all item items from the database
-      $items = Item::all();
-      return view('item.index', compact('items'));
+        $perPage = $request->input('perPage', 10); // Default 10 item per halaman
+        $search = $request->input('search'); // Ambil input pencarian
+    
+        // Query pencarian + pagination
+        $items = Item::where('name', 'like', "%{$search}%")
+                     ->orWhere('price', 'like', "%{$search}%")
+                     ->paginate($perPage)
+                     ->appends(['perPage' => $perPage, 'search' => $search]); // Menyimpan filter di pagination
+    
+        return view('item.index', compact('items', 'perPage', 'search'));
     }
 
     /**

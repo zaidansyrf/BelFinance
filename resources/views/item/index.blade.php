@@ -73,42 +73,60 @@
                                 <div class="card-body">
                                     <h2 class="card-title text-black">Tabel Menu</h2>
                                     <div class="overflow-x-auto">
-                                    <table class="table w-full table-auto">
-                                        <thead>
-                                            <tr>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($items as $menu)
-                                            <tr class="hover:bg-gray-100/50">
-                                                <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
-                                                <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
-                                                <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
-                                                <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
-                                                <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
-                                                <td class="py-2 px-4 border-b text-black">
-                                                    <a href="#" class="text-blue-500 hover:underline">Edit</a>
-                                                    <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="inline-block">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?')">Hapus</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            @if($items->isEmpty())
-                                            <tr>
-                                                <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
-                                            </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
+                                    <form method="GET" action="{{ route('menu.index') }}" class="text-black">
+    <label for="search">Cari:</label>
+    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari item..." />
+    
+    <label for="perPage">Tampilkan:</label>
+    <select name="perPage" id="perPage" onchange="this.form.submit()">
+        <option value="5" {{ request('perPage') == 5 ? 'selected' : '' }}>5</option>
+        <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
+        <option value="15" {{ request('perPage') == 15 ? 'selected' : '' }}>15</option>
+    </select>
+
+    <button type="submit">Cari</button>
+</form>
+                                        <table class="table w-full table-auto">
+                                            <thead>
+                                                <tr>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)</th>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
+                                                    <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($items as $menu)
+                                                <tr class="hover:bg-gray-100/50">
+                                                    <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">
+                                                        <a href="#" class="text-blue-500 hover:underline">Edit</a>
+                                                        <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?')">Hapus</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                                @if($items->isEmpty())
+                                                <tr>
+                                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                                                </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+
+                                        <!-- Tambahkan Navigasi Pagination -->
+                                        <div>
+                                            {{ $items->appends(['perPage' => $perPage])->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +193,7 @@
                         </li>
                         <li class="relative">
                             <button id="dropdownPemasukkanButton" onclick="dropdownPemasukkan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                            Pemasukkan
+                                Pemasukkan
                             </button>
                             <ul id="dropdownPemasukkanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
                                 <li class="px-0 py-0 cursor-pointer"><a href="{{ url('/keuangan/pembayaran') }}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
@@ -184,7 +202,7 @@
                         </li>
                         <li>
                             <a href="{{ url('/keuangan/pengeluaran') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2">
-                            Pengeluaran
+                                Pengeluaran
                             </a>
                         </li>
                         <li>
@@ -311,20 +329,21 @@
                     dropdownKategoriMenu.classList.add("hidden");
                 }
             });
+
             function dropdownPemasukkan() {
-            const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
-            dropdownPemasukkanMenu.classList.toggle('hidden');
+                const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
+                dropdownPemasukkanMenu.classList.toggle('hidden');
             }
-            document.addEventListener("click", function (event) {
+            document.addEventListener("click", function(event) {
                 const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
                 const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
 
                 // Jika elemen yang diklik bukan bagian dari dropdown
                 if (
-                !dropdownPemasukkanMenu.contains(event.target) &&
-                !dropdownPemasukkanButton.contains(event.target)
+                    !dropdownPemasukkanMenu.contains(event.target) &&
+                    !dropdownPemasukkanButton.contains(event.target)
                 ) {
-                dropdownPemasukkanMenu.classList.add("hidden");
+                    dropdownPemasukkanMenu.classList.add("hidden");
                 }
             });
         </script>
