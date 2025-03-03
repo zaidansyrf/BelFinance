@@ -1,4 +1,4 @@
-    <x-app-layout>
+<x-app-layout>
         <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
             <!-- sidebar -->
             <div class="drawer lg:drawer-open">
