@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -13,10 +14,11 @@ class ItemController extends Controller
     public function index()
     {
       // Retrieve all item items from the database
-      $items = Item::all();
-      return view('item.index', compact('items'));
-    }
+      return view('item.index', [
+        'items' => DB::table('items')->paginate(10)
+      ]);
 
+    }
     /**
      * Show the form for creating a new resource.
      */
