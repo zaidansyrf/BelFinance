@@ -36,5 +36,9 @@ class UangMasukController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
-
+    
+    public function show(Income $income)
+    {
+        return view('keuangan-detail-uang-masuk', compact('income'));
+    }
 }
