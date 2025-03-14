@@ -1,3 +1,4 @@
+@section('title', 'Sumber keluar')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -13,8 +14,8 @@
             <!-- menu hamburger mobile view -->
             <div class="flex items-center lg:hidden">
               <label for="my-drawer-2" class="cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+                  <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
                 </svg>
               </label>
               <!-- "Halo Pengguna" text mobile view -->
@@ -65,9 +66,9 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber Keluar</h1>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber keluar</h1>
             <button onclick="openSourceForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
-              + Tambah
+              + <span class="hidden sm:inline">Tambah</span>
             </button>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
@@ -95,7 +96,7 @@
                         <form action="{{ route('sumber-keluar.destroy', $bill->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data {{ $bill->name }}?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded">Hapus</button>
+                            <button type="submit" class="text-red-500 hover:underline ml-2">Hapus</button>
                         </form>
                       </td>
                     </tr>

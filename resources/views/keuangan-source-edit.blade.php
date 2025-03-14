@@ -1,3 +1,4 @@
+@section('title', 'Sumber masuk | Edit')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -13,8 +14,8 @@
             <!-- menu hamburger mobile view -->
             <div class="flex items-center lg:hidden">
               <label for="my-drawer-2" class="cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+                  <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
                 </svg>
               </label>
               <!-- "Halo Pengguna" text mobile view -->
@@ -75,7 +76,7 @@
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $source->name }}" placeholder="cth. Belanja" required>
+                        <input type="text" id="sourceName" class="text-black w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $source->name }}" required>
                     </div>
                     <div class="flex justify-end mt-4">
                         <a href="{{ route('sumber-masuk.index') }}" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</a>

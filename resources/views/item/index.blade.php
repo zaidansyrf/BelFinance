@@ -1,3 +1,4 @@
+@section('title', 'Menu')
 <x-app-layout>
         <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
             <!-- sidebar -->
@@ -67,8 +68,8 @@
                         <div class="sticky justify-between items-center mt-12 px-8">
                             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Menu</h1>
                             <div class="flex items-center space-x-4">
-                                <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D] flex items-center">
-                                    <span class="hidden sm:inline">+</span> Tambah
+                                <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
+                                    + <span class="hidden sm:inline">Tambah</span>
                                 </button>
                                 <form action="#" class="flex items-center w-full max-w-md">
                                     <div class="relative w-full">
