@@ -15,9 +15,27 @@ class ItemController extends Controller
     {
       // Retrieve all item items from the database
       return view('item.index', [
-        'items' => DB::table('items')->paginate(10)
+        'items' => DB::table('items')
+          ->orderBy('code', 'asc')
+          ->paginate(10)
       ]);
 
+    }
+    
+    /**
+     * Search for a resource in storage.
+     */
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $items = Item::query()
+            ->where('code', 'LIKE', "%{$search}%")
+            ->orWhere('name', 'LIKE', "%{$search}%")
+            ->orderBy('code', 'asc')
+            ->paginate(10);
+
+        return view('item.index', compact('items', 'search'));
     }
     /**
      * Show the form for creating a new resource.
@@ -92,13 +110,7 @@ class ItemController extends Controller
         // Kembali ke halaman admin/keuangan/menu
         return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
     }
-    public function search(Request $request)
-{
-    $query = $request->input('search');
-    $items = Item::where('name', 'like', '%' . $query . '%')->get();
-
-    return view('menu.index', compact('items'));
-}
+ 
 
 }
 

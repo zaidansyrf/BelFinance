@@ -71,7 +71,7 @@
                                 <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
                                     + <span class="hidden sm:inline">Tambah</span>
                                 </button>
-                                <form action="#" class="flex items-center w-full max-w-md">
+                                <form action="{{ route('menu.search') }}" method="GET" class="flex items-center w-full max-w-md">
                                     <div class="relative w-full">
                                         <label for="search" class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cari Menu</label>
                                         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">

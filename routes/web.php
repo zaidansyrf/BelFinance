@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
 //     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
 // });
 Route::resource('/admin/keuangan/menu', ItemController::class);
+Route::get('/admin/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
+
 
 
 
