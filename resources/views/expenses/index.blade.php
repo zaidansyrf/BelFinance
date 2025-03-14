@@ -1,3 +1,4 @@
+@section('title', 'Pengeluaran')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -67,7 +68,7 @@
           <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pengeluaran</h1>
             <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pengeluaran/create')}}'">
-              + Tambah              
+              + <span class="hidden sm:inline">Tambah</span>              
             </button>
           </div>
           <div class="flex justify-center w-full px-8">
@@ -84,7 +85,7 @@
                         <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
                         <th class="py-2 px-4 border-b text-left text-gray-800">Keterangan</th>
                         <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
-                        <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
+                        <!-- <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -96,15 +97,14 @@
                         <td class="text-black px-4 py-2">Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->description }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->date->format('d-m-Y') }}</td>
-                        <td class="text-black px-4 py-2">
-                          <a href="" class="btn btn-sm btn-primary">Edit</a>
+                        <!-- <td class="text-black px-4 py-2">
+                          <a href="" class="text-blue-500 hover:underline">Edit</a>
                             <form action="{{ url('/keuangan/pengeluaran/' . $expense->id) }}" method="POST">
                               @csrf
                               @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-error">Hapus</button>
+                              <button type="submit" class="text-red-500 hover:underline ml-2">Hapus</button>
                             </form>
-
-                        </td>
+                        </td> -->
                       </tr>
                       @endforeach
                       @if($expenses->isEmpty())

@@ -1,3 +1,4 @@
+@section('title', 'Pemasukkan | Pembayaran')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -67,13 +68,25 @@
           <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pembayaran</h1>
             <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pembayaran/create')}}'">
-              + Tambah
+              + <span class="hidden sm:inline">Tambah</span>
             </button>
           </div>
             <div class="flex justify-center w-full px-8">
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                   <h2 class="card-title text-black">Tabel Pembayaran</h2>
+                  <div class="overflow-x-auto">
+                    <table class="table w-full table-auto">
+                      <thead>
+                        <tr>
+                          <th class="py-2 px4 border-b text-left text-gray-800">No</th>
+                          <th class="py-2 px4 border-b text-left text-gray-800">Nama</th>
+                          <th class="py-2 px4 border-b text-left text-gray-800">Sumber</th>
+                          <th class="py-2 px4 border-b text-left text-gray-800">Total</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

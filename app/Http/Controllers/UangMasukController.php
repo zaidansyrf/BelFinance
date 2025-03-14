@@ -10,10 +10,11 @@ class UangMasukController extends Controller
 {
     public function index()
     {
-        $income = Income::with(['source'])->get();
+        $income = Income::with(['source'])->paginate(10); // Menampilkan 10 item per halaman
         $sources = Source::all();
         return view('keuangan-uang-masuk', compact('income', 'sources'));
     }
+    
     
     public function store(Request $request)
     {

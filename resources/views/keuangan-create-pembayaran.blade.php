@@ -1,3 +1,4 @@
+@section('title', 'Pembayaran | Tambah')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -61,7 +62,6 @@
             </div>
           </div>
         </div>
-        <!-- main content -->
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
@@ -131,8 +131,9 @@
 
                     <!-- Buttons -->
                     <div class="flex justify-end gap-4 mt-4">
-                      <button type="button" id="add-item" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah Item</button>
-                      <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan Pesanan</button>
+                    <button type="reset" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Reset</button>
+                      <button type="button" id="add-item" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Tambah <span class="hidden sm:inline">Item</span></button>
+                      <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]">Simpan <span class="hidden sm:inline">Pesanan</span></button>
                     </div>
                   </form>
                 </div>

@@ -1,3 +1,4 @@
+@section('title', 'Sumber masuk | Edit')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -75,7 +76,7 @@
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $source->name }}" placeholder="cth. Belanja" required>
+                        <input type="text" id="sourceName" class="text-black w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $source->name }}" required>
                     </div>
                     <div class="flex justify-end mt-4">
                         <a href="{{ route('sumber-masuk.index') }}" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</a>

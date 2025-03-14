@@ -1,3 +1,4 @@
+@section('title', 'Pengeluaran')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -82,13 +83,6 @@
                       <label for="source" class="block text-sm font-medium text-black form-label">Sumber</label>
                       <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
                         <option class="text-black" value="" selected disabled>Pilih Sumber</option>
-                        <!-- @if ($allSources->count())
-                        @foreach ($allSources as $source)
-                        <option value="{{ $source->id }}">{{ $source->name }}</option>
-                        @endforeach
-                        @else
-                        <option disabled>Data sumber tidak tersedia</option>
-                        @endif -->
                       </select>
                     </div>
                     <!-- Nama Tagihan -->

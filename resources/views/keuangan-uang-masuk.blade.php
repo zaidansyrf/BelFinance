@@ -1,3 +1,4 @@
+@section('title', 'Pemasukkan | Uang masuk')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -65,17 +66,17 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Uang Masuk</h1>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Uang masuk</h1>
             <div class="mb-4">
             <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="openModal()">
-              + Tambah              
+              + <span class="hidden sm:inline">Tambah</span>              
             </button>
             </div>
           </div>
           <div class="flex justify-center w-full px-8">
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                  <h2 class="card-title text-black">Tabel Uang Masuk</h2>
+                  <h2 class="card-title text-black">Tabel Uang masuk</h2>
                   <div class="overflow-x-auto">
                     <table class="table w-full table-auto">
                         <thead>
@@ -110,6 +111,7 @@
                                 </tr>
                             @endif
                         </tbody>
+                        {{ $income->links() }}
                     </table>
                   </div>
                 </div>

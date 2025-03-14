@@ -1,3 +1,4 @@
+@section('title', 'Sumber keluar | Edit')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -75,10 +76,10 @@
                     <!-- Nama Sumber -->
                     <div class="mb-4">
                         <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama Sumber</label>
-                        <input type="text" id="sourceName" class="w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $bills->name }}" placeholder="cth. Belanja">
+                        <input type="text" id="sourceName" class="text-black w-full p-2 border border-gray-300 rounded-md" name="name" value="{{ $bills->name }}" >
                     </div>
                     <div class="flex justify-end mt-4">
-                        <button type="button" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                    <a href="{{ route('sumber-keluar.index') }}" class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</a>
                         <button type="submit" class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Update</button>
                     </div>
                 </form>
