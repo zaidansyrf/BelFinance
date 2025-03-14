@@ -1,3 +1,4 @@
+@section('title', 'Dashboard')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -13,8 +14,8 @@
             <!-- menu hamburger mobile view -->
             <div class="flex items-center lg:hidden">
               <label for="my-drawer-2" class="cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+                  <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
                 </svg>
               </label>
               <!-- "Halo Pengguna" text mobile view -->
@@ -66,10 +67,85 @@
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Dashboard</h1>
-            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+              <div class="bg-gradient-to-r from-green-500 to-green-700 text-white p-4 rounded-lg w-full text-center shadow-md">
+                <p class="text-sm">Pemasukan Hari Ini</p>
+                <p class="text-lg font-bold">Rp. {{ number_format($income->sum('amount'), 0, ',', '.') }}</p>
+              </div>
+              <div class="bg-gradient-to-r from-red-500 to-red-700 text-white p-4 rounded-lg w-full text-center shadow-md">
+                <p class="text-sm">Pengeluaran Hari Ini</p>
+                <p class="text-lg font-bold"> Rp. {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</p>
+              </div>
+              <div class="bg-gradient-to-r from-orange-400 to-orange-600 text-white p-4 rounded-lg w-full text-center shadow-md">
+                <p class="text-sm">Jumlah Transaksi</p>
+                <p class="text-lg font-bold"></p>
+              </div>
+              <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded-lg w-full text-center shadow-md">
+                <p class="text-sm"></p>
+                <p class="text-lg font-bold">Rp.</p>
+              </div>
+              <div class="bg-gradient-to-r {{ $profit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg w-full text-center shadow-md">
+                  <p class="text-sm">Keuntungan Hari Ini</p>
+                  <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
+              </div>
+            </div>
           </div>
-        </div>
+          <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-12">
+            <!-- Wrapper untuk membuat tabel bersebelahan di desktop -->
+            <div class="flex flex-col lg:flex-row gap-6">
+              
+              <!-- Section Pesanan Baru -->
+              <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
+                <h2 class="text-lg font-semibold text-black mb-4">Pesanan Baru</h2>
+                <div class="overflow-auto">
+                  <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                      <tr class="bg-gray-200">
+                        <th class="border border-gray-300 p-2">No</th>
+                        <th class="border border-gray-300 p-2">Nama Pesanan</th>
+                        <th class="border border-gray-300 p-2">Menu</th>
+                        <th class="border border-gray-300 p-2">Jumlah</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border border-gray-300 p-2">1</td>
+                        <td class="border border-gray-300 p-2">Pesanan Offline</td>
+                        <td class="border border-gray-300 p-2">Nasi Goreng</td>
+                        <td class="border border-gray-300 p-2">2</td>
+                      </tr>
+                      <tr>
+                        <td class="border border-gray-300 p-2">2</td>
+                        <td class="border border-gray-300 p-2">Pesanan Online</td>
+                        <td class="border border-gray-300 p-2">Ayam Bakar</td>
+                        <td class="border border-gray-300 p-2">1</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
+              <!-- Section Menu Terlaris -->
+              <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
+                <h2 class="text-lg font-semibold text-black mb-4">Grafik pemasukkan perbulan</h2>
+                <div class="overflow-auto">
+                
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-12">
+          <div class="flex flex-col lg:flex-row gap-6">
+              <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
+                <h2 class="text-lg font-semibold text-black mb-4">Grafik pemasukkan perbulan</h2>
+                <div class="overflow-auto">
+                
+                </div>
+              </div>
+            </div>
+          </div>
+         
+        </div>
       </div>
      <!-- sidebar content -->
       <div class="drawer-side">
