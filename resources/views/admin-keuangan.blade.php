@@ -78,11 +78,11 @@
               </div>
               <div class="bg-gradient-to-r from-orange-400 to-orange-600 text-white p-4 rounded-lg w-full text-center shadow-md">
                 <p class="text-sm">Jumlah Transaksi</p>
-                <p class="text-lg font-bold"></p>
+                <p class="text-lg font-bold">Rp. {{ number_format($count, 0, ',', '.') }}</p>
               </div>
               <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded-lg w-full text-center shadow-md">
                 <p class="text-sm"></p>
-                <p class="text-lg font-bold">Rp.</p>
+                <p class="text-lg font-bold"></p>
               </div>
               <div class="bg-gradient-to-r {{ $profit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg w-full text-center shadow-md">
                   <p class="text-sm">Keuntungan Hari Ini</p>
