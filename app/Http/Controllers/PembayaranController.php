@@ -11,6 +11,26 @@ use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
+    public function chartIncome()
+{
+    $monthlyIncome = Income::selectRaw('MONTH(date) as month, SUM(amount) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // Buat array dengan semua bulan (1-12) dengan nilai default 0
+    $months = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $months[] = [
+            'month' => $i,
+            'total' => $monthlyIncome[$i]->total ?? 0  // Jika tidak ada transaksi, nilai = 0
+        ];
+    }
+
+    return response()->json($months);
+}
+
     public function index()
     {
         return view('keuangan-pembayaran');
@@ -29,7 +49,6 @@ class PembayaranController extends Controller
     ]);
 
     
-
     // Persiapan data
     $selectedItems = $request->items;
     $totalAmount = 0;
@@ -81,7 +100,7 @@ class PembayaranController extends Controller
         // Commit transaksi
         DB::commit();
 
-        // Redirect ke halaman lain dengan pesan sukses
+        // Redirect ke halaman lain 
         return redirect()->route('pembayaran.view')->with('success', 'Pesanan berhasil disimpan!');
     } catch (\Exception $e) {
         // Rollback transaksi jika ada error

@@ -9,18 +9,43 @@ use App\Models\Bill;
 
 class ExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function chartExpense()
     {
-        $expenses = Expense::with(['source', 'bill'])->get();
-        return view('expenses.index', compact('expenses'));
+        $monthlyExpense = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // Buat array dengan semua bulan (1-12) dengan nilai default 0
+    $months = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $months[] = [
+            'month' => $i,
+            'total' => $monthlyExpense[$i]->total ?? 0  // Jika tidak ada transaksi, nilai = 0
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    return response()->json($months);
+    }
+    public function index()
+    {
+        $expenses = Expense::with(['sources', 'bills'])->get();
+        return view('expenses.index', compact('expenses'));
+    }
+    
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $expenses= Expense::query()
+            ->where('date', 'LIKE', "%{$search}%")
+            ->orWhere('bill_id', 'LIKE', "%{$search}%")
+            ->orderBy('date', 'asc')
+            ->paginate(10);
+
+        return view('expenses.index', compact('expenses', 'search'));
+    }
     public function create()
     {
         $bills = Bill::all();
@@ -28,9 +53,6 @@ class ExpenseController extends Controller
         return view('keuangan-create-pengeluaran', compact('sources', 'bills'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -49,33 +71,21 @@ class ExpenseController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
     try {

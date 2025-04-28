@@ -71,7 +71,7 @@
                                 <button onclick="openMenuForm()" class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
                                     + <span class="hidden sm:inline">Tambah</span>
                                 </button>
-                                <form action="{{ route('menu.search') }}" method="GET" class="flex items-center w-full max-w-md">
+                                <form action="{{ route('menu.search') }}" method="GET" class="flex items-center max-w-md">
                                     <div class="relative w-full">
                                         <label for="search" class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cari Menu</label>
                                         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -79,14 +79,23 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                                             </svg>
                                         </div>
-                                        <input class="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-l-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Cari Menu" type="search" id="search" name="search">
+                                        <input type="search" id="search" name="search" placeholder="Cari" 
+                                            value="{{ request('search') }}"
+                                            class="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     </div>
-                                    <button type="submit" class="py-3 px-5 text-sm font-medium text-white bg-primary-700 border border-primary-600 rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Cari</button>
+                                    
+                                    @if(request('search'))
+                                        <!-- Tombol Clear Jika Ada Input -->
+                                        <a href="{{ url('/admin/keuangan/menu') }}" class="py-3 px-5 text-sm font-medium text-white bg-red-600 border border-red-500 rounded-r-lg hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                                            Clear
+                                        </a>
+                                    @endif
                                 </form>
+
                             </div>
                             <div class="card text-primary-content bg-white mt-4 w-full">
                                 <div class="card-body">
-                                    <h2 class="card-title text-black">Tabel Menu</h2>
+                                    <!-- <h2 class="card-title text-black">Tabel Menu</h2> -->
                                     <div class="overflow-x-auto">
                                     <table class="table w-full table-auto">
                                         <thead>
@@ -123,9 +132,9 @@
                                             </tr>
                                             @endif
                                         </tbody>
-                                        {{ $items->links() }}
                                     </table>
                                     </div>
+                                    {{ $items->links() }}
                                 </div>
                             </div>
                         </div>

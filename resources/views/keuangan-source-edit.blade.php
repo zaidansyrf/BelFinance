@@ -66,7 +66,7 @@
         <!-- main content -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit Sumber Masuk</h1>
+            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit</h1>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
                 <div class="overflow-x-auto">

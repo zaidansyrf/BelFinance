@@ -67,14 +67,35 @@
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Halaman Pengeluaran</h1>
-            <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pengeluaran/create')}}'">
-              + <span class="hidden sm:inline">Tambah</span>              
-            </button>
-          </div>
-          <div class="flex justify-center w-full px-8">
+            <div class="flex items-center space-x-4">
+              <button class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]" onclick="window.location.href='{{url('/keuangan/pengeluaran/create')}}'">
+                + <span class="hidden sm:inline">Tambah</span>              
+              </button>
+              <form action="{{ route('expenses.search') }}" method="GET" class="flex items-center max-w-md">
+                  <div class="relative w-full">
+                      <label for="search" class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cari Menu</label>
+                      <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                          <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                          </svg>
+                      </div>
+                      <input type="search" id="search" name="search" placeholder="Cari" 
+                          value="{{ request('search') }}"
+                          class="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  </div>
+                  
+                  @if(request('search'))
+                      <!-- Tombol Clear Jika Ada Input -->
+                      <a href="{{ url('/keuangan/pengeluaran') }}" class="py-3 px-5 text-sm font-medium text-white bg-red-600 border border-red-500 rounded-r-lg hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                          Clear
+                      </a>
+                  @endif
+              </form>
+              
+            </div> 
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
-                  <h2 class="card-title text-black">Tabel Pengeluaran</h2>
+                  <!-- <h2 class="card-title text-black">Tabel Pengeluaran</h2> -->
                   <div class="overflow-x-auto">
                   <table class="table w-full">
                     <thead>
@@ -89,22 +110,14 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($expenses as $key => $expense)
+                    @foreach ($expenses->sortByDesc('date')->values() as $expense)
                       <tr class="hover:bg-gray-100/50">
-                        <td class="text-black px-4 py-2">{{ $key + 1 }}</td>
+                        <td class="text-black px-4 py-2">{{ $loop->iteration }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->source->name }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->bill->name }}</td>
                         <td class="text-black px-4 py-2">Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->description }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->date->format('d-m-Y') }}</td>
-                        <!-- <td class="text-black px-4 py-2">
-                          <a href="" class="text-blue-500 hover:underline">Edit</a>
-                            <form action="{{ url('/keuangan/pengeluaran/' . $expense->id) }}" method="POST">
-                              @csrf
-                              @method('DELETE')
-                              <button type="submit" class="text-red-500 hover:underline ml-2">Hapus</button>
-                            </form>
-                        </td> -->
                       </tr>
                       @endforeach
                       @if($expenses->isEmpty())
@@ -117,7 +130,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+          </div>
         </div>
 
       </div>
