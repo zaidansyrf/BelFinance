@@ -46,7 +46,7 @@
 
 </div>
 <div class="flex items-center justify-center">
-    <a href="{{ url('/admin/keuangan/dashboard') }}" style="background: linear-gradient(to right, #75bb75 0%, #75bb75 100%)" class="text-white hover:from-green-600 hover:to-green-800 transition-all duration-500 ease-in-out transform hover:scale-110 hover:-translate-y-1 mt-4 rounded-full px-6 py-3 border-2 border-transparent hover:border-green-300 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-green-300">
+    <a href="{{ url()->previous() }}" style="background: linear-gradient(to right, #75bb75 0%, #75bb75 100%)" class="text-white hover:from-green-600 hover:to-green-800 transition-all duration-500 ease-in-out transform hover:scale-110 hover:-translate-y-1 mt-4 rounded-full px-6 py-3 border-2 border-transparent hover:border-green-300 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-green-300">
         Kembali
     </a>
 </div>

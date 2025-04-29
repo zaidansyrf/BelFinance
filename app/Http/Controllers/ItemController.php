@@ -8,23 +8,21 @@ use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    //emthod untuk menampilkan data
     public function index()
     {
-      // Retrieve all item items from the database
+      // mengambil data dari database
       return view('item.index', [
         'items' => DB::table('items')
           ->orderBy('code', 'asc')
+          //paginate data untuk ditammpilkan
           ->paginate(10)
       ]);
 
     }
     
-    /**
-     * Search for a resource in storage.
-     */
+    //method pencarian
     public function search(Request $request)
     {
         $search = $request->input('search');
@@ -37,17 +35,13 @@ class ItemController extends Controller
 
         return view('item.index', compact('items', 'search'));
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    //method menyimpan data ke database
     public function store(Request $request)
     {
         $request->validate([
@@ -59,7 +53,7 @@ class ItemController extends Controller
             'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ]);
         try {
-            // Create a new item
+            // membuat item baru
             Item::create([
                 'name' => $request->name,
                 'price' => $request->price,
@@ -67,7 +61,7 @@ class ItemController extends Controller
                 'code' => $request->code
             ]);
 
-            // Redirect back with a success message
+            // Redirect kembali dengan pesan
             return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
         } catch (\Exception $e) {
             // Handle errors
@@ -75,33 +69,24 @@ class ItemController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    //method edit
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //method update
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //method hapus
     public function destroy(string $id)
     {
         Item::destroy($id);

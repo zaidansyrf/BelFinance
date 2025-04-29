@@ -14,9 +14,9 @@ class SourceController extends Controller
      */
     public function index()
     {
-        $sources = Source::all();
+        // $sources = Source::all();
         return view('kategori.source.index', [
-            'sources' => DB::table('sources')->paginate(10)
+            'sources' => DB::table('sources')->paginate(5)
         ]);
     }
 

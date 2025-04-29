@@ -26,7 +26,6 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ExpenseController;
 
 
-
 // Fallback route
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);
@@ -45,6 +44,7 @@ Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
 Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
 Route::resource('keuangan/uang-masuk', UangMasukController::class);
 // Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
+Route::get('/item/menu', [ItemController::class, 'index'])->name('item.index');
 
 Route::resource('keuangan/pembayaran', PembayaranController::class);
 Route::resource('keuangan/pengeluaran', ExpenseController::class);
@@ -62,7 +62,6 @@ Route::get('/admin/keuangan/laporan-keuangan/pembayaran',[AdminKeuanganLaporanPe
 Route::get('/admin/keuangan/laporan-keuangan/pemasukkan',[AdminKeuanganLaporanPemasukkanController::class, 'view']);
 Route::get('/admin/keuangan/laporan-keuangan/pengeluaran',[AdminKeuanganLaporanPengeluaranController::class, 'view']);
 // Route::get('/admin/keuangan/laporan-keuangan/sumber',[AdminKeuanganLaporanSumberController::class, 'view']);
-// Route::get('/admin/hutang',[AdminHutangController::class, 'view']);
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
 Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
 Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
@@ -73,19 +72,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-// Route::prefix('menu')->name('menu.')->group(function() {
-//     Route::get('/', [MenuController::class, 'index'])->name('index');
-//     Route::get('/create', [MenuController::class, 'create'])->name('create');
-//     Route::post('/', [MenuController::class, 'store'])->name('store');
-//     Route::get('/{id}/edit', [MenuController::class, 'edit'])->name('edit');
-//     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
-//     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
-// });
 Route::resource('/admin/keuangan/menu', ItemController::class);
 Route::get('/admin/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
-
-
-
+Route::get('/keuangan/pengeluaran/', [ExpenseController::class, 'search'])->name('expenses.search');
+Route::get('/pembayaran/chart', [PembayaranController::class, 'chartIncome']);
+Route::get('/pengeluaran/chart', [ExpenseController::class, 'chartExpense']);
 
 require __DIR__.'/auth.php';

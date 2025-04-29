@@ -73,7 +73,7 @@
 
             </div>
             <div class="container">
-              <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Pesanan Baru</h1>
+              <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Transaksi Baru</h1>
               <div class="card text-primary-content bg-white mt-4 w-full">
                 <div class="card-body">
                   <form action="{{ route('pembayaran.store') }}" method="POST">

@@ -72,12 +72,7 @@
             </button>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
-                <h2 class="card-title text-black">Tabel Sumber keluar</h2>
-                @if($Bills->isEmpty())
-                <div class="flex justify-center items-center h-full bg-white">
-                  <h1 class="text-black text-center">Belum ada data</h1>
-                </div>
-                @else
+                <!-- <h2 class="card-title text-black">Tabel Sumber keluar</h2> -->
                 <table class="table w-full">
                   <thead>
                     <tr>
@@ -101,9 +96,13 @@
                       </td>
                     </tr>
                     @endforeach
+                    @if($Bills->isEmpty())
+                    <tr>
+                      <td colspan="6" class="px-4 py-2 text-center text-black">Tidak ada data tersedia.</td>
+                    </tr>
+                    @endif
                   </tbody>
                 </table>
-                @endif
               </div>
             </div>
           </div>

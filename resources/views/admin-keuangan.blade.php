@@ -80,10 +80,6 @@
                 <p class="text-sm">Jumlah Transaksi</p>
                 <p class="text-lg font-bold"></p>
               </div>
-              <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded-lg w-full text-center shadow-md">
-                <p class="text-sm"></p>
-                <p class="text-lg font-bold">Rp.</p>
-              </div>
               <div class="bg-gradient-to-r {{ $profit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg w-full text-center shadow-md">
                   <p class="text-sm">Keuntungan Hari Ini</p>
                   <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
@@ -96,7 +92,7 @@
               
               <!-- Section Pesanan Baru -->
               <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
-                <h2 class="text-lg font-semibold text-black mb-4">Pesanan Baru</h2>
+                <h2 class="text-lg font-semibold text-black mb-4">Pesanan Baru (masih placeholder)</h2>
                 <div class="overflow-auto">
                   <table class="w-full border-collapse border border-gray-300">
                     <thead>
@@ -129,7 +125,7 @@
               <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
                 <h2 class="text-lg font-semibold text-black mb-4">Grafik pemasukkan perbulan</h2>
                 <div class="overflow-auto">
-                
+                <canvas id="incomeChart"></canvas>
                 </div>
               </div>
             </div>
@@ -137,9 +133,9 @@
           <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-12">
           <div class="flex flex-col lg:flex-row gap-6">
               <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2">
-                <h2 class="text-lg font-semibold text-black mb-4">Grafik pemasukkan perbulan</h2>
+                <h2 class="text-lg font-semibold text-black mb-4">Grafik pengeluaran perbulan</h2>
                 <div class="overflow-auto">
-                
+                <canvas id="expenseChart"></canvas>
                 </div>
               </div>
             </div>
@@ -218,7 +214,78 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // chart pemasukkan
+   document.addEventListener("DOMContentLoaded", function () {
+        fetch("/pembayaran/chart")
+            .then(response => response.json())
+            .then(data => {
+              const namaBulan = [
+                 "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+              ]
+                const labels = data.map(item => namaBulan[item.month - 1] );
+                const values = data.map(item => item.total);
+
+                const ctx = document.getElementById("incomeChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Pemasukan",
+                            data: values,
+                            borderColor: "blue",
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error("Error fetching chart data:", error));
+    });
+    // chart pengeluaran
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/pengeluaran/chart")
+            .then(response => response.json())
+            .then(data => {
+              const namaBulan = [
+                 "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+              ]
+                const labels = data.map(item => namaBulan[item.month - 1] );
+                const values = data.map(item => item.total);
+
+                const ctx = document.getElementById("expenseChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Pengeluaran",
+                            data: values,
+                            borderColor: "red",
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error("Error fetching chart data:", error));
+    });
   function dropdownLaporan() {
   const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
   dropdownLaporanMenu.classList.toggle('hidden');

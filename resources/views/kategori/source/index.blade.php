@@ -72,7 +72,7 @@
             </button>
             <div class="card text-primary-content bg-white mt-4 w-full">
               <div class="card-body">
-                <h2 class="card-title text-black">Tabel Sumber masuk</h2>
+                <!-- <h2 class="card-title text-black">Tabel Sumber masuk</h2> -->
                 <div class="overflow-x-auto">
                   <table class="table w-full table-auto">
                     <thead>
@@ -104,6 +104,7 @@
                       @endif
                     </tbody>
                   </table>
+                  {{ $sources->links() }}
                 </div>
               </div>
             </div>
