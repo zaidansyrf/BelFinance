@@ -17,7 +17,7 @@
                 <input type="text" placeholder="Username" class="mb-2 input input-bordered text-[#2B7A78] w-full max-w-xs bg-white mt-12 " />
                 <input type="text" placeholder="Password" class="input input-bordered text-[#2B7A78] w-full max-w-xs bg-white" />
                 <div class="card-actions justify-center mt-6">
-                    <button class="btn btn-active" style="background-color: #2B7A78; color: white;">MASUK</button>
+                    <button class="btn btn-active" style="background-color: #2B7A78; color: white;">LOGIN</button>
                 </div>
             </div>
         </div>

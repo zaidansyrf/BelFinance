@@ -111,19 +111,6 @@
                 <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Sumber Keluar</a></li>
               </ul>
             </li>
-            <li class="relative">
-              <!-- Dropdown Laporan -->
-              <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-                Laporan Keuangan
-              </button>
-                <!-- Dropdown Menu -->
-              <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pembayaran</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pemasukan</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Pengeluaran</a></li>
-                <li class="px-0 py-0 cursor-pointer"><a href="#" class="hover:bg-[#3A9B98]">Sumber</a></li>
-              </ul>
-            </li>
           </ul>
         </div>
     </div>

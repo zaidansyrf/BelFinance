@@ -4,97 +4,102 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    //emthod untuk menampilkan data
     public function index()
     {
-      // Retrieve all item items from the database
-      $items = Item::all();
-      return view('item.index', compact('items'));
-    }
+      // mengambil data dari database
+      return view('item.index', [
+        'items' => DB::table('items')
+          ->orderBy('code', 'asc')
+          //paginate data untuk ditammpilkan
+          ->paginate(10)
+      ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    }
+    
+    //method pencarian
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+    
+        $items = Item::query()
+            ->where(function ($query) use ($search) {
+                $query->where('code', 'LIKE', "%{$search}%")
+                      ->orWhere('name', 'LIKE', "%{$search}%")
+                      ->orWhere('price', 'LIKE', "%{$search}%"); // Tambahkan pencarian berdasarkan harga
+            })
+            ->orderBy('code', 'asc')
+            ->paginate(10);
+    
+        return view('item.index', compact('items', 'search'));
+    }
+    
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    //method menyimpan data ke database
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
+            'code' => 'required|string|max:255|unique:items,code',
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ]);
+        try {
+            // membuat item baru
+            Item::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'code' => $request->code
+            ]);
 
-        // Coba jika inputan tidak berupa angka
-        if (!is_numeric($request->quantity)) {
-            return redirect()->back()->with('error', 'Harus berupa angka');
+            // Redirect kembali dengan pesan
+            return redirect()->route('item.index')->with('success', 'Menu berhasil ditambahkan');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
         }
-
-        // Create a new item item
-        Item::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-        ]);
-
-        // Redirect back with a success message
-        // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    //method edit
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //method update
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //method hapus
     public function destroy(string $id)
     {
         Item::destroy($id);
 
         // Redirect back with a success message
         // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
+        return redirect()->route('item.index')->with('success', 'Menu berhasil dihapus');
     }
-    public function search(Request $request)
-{
-    $query = $request->input('search');
-    $items = Item::where('name', 'like', '%' . $query . '%')->get();
-
-    return view('menu.index', compact('items'));
-}
+ 
 
 }
 
