@@ -30,22 +30,34 @@ class ExpenseController extends Controller
     }
     public function index()
     {
-        $expenses = Expense::with(['sources', 'bills'])->get();
+        $expenses = Expense::with(['sources', 'bills'])
+        ->orderBy('date', 'desc')
+        ->paginate(10);
         return view('expenses.index', compact('expenses'));
     }
     
     public function search(Request $request)
     {
         $search = $request->input('search');
-
-        $expenses= Expense::query()
-            ->where('date', 'LIKE', "%{$search}%")
-            ->orWhere('bill_id', 'LIKE', "%{$search}%")
-            ->orderBy('date', 'asc')
-            ->paginate(10);
-
+    
+        $expenses = Expense::query()
+        ->join('sources', 'expenses.source_id', '=', 'sources.id')
+        ->join('bills', 'expenses.bill_id', '=', 'bills.id') // JOIN ke tabel tagihan
+        ->where(function ($query) use ($search) {
+            $query->where('sources.name', 'LIKE', "%{$search}%")
+                ->orWhere('bills.name', 'LIKE', "%{$search}%")
+                ->orWhere('expenses.amount', 'LIKE', "%{$search}%")
+                ->orWhere('expenses.description', 'LIKE', "%{$search}%")
+                ->orWhere('expenses.date', 'LIKE', "%{$search}%");
+        })
+        ->select('expenses.*') 
+        ->orderBy('expenses.date', 'asc')
+        ->paginate(10);
+    
         return view('expenses.index', compact('expenses', 'search'));
     }
+    
+    
     public function create()
     {
         $bills = Bill::all();

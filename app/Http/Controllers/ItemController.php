@@ -26,15 +26,19 @@ class ItemController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-
+    
         $items = Item::query()
-            ->where('code', 'LIKE', "%{$search}%")
-            ->orWhere('name', 'LIKE', "%{$search}%")
+            ->where(function ($query) use ($search) {
+                $query->where('code', 'LIKE', "%{$search}%")
+                      ->orWhere('name', 'LIKE', "%{$search}%")
+                      ->orWhere('price', 'LIKE', "%{$search}%"); // Tambahkan pencarian berdasarkan harga
+            })
             ->orderBy('code', 'asc')
             ->paginate(10);
-
+    
         return view('item.index', compact('items', 'search'));
     }
+    
 
     public function create()
     {
@@ -62,7 +66,7 @@ class ItemController extends Controller
             ]);
 
             // Redirect kembali dengan pesan
-            return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
+            return redirect()->route('item.index')->with('success', 'Menu berhasil ditambahkan');
         } catch (\Exception $e) {
             // Handle errors
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
@@ -93,7 +97,7 @@ class ItemController extends Controller
 
         // Redirect back with a success message
         // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
+        return redirect()->route('item.index')->with('success', 'Menu berhasil dihapus');
     }
  
 
