@@ -42,15 +42,15 @@ Route::get('/login-belfinance', function () {
 Route::get('/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
 Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
 Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
-Route::resource('keuangan/uang-masuk', UangMasukController::class);
+Route::resource('/keuangan/uang-masuk', UangMasukController::class);
 Route::get('/item/menu', [ItemController::class, 'index'])->name('item.index');
 
-Route::resource('keuangan/pembayaran', PembayaranController::class);
-Route::resource('keuangan/pengeluaran', ExpenseController::class);
+Route::resource('/keuangan/pembayaran', PembayaranController::class);
+Route::resource('/keuangan/pengeluaran', ExpenseController::class);
 Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
 Route::resource('/keuangan/kategori/sumber-masuk', SourceController::class);
 Route::resource('/keuangan/kategori/sumber-keluar', BillController::class);
-Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
+Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
 Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
 Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);

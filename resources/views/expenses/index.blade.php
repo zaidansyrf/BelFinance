@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                  <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                  <li><a class="text-black" href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                   <li><a class=" text-red-700">Log Out</a></li>
                 </ul>
               </div>
@@ -56,7 +56,7 @@
                 </div>
               </div>
               <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                <li><a class="text-black"  href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                 <li><a class=" text-red-700">Log Out</a></li>
               </ul>
             </div>
@@ -106,7 +106,7 @@
                         <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
                         <th class="py-2 px-4 border-b text-left text-gray-800">Keterangan</th>
                         <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
-                        <!-- <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th> -->
+                        <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -118,6 +118,10 @@
                         <td class="text-black px-4 py-2">Rp. {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->description }}</td>
                         <td class="text-black px-4 py-2">{{ $expense->date->format('d-m-Y') }}</td>
+                        <td class="text-black px-4 py-2">
+                            <a href="{{ url('keuangan/pengeluaran/')}}" class="text-white btn btn-sm bg-[#2B7A78] hover:bg-[#205C5D]">Edit</a>
+                            <a href="{{ url('keuangan/pengeluaran/')}}" class="text-white btn btn-sm bg-[#2B7A78] hover:bg-[#205C5D]">Hapus</a>
+                        </td>
                       </tr>
                       @endforeach
                       @if($expenses->isEmpty())

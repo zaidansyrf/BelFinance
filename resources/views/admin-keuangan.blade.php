@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                  <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                  <li><a class="text-black" href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                   <li><a class=" text-red-700">Log Out</a></li>
                 </ul>
               </div>
@@ -56,8 +56,13 @@
                 </div>
               </div>
               <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
-                <li><a class=" text-red-700">Log Out</a></li>
+                <li><a href="{{url('keuangan/info-profile')}}"class="text-black">Info Profile</a></li>
+                <li> 
+                  <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="text-red-500">Log Out</button>
+                  </form>
+                </li>
               </ul>
             </div>
           </div>
@@ -67,7 +72,27 @@
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
           <div class="sticky justify-between items-center mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Selamat Datang</h1>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+            <!-- keuangan tahunan -->
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                <!--  pemasukan tahunan -->
+                <div class="bg-gradient-to-r from-green-500 to-green-700 text-white p-4 rounded-lg text-center shadow-md w-full">
+                  <p class="text-sm">Total Pemasukan Tahun {{ $currentYear }}</p>
+                  <p class="text-lg font-bold">Rp. {{ number_format($yearlyIncome, 0, ',', '.') }}</p>
+                </div>
+
+                <!--  pengeluaran tahunan -->
+                <div class="bg-gradient-to-r from-red-500 to-red-700 text-white p-4 rounded-lg text-center shadow-md w-full">
+                  <p class="text-sm">Total Pengeluaran Tahun {{ $currentYear }}</p>
+                  <p class="text-lg font-bold">Rp. {{ number_format($yearlyExpense, 0, ',', '.') }}</p>
+                </div>
+
+                <!-- laba/rugi tahunan -->
+                <div class="bg-gradient-to-r {{ $yearlyProfit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg text-center shadow-md w-full">
+                  <p class="text-sm">Laba/Rugi Tahun {{ $currentYear }}</p>
+                  <p class="text-lg font-bold">Rp. {{ number_format($yearlyProfit, 0, ',', '.') }}</p>
+                </div>
+              </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
               <!-- card pemasukkan total -->
               <div class="relative bg-gradient-to-r from-green-500 to-green-700 text-white p-4 rounded-lg w-full text-center shadow-md overflow-hidden">
                 <div class="absolute inset-0 opacity-50 pointer-events-none">
@@ -103,38 +128,42 @@
                   <p class="text-sm">Keuntungan Hari Ini</p>
                   <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
               </div>
+              
             </div>
           </div>
           <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-12 mb-4">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Analytic</h1>
             <div class="flex flex-col lg:flex-row gap-6">
-              <!-- Section Pesanan Baru -->
-              <div class="bg-white shadow-md rounded-lg p-4 w-full lg:w-[48%] max-h-[250px] overflow-auto">
-                <h2 class="text-lg font-semibold text-black mb-4"></h2>
-                <div class="overflow-auto">
-                  <table class="table w-full table-auto">
-                    <thead>
-                      <tr class="bg-gray-200">
-                        <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
-                        <th class="py-2 px-4 border-b text-left text-gray-800"> Tipe Pesanan</th>
-                        <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah</th>
-                        <th class="py-2 px-4 border-b text-left text-gray-800">Detail</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($summary as $i => $row)
-                      <tr>
-                        <td class="text-black px-4 py-2">{{ $i + 1 }}</td>
-                        <td class="text-black px-4 py-2">{{ $row['tipe'] }}</td>
-                        <td class="text-black px-4 py-2">{{ $row['jumlah'] }}</td>
-                        <td class="text-black px-4 py-2">
-                                        <a href="{{ url('/keuangan/detail-pesanan')}}" class="btn btn-sm btn-primary bg-[#2B7A78] hover:bg-[#205C5D]">Detail</a>
-                                    </td>
-                      </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
+              <!-- section Pesanan Baru -->
+              <div class="bg-white shadow-md rounded-lg p-4 w-full lg:w-[48%]">
+                  <h2 class="text-lg font-semibold text-black mb-4"></h2>
+                  <div class="overflow-y-auto max-h-[400px]">
+                      <table class="min-w-full border border-gray-300">
+                          <thead class="bg-gray-100">
+                              <tr>
+                                  <th class="px-4 py-2 border">No</th>
+                                  <th class="px-4 py-2 border">Sumber</th>
+                                  <th class="px-4 py-2 border">Jumlah </th>
+                                  <th class="px-4 py-2 border">Total masuk</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @foreach ($summary as $index => $data)
+                                  <tr class="text-center">
+                                      <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                                      <td class="px-4 py-2 border">{{ $data['sumber'] }}</td>
+                                      <td class="px-4 py-2 border">{{ $data['jumlah'] }}</td>
+                                      <td class="px-4 py-2 border">Rp {{ number_format($data['total'], 0, ',', '.') }}</td>
+                                  </tr>
+                               @if($summary->isEmpty())
+                                  <tr>
+                                      <td colspan="4" class="text-center px-4 py-4">Belum ada pesanan hari ini.</td>
+                                  </tr>
+                                @endif
+                              @endforeach
+                          </tbody>
+                      </table>
+                  </div>
               </div>
 
               <!-- Section  grafik-->
@@ -146,32 +175,6 @@
               </div>
             </div>
           </div>
-          <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-          <div class="sticky justify-between items-center mt-12 px-8">
-            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Laporan Keuangan</h1>
-          </div>
-            <div class="flex justify-center w-full px-8">
-              <div class="card text-primary-content bg-white mt-4 w-full">
-                <div class="card-body">
-                  <!-- <h2 class="card-title text-black">Tabel Pembayaran</h2> -->
-                  <div class="overflow-x-auto">
-                    <table class="table w-full table-auto">
-                      <thead>
-                        <tr>
-                          <th class="py-2 px4 border-b text-left text-gray-800">No</th>
-                          <th class="py-2 px4 border-b text-left text-gray-800">Nama</th>
-                          <th class="py-2 px4 border-b text-left text-gray-800">Sumber</th>
-                          <th class="py-2 px4 border-b text-left text-gray-800">Total</th>
-                          <th class="py-2 px4 border-b text-left text-gray-800">Detail</th>
-                        </tr>
-                      </thead>
-                      
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
         </div>
       </div>
      <!-- sidebar content -->

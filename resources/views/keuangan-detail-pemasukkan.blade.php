@@ -55,7 +55,7 @@
                 </div>
               </div>
               <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                <li><a class="text-black"  href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                 <li><a class=" text-red-700">Log Out</a></li>
               </ul>
             </div>
