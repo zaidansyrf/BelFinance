@@ -1,3 +1,4 @@
+@section('title', 'Pengeluaran | Edit')
 <x-app-layout>
   <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
     <!-- sidebar -->
@@ -13,8 +14,8 @@
             <!-- menu hamburger mobile view -->
             <div class="flex items-center lg:hidden">
               <label for="my-drawer-2" class="cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+                  <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
                 </svg>
               </label>
               <!-- "Halo Pengguna" text mobile view -->
@@ -36,7 +37,7 @@
                   </div>
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                  <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                  <li><a class="text-black"  href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                   <li><a class=" text-red-700">Log Out</a></li>
                 </ul>
               </div>
@@ -55,7 +56,7 @@
                 </div>
               </div>
               <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
+                <li><a class="text-black"  href="{{url('keuangan/info-profile')}}">Info Profile</a></li>
                 <li><a class=" text-red-700">Log Out</a></li>
               </ul>
             </div>
@@ -82,13 +83,6 @@
                       <label for="source" class="block text-sm font-medium text-black form-label">Sumber</label>
                       <select name="source_id" id="source" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
                         <option class="text-black" value="" selected disabled>Pilih Sumber</option>
-                        <!-- @if ($allSources->count())
-                        @foreach ($allSources as $source)
-                        <option value="{{ $source->id }}">{{ $source->name }}</option>
-                        @endforeach
-                        @else
-                        <option disabled>Data sumber tidak tersedia</option>
-                        @endif -->
                       </select>
                     </div>
                     <!-- Nama Tagihan -->
@@ -144,7 +138,7 @@
           </div>
           <!-- Sidebar Menu Links -->
           <li>
-            <a href="{{ url('/admin/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/dashboard') }}" class=" text-black  hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-2 block w-full px-4 py-2">
               Dashboard
             </a>
           </li>
@@ -163,7 +157,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ url('/admin/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
+            <a href="{{ url('/keuangan/menu') }}" class=" text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 block w-full px-4 py-2">
               Menu
             </a>
           </li>
@@ -174,21 +168,8 @@
             </button>
             <!-- Dropdown Menu -->
             <ul id="dropdownKategoriMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
-            </ul>
-          </li>
-          <li class="relative">
-            <!-- Dropdown Laporan -->
-            <button id="dropdownLaporanButton" onclick="dropdownLaporan()" class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left">
-              Laporan Keuangan
-            </button>
-            <!-- Dropdown Menu -->
-            <ul id="dropdownLaporanMenu" class="hidden bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pembayaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pembayaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pemasukkan')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pemasukan</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/pengeluaran')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Pengeluaran</a></li>
-              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/admin/keuangan/laporan-keuangan/sumber')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/keuangan/kategori/sumber-masuk')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Masuk</a></li>
+              <li class="px-0 py-0 cursor-pointer"><a href="{{url('/keuangan/kategori/sumber-keluar')}}" class="hover:bg-[#3A9B98] hover:rounded-none">Sumber Keluar</a></li>
             </ul>
           </li>
         </ul>

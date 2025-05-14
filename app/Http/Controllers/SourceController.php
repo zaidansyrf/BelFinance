@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Source;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SourceController extends Controller
 {
@@ -13,8 +14,10 @@ class SourceController extends Controller
      */
     public function index()
     {
-        $sources = Source::all();
-        return view('kategori.source.index', compact('sources'));
+        // $sources = Source::all();
+        return view('kategori.source.index', [
+            'sources' => DB::table('sources')->paginate(5)
+        ]);
     }
 
     /**
