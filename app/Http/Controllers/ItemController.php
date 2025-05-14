@@ -12,11 +12,9 @@ class ItemController extends Controller
     //emthod untuk menampilkan data
     public function index()
     {
-      // mengambil data dari database
       return view('item.index', [
         'items' => DB::table('items')
           ->orderBy('code', 'asc')
-          //paginate data untuk ditammpilkan
           ->paginate(10)
       ]);
 

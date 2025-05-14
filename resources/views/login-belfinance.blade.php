@@ -1,25 +1,44 @@
-<x-app-layout>
-    <title>BelFinance</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <div class="grid justify-items-center content-center h-svh w-full bg-[#D1DDD5]">
-        
-        <!-- Title with Icon -->
-        <div class="flex items-center mb-20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 mr-2" style="color: #2B7A78;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-            <h1 class="text-4xl font-bold text-primary text-center" style="color: #2B7A78;">BelFinance</h1>
+<x-guest-layout>
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <!-- Email Address -->
+        <div>
+            <x-text-input id="email" placeholder="Email..." class="mb-2 input input-bordered text-[#2B7A78] w-full max-w-xs bg-white mt-12" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="card bg-[#F7F7F7] text-primary-content w-96">
-            <!-- Content here -->
-            <div class="card-body">
-                <input type="text" placeholder="Username" class="mb-2 input input-bordered text-[#2B7A78] w-full max-w-xs bg-white mt-12 " />
-                <input type="text" placeholder="Password" class="input input-bordered text-[#2B7A78] w-full max-w-xs bg-white" />
-                <div class="card-actions justify-center mt-6">
-                    <button class="btn btn-active" style="background-color: #2B7A78; color: white;">LOGIN</button>
-                </div>
-            </div>
+        <!-- Password -->
+        <div class="mt-4">
+            <x-text-input id="password" placeholder="Password..." class="input input-bordered text-[#2B7A78] w-full max-w-xs bg-white"
+                            type="password"
+                            name="password"
+                            required autocomplete="current-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
-    </div>
-</x-app-layout>
+
+        <!-- Remember Me -->
+        <div class="block mt-4">
+            <label for="remember_me" class="inline-flex items-center">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+            </label>
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            @if (Route::has('password.request'))
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    {{ __('Forgot your password?') }}
+                </a>
+            @endif
+
+            <x-primary-button class="ms-3 bg-[#2B7A78]">
+                {{ __('Log in') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
