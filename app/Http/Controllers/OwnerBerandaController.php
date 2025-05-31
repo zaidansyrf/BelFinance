@@ -9,5 +9,7 @@ class OwnerBerandaController extends Controller
     public function view(){
         return view('owner-beranda');
     }
+
+
 }
 

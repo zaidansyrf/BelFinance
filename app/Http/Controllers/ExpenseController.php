@@ -35,11 +35,11 @@ class ExpenseController extends Controller
         ->paginate(10);
         return view('expenses.index', compact('expenses'));
     }
-    
+
     public function search(Request $request)
     {
         $search = $request->input('search');
-    
+
         $expenses = Expense::query()
         ->join('sources', 'expenses.source_id', '=', 'sources.id')
         ->join('bills', 'expenses.bill_id', '=', 'bills.id') // JOIN ke tabel tagihan
@@ -50,14 +50,14 @@ class ExpenseController extends Controller
                 ->orWhere('expenses.description', 'LIKE', "%{$search}%")
                 ->orWhere('expenses.date', 'LIKE', "%{$search}%");
         })
-        ->select('expenses.*') 
+        ->select('expenses.*')
         ->orderBy('expenses.date', 'asc')
         ->paginate(10);
-    
+
         return view('expenses.index', compact('expenses', 'search'));
     }
-    
-    
+
+
     public function create()
     {
         $bills = Bill::all();
@@ -77,7 +77,7 @@ class ExpenseController extends Controller
 
         try {
             Expense::create($validatedData);
-            return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil ditambahkan!');
+            return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil ditambahkan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran!');
         }
@@ -85,29 +85,48 @@ class ExpenseController extends Controller
 
     public function show(string $id)
     {
-        //
+        $expense = Expense::with(['source', 'bill'])->findOrFail($id);
+        $sources = Source::all();
+        $bills = Bill::all();
+        return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
+
     }
 
     public function edit(string $id)
     {
-        //
+        $expense = Expense::with(['source', 'bill'])->findOrFail($id);
+        $bills = Bill::all();
+        $sources = Source::all();
+        return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
     }
 
     public function update(Request $request, string $id)
     {
-        //
+        $validatedData = $request->validate([
+            'source_id' => 'required|exists:sources,id',
+            'bill_id' => 'required|exists:bills,id',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'nullable|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        try {
+            $expense = Expense::findOrFail($id);
+            $expense->update($validatedData);
+            return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui data pengeluaran!');
+        }
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-    try {
         $expense = Expense::findOrFail($id);
         $expense->delete();
-
-        return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil dihapus!');
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Gagal menghapus data pengeluaran!');
+        return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil dihapus!');
     }
 
-    }
+
+
+
 }

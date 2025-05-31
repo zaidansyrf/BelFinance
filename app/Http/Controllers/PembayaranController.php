@@ -33,13 +33,17 @@ class PembayaranController extends Controller
 
     public function index()
     {
-        return view('keuangan-pembayaran');
+        // Ambil semua data income beserta relasi source (sumber) dan tampilkan nama sumber
+        $pembayarans = Income::with('source')->get();
+
+        return view('keuangan-pembayaran', compact('pembayarans'));
     }
 
     public function store(Request $request)
     {
         // Validasi input
         // dd($request->all());
+
         $request->validate([
             'name' => 'required|string|max:255',
             'source_id' => 'required|exists:sources,id',
@@ -48,7 +52,7 @@ class PembayaranController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
-        
+
         // Persiapan data
         $selectedItems = $request->items;
         $totalAmount = 0;
@@ -100,7 +104,7 @@ class PembayaranController extends Controller
             // Commit transaksi
             DB::commit();
 
-            // Redirect ke halaman lain 
+            // Redirect ke halaman lain
             return redirect()->route('pembayaran.index')->with('success', 'Pesanan berhasil disimpan!');
         } catch (\Exception $e) {
             // Rollback transaksi jika ada error
@@ -119,30 +123,35 @@ class PembayaranController extends Controller
 
         return view('keuangan-create-pembayaran', compact('allItems', 'allSources'));
     }
-    public function deleteItem($incomeDetailId)
+    public function destroy($id)
     {
-        // Temukan income detail berdasarkan ID
-        $incomeDetail = IncomeDetail::findOrFail($incomeDetailId);
+        $pembayaran = Income::findOrFail($id);
 
-        // Hapus income detail
-        $incomeDetail->delete();
+        // Hapus detail yang terkait dulu
+        $pembayaran->incomeDetails()->delete();
 
-        return redirect()->route('pembayaran.view')->with('success', 'Item berhasil dihapus');
+        // Baru hapus induknya
+        $pembayaran->delete();
+
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
     }
+
+
+
     public function detail(Request $request)
     {
         $request->validate([
             'source_id' => 'required|exists:sources,id',
             'date' => 'required|date',
         ]);
-    
+
         $incomes = Income::where('source_id', $request->source_id)
             ->whereDate('date', $request->date)
             ->with(['incomeDetails.item', 'source'])
             ->get();
-    
+
         $details = [];
-    
+
         foreach ($incomes as $income) {
             foreach ($income->incomeDetails as $detail) {
                 $details[] = [
@@ -153,9 +162,18 @@ class PembayaranController extends Controller
                 ];
             }
         }
-    
-        return view('keuangan-detail-pesanan', compact('details'));
+
+        return view('pembayaran.detail-pengbayaran', compact('details'));
     }
+
+    public function show($id)
+    {
+        // Ambil data income berdasarkan ID
+        $pembayaran = Income::with(['source', 'incomeDetails.item'])->findOrFail($id);
+
+        return view('pembayaran.detail-pembayaran', compact('pembayaran'));
+    }
+
     public function dailySummary()
 {
     $summary = Income::with('source')
@@ -175,5 +193,5 @@ class PembayaranController extends Controller
     return view('keuangan-detail-pesanan', compact('summary'));
 }
 
-    
+
 }

@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('login-belfinance');
     }
 
     /**
@@ -25,6 +25,10 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+        if ($request->filled('remember')) {
+            Auth::login(Auth::user(), $request->boolean('remember'));
+        }
 
         $request->session()->regenerate();
 
@@ -42,6 +46,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login-belfinance');
+        return redirect()->route('login-belfinance');
     }
+
+
+
 }

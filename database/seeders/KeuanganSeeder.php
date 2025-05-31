@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -14,13 +13,22 @@ class KeuanganSeeder extends Seeder
      */
     public function run(): void
     {
-        
-         $Keuangan = [
-        'name' => 'belfinance',
-        'email' => 'keuangan@belindokitchen.com',
-        'password' => Hash::make('belindo_keuangan'),
-        'email_verified_at' => now(),
-    ];
-    DB::table('users')->insert($Keuangan);
+        $keuangan = [
+            'name' => 'belfinance',
+            'email' => 'keuangan@belindokitchen.com',
+            'password' => Hash::make('belindo_keuangan'),
+            'email_verified_at' => now(),
+            'role' => 'keuangan',
+        ];
+
+        $owner = [
+            'name' => 'belowner',
+            'email' => 'owner@belindokitchen.com',
+            'password' => Hash::make('belindo_owner'),
+            'email_verified_at' => now(),
+            'role' => 'owner',
+        ];
+
+        DB::table('users')->insert([$keuangan, $owner]);
     }
 }

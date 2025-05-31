@@ -19,12 +19,12 @@ class ItemController extends Controller
       ]);
 
     }
-    
+
     //method pencarian
     public function search(Request $request)
     {
         $search = $request->input('search');
-    
+
         $items = Item::query()
             ->where(function ($query) use ($search) {
                 $query->where('code', 'LIKE', "%{$search}%")
@@ -33,10 +33,10 @@ class ItemController extends Controller
             })
             ->orderBy('code', 'asc')
             ->paginate(10);
-    
+
         return view('item.index', compact('items', 'search'));
     }
-    
+
 
     public function create()
     {
@@ -73,19 +73,47 @@ class ItemController extends Controller
 
     public function show(string $id)
     {
-        //
+        // Menampilkan detail item berdasarkan ID
+        $item = Item::findOrFail($id);
+        return view('item.show', compact('item'));
     }
 
     //method edit
     public function edit(string $id)
     {
-        //
+        // Menampilkan form edit item berdasarkan ID
+        $item = Item::findOrFail($id);
+        return view('item.edit-menu', compact('item'));
     }
 
     //method update
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:1',
+            'code' => 'required|string|max:255|unique:items,code,' . $id,
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
+        ]);
+
+        try {
+            // Update item
+            $item = Item::findOrFail($id);
+            $item->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'code' => $request->code
+            ]);
+
+            // Redirect kembali dengan pesan
+            return redirect()->route('menu.search')->with('success', 'Menu berhasil diperbarui');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui menu');
+        }
     }
 
     //method hapus
@@ -97,7 +125,7 @@ class ItemController extends Controller
         // Kembali ke halaman admin/keuangan/menu
         return redirect()->route('item.index')->with('success', 'Menu berhasil dihapus');
     }
- 
+
 
 }
 
