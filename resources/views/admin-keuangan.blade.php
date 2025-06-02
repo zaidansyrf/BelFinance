@@ -134,7 +134,71 @@
                         </div>
                     </div>
 
-                    <!-- Laporan Keuangan Hari Ini -->
+                    <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-5 mb-4">
+                        <div class="bg-white shadow-md rounded-lg p-10 mt-8 ">
+                            <h2 class="text-lg font-semibold text-[#2B7A78] mb-4">Laporan Keuangan Hari Ini</h2>
+                            <div class="overflow-x-auto">
+                                @isset($transactions)
+                                    @if ($transactions->count() > 0)
+                                        <table class="min-w-full border border-gray-300">
+                                            <thead class="bg-gray-100">
+                                                <tr>
+                                                    <th class="px-4 py-2 border">No</th>
+                                                    <th class="px-4 py-2 border">Nama</th>
+                                                    <th class="px-4 py-2 border">Sumber</th>
+                                                    <th class="px-4 py-2 border">Pemasukan</th>
+                                                    <th class="px-4 py-2 border">Pengeluaran</th>
+                                                    <th class="px-4 py-2 border">Tanggal</th>
+                                                    <th class="px-4 py-2 border">Keterangan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($transactions as $index => $transaction)
+                                                    <tr class="text-center">
+                                                        @php static $no = 1; @endphp
+                                                        <td class="px-4 py-2 border">{{ $no++ }}</td>
+                                                        <td class="px-4 py-2 border">
+                                                            @if ($transaction->type === 'income')
+                                                                {{ $transaction->name }}
+                                                            @else
+                                                                {{ $transaction->bill->name ?? 'Tidak ada nama' }}
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-2 border">
+                                                            {{ $transaction->source->name ?? '-' }}</td>
+                                                        <td class="px-4 py-2 border">
+                                                            @if ($transaction->type === 'income')
+                                                                Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-2 border">
+                                                            @if ($transaction->type === 'expense')
+                                                                Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td class="px-4 py-2 border">
+                                                            {{ $transaction->created_at->format('d-m-Y') }}
+                                                        </td>
+                                                        <td class="px-4 py-2 border">{{ $transaction->description }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <p class="text-center py-4">Tidak ada transaksi hari ini.</p>
+                                    @endif
+                                @else
+                                    <p class="text-center py-4">Data transaksi tidak tersedia.</p>
+                                @endisset
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- <!-- Laporan Keuangan Hari Ini -->
                     <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-5 mb-4">
                         <div class="bg-white shadow-md rounded-lg p-10 mt-8 ">
                             <h2 class="text-lg font-semibold text-[#2B7A78] mb-4">Laporan Keuangan Hari Ini</h2>
@@ -152,33 +216,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $index => $transaction)
+                                        @foreach ($transactions as $index => $transaction)
                                             <tr class="text-center">
                                                 <td class="px-4 py-2 border">{{ $index + 1 }}</td>
                                                 <td class="px-4 py-2 border">{{ $transaction->name }}</td>
-                                                <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}
+                                                <td class="px-4 py-2 border">{{ $transaction->source }}</td>
+                                                <td class="px-4 py-2 border">
+                                                    @if ($transaction->type === 'income')
+                                                        Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                    @else
+                                                        -
+                                                    @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    Rp {{ number_format($transaction->income, 0, ',', '.') }}
+                                                    @if ($transaction->type === 'expense')
+                                                        Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                    @else
+                                                        -
+                                                    @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    Rp {{ number_format($transaction->expense, 0, ',', '.') }}
+                                                    {{ $transaction->created_at->format('d-m-Y') }}
                                                 </td>
-                                                <td class="px-4 py-2 border">{{ $transaction->date }}</td>
                                                 <td class="px-4 py-2 border">{{ $transaction->description }}</td>
                                             </tr>
                                         @endforeach
                                         @if ($transactions->isEmpty())
                                             <tr>
-                                                <td colspan="7" class="text-center px-4 py-4">Tidak ada data
-                                                    tersedia.</td>
+                                                <td colspan="7" class="text-center px-4 py-4">Belum ada transaksi
+                                                    hari
+                                                    ini.</td>
                                             </tr>
-                                        @endif --}}
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- sidebar content -->

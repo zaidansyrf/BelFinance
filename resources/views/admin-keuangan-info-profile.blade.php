@@ -64,19 +64,9 @@
                                                 class="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         </div>
 
-                                        <div class="sm:col-span-6 flex items-center mt-4">
-                                            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <div class="ml-3">
-                                                <p class="text-sm font-medium text-gray-700">Email verified</p>
-                                                <p class="text-sm text-gray-500">Verified on 28 May 2025, 10:00</p>
-                                            </div>
-                                        </div>
+
                                     </div>
-                                    <div class="mt-6 flex justify-end">
+                                    <div class="mt-10 flex justify-end">
                                         <button type="reset"
                                             class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
                                         <button type="submit"
