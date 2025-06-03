@@ -14,6 +14,10 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'profit-green': '#55AD9B',
+                'loss-red': '#D35D6E',
+            },
         },
         
     },

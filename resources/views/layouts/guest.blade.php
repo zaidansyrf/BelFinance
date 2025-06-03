@@ -17,7 +17,7 @@
 </head>
 
 <body class="font-sans text-gray-900 antialiased bg-[#D1DDD5]">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 ">
+    <div class="px-4 py-2 min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 ">
         <!-- Logo Belfinance -->
         <div class="flex items-center mt-20 mb-5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

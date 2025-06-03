@@ -10,7 +10,7 @@
                 <!-- navbar -->
                 @include('layouts.navbar')
                 <!-- main content -->
-                <div class="flex-1 bg-[#D1DDD5] overflow-auto">
+                <div class="py-4 flex-1 bg-[#D1DDD5] overflow-auto">
                     <div class="sticky justify-between items-center mt-12 px-8">
                         <div class="mb-4">
                             <!-- Tombol Kembali -->

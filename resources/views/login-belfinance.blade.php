@@ -8,7 +8,7 @@
         @csrf
 
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Login Account</h1>
+            <h1 class="text-3xl font-bold text-gray-800">Login</h1>
         </div>
         <!-- Name Field -->
         <div class="mb-6">
@@ -55,7 +55,7 @@
             {{ __('Log in') }}
         </button>
 
-        <!-- Optional: Sign up link -->
+        <!-- Optional: Sign up link
         <div class="mt-6 text-center">
             <span class="text-sm text-gray-600">
                 {{ __("Don't have an account?") }}
@@ -64,6 +64,6 @@
                 href="{{ route('register') }}">
                 {{ __('Sign up') }}
             </a>
-        </div>
+        </div> -->
     </form>
 </x-guest-layout>

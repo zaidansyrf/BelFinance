@@ -1,4 +1,10 @@
 @section('title', 'Laporan Keuangan')
+@php
+use Carbon\Carbon;
+    $awal = request('tanggal_awal');
+    $akhir = request('tanggal_akhir');
+    $hariIni = Carbon::today()->toDateString();
+@endphp
 <x-app-layout>
     <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
         <!-- sidebar -->
@@ -11,7 +17,7 @@
                 @include('layouts.navbar')
                 <!-- main content -->
 
-                <div class="flex-1 bg-[#D1DDD5] overflow-auto">
+                <div class="py-4 flex-1 bg-[#D1DDD5] overflow-auto">
                     <h2 class="text-xl font-semibold text-[#2B7A78] mb-4 px-8 mt-12">Filter Laporan</h2>
 
                     <div class="flex justify-center w-full px-8">
@@ -55,7 +61,23 @@
                             <div class="card text-primary-content bg-white w-full">
                                 <div class="card-body">
                                     <div class="flex justify-between items-center">
-                                        <h2 class="card-title text-[#468585]">Tabel Laporan Keuangan</h2>
+
+
+                                        <h2 class="card-title text-[#468585]">
+                                            Menampilkan :    @if ($awal === $hariIni && $akhir === $hariIni)
+                                                {{ Carbon::parse($awal)->translatedFormat('d F Y') }}
+                                            @elseif ($awal && $akhir)
+                                                {{ Carbon::parse($awal)->translatedFormat('d F Y') }} - {{ Carbon::parse($akhir)->translatedFormat('d F Y') }}
+                                            @elseif ($awal)
+                                                {{ Carbon::parse($awal)->translatedFormat('d F Y') }}
+                                            @elseif ($akhir)
+                                                {{ Carbon::parse($akhir)->translatedFormat('d F Y') }}
+                                            @else
+                                                Semua
+                                            @endif
+                                        </h2>
+
+                                        </h2>
                                         <a href="{{ route('laporan.export-pdf', request()->query()) }}"
                                             class="px-4 py-2 bg-[#468585] hover:bg-[#234343] text-white rounded-md">
                                             Export PDF
