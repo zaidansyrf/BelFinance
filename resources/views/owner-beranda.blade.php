@@ -1,78 +1,35 @@
 @section('title', 'Dashboard')
 <x-app-layout>
-    <x-slot name="header">
-        <!-- Sticky header with white background and subtle shadow -->
-        <header class="sticky top-0 z-50 ">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-between">
-                    <!-- Logo section - left side -->
-                    <div class="flex items-center">
-                        <a href="/" class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="#468585" class="h-8 w-8 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                            <span class="text-xl font-bold text-[#468585]">BelFinance</span>
-                        </a>
-                    </div>
 
-                    <!-- Navigation menu - center -->
-                    <nav class="hidden md:flex items-center space-x-1 bg-white p-1 rounded-lg border border-gray-200">
-                        <a href="#"
-                            class="px-4 py-2 text-sm font-medium text-white bg-gray-50 rounded-md transition-colors duration-200"
-                            style="background-color: #468585;">
-                            Beranda
-                        </a>
-                        <a href="#"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#468585] hover:bg-gray-50 rounded-md transition-colors duration-200">
-                            Laporan Keuangan
-                        </a>
-                    </nav>
+    @include('layouts.navbar-owner')
 
-                    <!-- Profile section - right side -->
-                    <div class="flex items-center">
-                        <button type="button"
-                            class="relative flex rounded-full bg-gray-100 p-1 text-gray-400 hover:text-[#468585] focus:outline-none focus:ring-2 focus:ring-[#468585] focus:ring-offset-2 transition-colors duration-200">
-                            <span class="absolute -inset-1.5"></span>
-                            <span class="sr-only">View profile</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </x-slot>
 
 
     <!-- main content -->
-    <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-        <div class="sticky justify-between items-center mt-12 px-8">
+    <div class="flex-1 bg-[#D1DDD5] overflow-auto pt-10">
+        <div class="sticky justify-between items-center  mt-12 px-8">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Selamat Datang</h1>
             <!-- keuangan tahunan -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
                 <!--  pemasukan tahunan -->
                 <div
                     class="bg-gradient-to-r from-green-500 to-green-700 text-white p-4 rounded-lg text-center shadow-md w-full">
-                    <p class="text-sm">Total Pemasukan Tahun </p>
-                    <p class="text-lg font-bold">Rp. </p>
+                    <p class="text-sm">Total Pemasukan Tahun {{ $currentYear }}</p>
+                    <p class="text-lg font-bold">Rp. {{ number_format($yearlyIncome, 0, ',', '.') }}</p>
                 </div>
 
                 <!--  pengeluaran tahunan -->
                 <div
                     class="bg-gradient-to-r from-red-500 to-red-700 text-white p-4 rounded-lg text-center shadow-md w-full">
-                    <p class="text-sm">Total Pengeluaran Tahun </p>
-                    <p class="text-lg font-bold">Rp. </p>
+                    <p class="text-sm">Total Pengeluaran Tahun {{ $currentYear }}</p>
+                    <p class="text-lg font-bold">Rp. {{ number_format($yearlyExpense, 0, ',', '.') }}</p>
                 </div>
 
                 <!-- laba/rugi tahunan -->
-                <div class="bg-gradient-to-r  text-white p-4 rounded-lg text-center shadow-md w-full">
-                    <p class="text-sm">Laba/Rugi Tahun </p>
-                    <p class="text-lg font-bold">Rp. </p>
+                <div
+                    class="bg-gradient-to-r {{ $yearlyProfit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg text-center shadow-md w-full">
+                    <p class="text-sm">Laba/Rugi Tahun {{ $currentYear }}</p>
+                    <p class="text-lg font-bold">Rp. {{ number_format($yearlyProfit, 0, ',', '.') }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
@@ -90,7 +47,7 @@
                     </div>
                     <p class="text-sm relative z-10">Pemasukan Hari Ini</p>
                     <p class="text-lg font-bold relative z-10">Rp.
-                    </p>
+                        {{ number_format($income->sum('amount'), 0, ',', '.') }}</p>
                 </div>
                 <!-- card pengeluaran total -->
                 <div
@@ -105,17 +62,18 @@
                     </div>
                     <p class="text-sm relative z-10">Pengeluaran Hari Ini</p>
                     <p class="text-lg font-bold relative z-10">Rp.
-                    </p>
+                        {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</p>
                 </div>
                 <!-- card jumlah transaksi -->
                 <div
                     class="bg-gradient-to-r from-orange-400 to-orange-600 text-white p-4 rounded-lg w-full text-center shadow-md">
                     <p class="text-sm">Jumlah Pesanan</p>
-                    <p class="text-lg font-bold"></p>
+                    <p class="text-lg font-bold">{{ $total_orders }}</p>
                 </div>
-                <div class="bg-gradient-to-r  text-white p-4 rounded-lg w-full text-center shadow-md">
+                <div
+                    class="bg-gradient-to-r {{ $profit >= 0 ? 'from-green-500 to-green-700' : 'from-red-500 to-red-700' }} text-white p-4 rounded-lg w-full text-center shadow-md">
                     <p class="text-sm">Keuntungan Hari Ini</p>
-                    <p class="text-lg font-bold">Rp. </p>
+                    <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
                 </div>
 
             </div>
@@ -137,20 +95,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr class="text-center">
-                                    <td class="px-4 py-2 border"></td>
-                                    <td class="px-4 py-2 border"></td>
-                                    <td class="px-4 py-2 border"></td>
-                                    <td class="px-4 py-2 border">Rp
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="4" class="text-center px-4 py-4">Belum ada
-                                        pesanan hari ini.</td>
-                                </tr>
-
+                                @foreach ($summary as $index => $data)
+                                    <tr class="text-center">
+                                        <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                                        <td class="px-4 py-2 border">{{ $data['sumber'] }}</td>
+                                        <td class="px-4 py-2 border">{{ $data['jumlah'] }}</td>
+                                        <td class="px-4 py-2 border">Rp
+                                            {{ number_format($data['total'], 0, ',', '.') }}</td>
+                                    </tr>
+                                    @if ($summary->isEmpty())
+                                        <tr>
+                                            <td colspan="4" class="text-center px-4 py-4">Belum ada
+                                                pesanan hari ini.</td>
+                                        </tr>
+                                    @endif
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -166,50 +125,261 @@
             </div>
         </div>
 
-        <!-- Laporan Keuangan Hari Ini -->
         <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-5 mb-4">
-            <div class="bg-white shadow-md rounded-lg p-10 mt-8 ">
-                <h2 class="text-lg font-semibold text-[#2B7A78] mb-4">Laporan Keuangan Hari Ini</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-2 border">No</th>
-                                <th class="px-4 py-2 border">Nama</th>
-                                <th class="px-4 py-2 border">Sumber</th>
-                                <th class="px-4 py-2 border">Pemasukan</th>
-                                <th class="px-4 py-2 border">Pengeluaran</th>
-                                <th class="px-4 py-2 border">Tanggal</th>
-                                <th class="px-4 py-2 border">Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{-- @forelse ($dailyReports as $index => $report)
-                                <tr class="text-center">
-                                    <td class="px-4 py-2 border">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-2 border">{{ $report->user->name ?? '-' }}</td>
-                                    <td class="px-4 py-2 border">{{ $report->sumber ?? '-' }}</td>
-                                    <td class="px-4 py-2 border">
-                                        {{ $report->type == 'income' ? 'Rp. ' . number_format($report->amount, 0, ',', '.') : '-' }}
-                                    </td>
-                                    <td class="px-4 py-2 border">
-                                        {{ $report->type == 'expense' ? 'Rp. ' . number_format($report->amount, 0, ',', '.') : '-' }}
-                                    </td>
-                                    <td class="px-4 py-2 border">
-                                        {{ \Carbon\Carbon::parse($report->tanggal)->format('d-m-Y') }}</td>
-                                    <td class="px-4 py-2 border">{{ $report->keterangan ?? '-' }}</td>
-                                </tr>
-                            @empty --}}
-                            {{-- <tr>
-                                <td colspan="7" class="text-center px-4 py-4">Belum ada transaksi hari
-                                    ini.</td>
-                            </tr>
-                            @endforelse --}}
-                        </tbody>
-                    </table>
+            <div class="bg-white shadow-md rounded-lg p-10 mt-8">
+
+                {{-- Tombol Filter --}}
+                <div class="mb-4 space-x-2">
+                    <button id="btn-income" onclick="filterTable('income')"
+                        class="filter-btn px-4 py-2 rounded-md text-sm font-medium bg-white text-[#468585] border border-[#468585] transition-colors duration-200">
+                        Pemasukan
+                    </button>
+                    <button id="btn-expense" onclick="filterTable('expense')"
+                        class="filter-btn px-4 py-2 rounded-md text-sm font-medium bg-white text-[#468585] border border-[#468585] transition-colors duration-200">
+                        Pengeluaran
+                    </button>
+                    <button id="btn-all" onclick="filterTable('all')"
+                        class="filter-btn px-4 py-2 rounded-md text-sm font-medium bg-white text-[#468585] border border-[#468585] transition-colors duration-200">
+                        Semua
+                    </button>
+                </div>
+
+                {{-- Tabel Transaksi --}}
+                <div class="overflow-x-auto pt-6">
+                    @isset($transactions)
+                        @if ($transactions->count() > 0)
+                            <table class="min-w-full border border-gray-300">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-2 border">No</th>
+                                        <th class="px-4 py-2 border">Nama</th>
+                                        <th class="px-4 py-2 border">Sumber</th>
+                                        <th class="px-4 py-2 border" id="th-income">Pemasukan</th>
+                                        <th class="px-4 py-2 border" id="th-expense">Pengeluaran</th>
+                                        <th class="px-4 py-2 border">Tanggal</th>
+                                        <th class="px-4 py-2 border">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-table-body">
+                                    @foreach ($transactions as $index => $transaction)
+                                        <tr class="text-center bg-white hover:bg-gray-50"
+                                            data-type="{{ $transaction->type }}">
+                                            <td class="px-4 py-2 border nomor-urut">{{ $loop->iteration }}</td>
+                                            <td class="px-4 py-2 border">
+                                                @if ($transaction->type === 'income')
+                                                    {{ $transaction->name }}
+                                                @else
+                                                    {{ $transaction->bill->name ?? 'Tidak ada nama' }}
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}</td>
+                                            <td class="px-4 py-2 border income-col">
+                                                @if ($transaction->type === 'income')
+                                                    Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 border expense-col">
+                                                @if ($transaction->type === 'expense')
+                                                    Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 border">
+                                                {{ $transaction->created_at->format('d-m-Y') }}
+                                            </td>
+                                            <td class="px-4 py-2 border">{{ $transaction->description }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <p class="text-center py-4">Tidak ada transaksi hari ini.</p>
+                        @endif
+                    @else
+                        <p class="text-center py-4">Data transaksi tidak tersedia.</p>
+                    @endisset
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('combinedChart')?.getContext('2d');
+        if (ctx) {
+            const combinedChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($months) !!},
+                    datasets: [{
+                            label: 'Pemasukkan',
+                            data: {!! json_encode($incomeData) !!},
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: {!! json_encode($expenseData) !!},
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp' + value.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                combinedChart.resize();
+            });
+        }
+
+        function dropdownLaporan() {
+            const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
+            dropdownLaporanMenu?.classList.toggle('hidden');
+        }
+        document.addEventListener("click", function(event) {
+            const dropdownLaporanMenu = document.getElementById("dropdownLaporanMenu");
+            const dropdownLaporanButton = document.getElementById("dropdownLaporanButton");
+
+            if (dropdownLaporanMenu && dropdownLaporanButton) {
+                if (
+                    !dropdownLaporanMenu.contains(event.target) &&
+                    !dropdownLaporanButton.contains(event.target)
+                ) {
+                    dropdownLaporanMenu.classList.add("hidden");
+                }
+            }
+        });
+
+        function dropdownKategori() {
+            const dropdownKategoriMenu = document.getElementById('dropdownKategoriMenu');
+            dropdownKategoriMenu?.classList.toggle('hidden');
+        }
+        document.addEventListener("click", function(event) {
+            const dropdownKategoriMenu = document.getElementById("dropdownKategoriMenu");
+            const dropdownKategoriButton = document.getElementById("dropdownKategoriButton");
+
+            if (dropdownKategoriMenu && dropdownKategoriButton) {
+                if (
+                    !dropdownKategoriMenu.contains(event.target) &&
+                    !dropdownKategoriButton.contains(event.target)
+                ) {
+                    dropdownKategoriMenu.classList.add("hidden");
+                }
+            }
+        });
+
+        function toggleAdditionalFields() {
+            const paymentSource = document.getElementById('paymentSource')?.value;
+
+            if (!paymentSource) return;
+
+            // Hide all additional fields first
+            const orderMenu = document.getElementById('orderMenu');
+            orderMenu?.classList.add('hidden');
+
+            // Show relevant fields based on the selected income source
+            if (paymentSource === 'shopee') {
+                orderMenu?.classList.remove('hidden');
+            }
+        }
+
+        function dropdownPemasukkan() {
+            const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
+            dropdownPemasukkanMenu?.classList.toggle('hidden');
+        }
+        document.addEventListener("click", function(event) {
+            const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
+            const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
+
+            if (dropdownPemasukkanMenu && dropdownPemasukkanButton) {
+                if (
+                    !dropdownPemasukkanMenu.contains(event.target) &&
+                    !dropdownPemasukkanButton.contains(event.target)
+                ) {
+                    dropdownPemasukkanMenu.classList.add("hidden");
+                }
+            }
+        });
+
+
+        function filterTable(type) {
+            const rows = document.querySelectorAll('#transaction-table-body tr');
+            const incomeCols = document.querySelectorAll('.income-col');
+            const expenseCols = document.querySelectorAll('.expense-col');
+            const thIncome = document.getElementById('th-income');
+            const thExpense = document.getElementById('th-expense');
+            const nomorUrut = document.querySelectorAll('.nomor-urut');
+
+            let count = 1;
+
+            rows.forEach(row => {
+                const rowType = row.getAttribute('data-type');
+                const noCell = row.querySelector('.nomor-urut');
+
+                if (type === 'all' || rowType === type) {
+                    row.style.display = '';
+                    noCell.textContent = count++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (type === 'income') {
+                incomeCols.forEach(col => col.style.display = '');
+                expenseCols.forEach(col => col.style.display = 'none');
+                thIncome.style.display = '';
+                thExpense.style.display = 'none';
+            } else if (type === 'expense') {
+                incomeCols.forEach(col => col.style.display = 'none');
+                expenseCols.forEach(col => col.style.display = '');
+                thIncome.style.display = 'none';
+                thExpense.style.display = '';
+            } else {
+                incomeCols.forEach(col => col.style.display = '');
+                expenseCols.forEach(col => col.style.display = '');
+                thIncome.style.display = '';
+                thExpense.style.display = '';
+            }
+
+            // Highlight tombol aktif
+            const buttons = {
+                income: document.getElementById('btn-income'),
+                expense: document.getElementById('btn-expense'),
+                all: document.getElementById('btn-all')
+            };
+
+            Object.values(buttons).forEach(btn => {
+                btn.classList.remove('bg-[#468585]', 'text-white');
+                btn.classList.add('bg-white', 'text-[#468585]');
+            });
+
+            if (buttons[type]) {
+                buttons[type].classList.remove('bg-white', 'text-[#468585]');
+                buttons[type].classList.add('bg-[#468585]', 'text-white');
+            }
+        }
+
+        // Set default filter
+        window.addEventListener('DOMContentLoaded', () => filterTable('all'));
+    </script>
 
 </x-app-layout>

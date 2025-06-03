@@ -73,6 +73,10 @@ Route::middleware(['web'])->group(function () {
     Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
     //Info Profile
     Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
+    Route::get('/keuangan/info-profile/edit', [AdminKeuanganInfoProfileController::class, 'edit'])->name('info-profile.edit');
+    Route::post('/keuangan/info-profile/update', [AdminKeuanganInfoProfileController::class, 'update'])->name('info-profile.update');
+    Route::get('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePasswordForm'])->name('info-profile.change-password-form');
+    Route::post('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePassword'])->name('info-profile.update-password');
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -81,7 +85,12 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
 
 
-
+// beranda owner
+Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
+// laporan owner
+Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
+// info profile owner
+Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
 
 
 
@@ -91,7 +100,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 // Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
 
 // Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
+
 // Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
 // Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
 
