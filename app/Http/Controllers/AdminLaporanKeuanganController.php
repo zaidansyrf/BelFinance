@@ -122,57 +122,5 @@ class AdminLaporanKeuanganController extends Controller
         return $pdf->download($filename);
     }
 
-<<<<<<< HEAD
-    $incomeQuery = Income::with('source')
-        ->selectRaw("'pemasukan' as jenis, name as nama, source_id, amount as jumlah, date as tanggal, description as keterangan");
 
-    $expenseQuery = Expense::with('source')
-        ->selectRaw("'pengeluaran' as jenis, '' as nama, source_id, amount as jumlah, date as tanggal, description as keterangan");
-
-    if ($tanggalAwal && $tanggalAkhir) {
-        $incomeQuery->whereBetween('date', [$tanggalAwal, $tanggalAkhir]);
-        $expenseQuery->whereBetween('date', [$tanggalAwal, $tanggalAkhir]);
-    } elseif ($tanggalAwal) {
-        $incomeQuery->where('date', '>=', $tanggalAwal);
-        $expenseQuery->where('date', '>=', $tanggalAwal);
-    } elseif ($tanggalAkhir) {
-        $incomeQuery->where('date', '<=', $tanggalAkhir);
-        $expenseQuery->where('date', '<=', $tanggalAkhir);
-    }
-
-    $laporan = $incomeQuery->unionAll($expenseQuery)
-              ->orderBy('tanggal', 'asc')
-              ->get();
-
-    // Calculate totals
-    $totalPemasukan = $laporan->where('jenis', 'pemasukan')->sum('jumlah');
-    $totalPengeluaran = $laporan->where('jenis', 'pengeluaran')->sum('jumlah');
-    $saldo = $totalPemasukan - $totalPengeluaran;
-
-    // Format dates for display
-    $displayAwal = $tanggalAwal ? \Carbon\Carbon::parse($tanggalAwal)->translatedFormat('d F Y') : 'Semua Data';
-    $displayAkhir = $tanggalAkhir ? \Carbon\Carbon::parse($tanggalAkhir)->translatedFormat('d F Y') : 'Semua Data';
-    ini_set('memory_limit', '1024M');
-    $pdf = Pdf::loadView('laporan.export-pdf', [
-        'laporan' => $laporan,
-        'tanggalAwal' => $displayAwal,
-        'tanggalAkhir' => $displayAkhir,
-        'totalPemasukan' => $totalPemasukan,
-        'totalPengeluaran' => $totalPengeluaran,
-        'saldo' => $saldo,
-        'user' => auth()->user(),
-        'generatedAt' => now()->translatedFormat('d F Y H:i:s')
-    ])->setPaper('a4', 'landscape');
-
-    $filename = 'Laporan-Keuangan-'
-        . ($tanggalAwal ?: 'all')
-        . '-sd-'
-        . ($tanggalAkhir ?: 'all')
-        . '.pdf';
-
-    return $pdf->download($filename);
-}
-
-=======
->>>>>>> 4999677e607f0db5c035e0f0edd5555fa1c11853
 }
