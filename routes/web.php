@@ -82,15 +82,17 @@ Route::middleware(['web'])->group(function () {
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 
-
-
-
-// beranda owner
+Route::middleware(['web', 'auth'])->group(function () {
+    // beranda owner
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
 // laporan owner
 Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
 // info profile owner
 Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
+});
+
+
+
 
 
 

@@ -51,15 +51,28 @@
                             <div class="font-semibold text-gray-800">{{ Auth::user()->name }}</div>
                             <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
                         </div> --}}
-                        <a href="{{ url('keuangan/info-profile') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Profile
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <div class="py-2">
+                            <a href="{{ url('keuangan/info-profile') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#468585]"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5.121 17.804A13.937 13.937 0 0 1 12 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                                Profile
+                            </a>
+                        </div>
+                        <div class="border-t border-gray-100"></div>
+                        <form method="POST" action="{{ route('logout') }}" class="py-2">
                             @csrf
                             <button type="submit"
-                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                Logout
+                                class="flex items-center px-4 py-2 text-sm text-red-500 hover:text-red-700 hover:bg-gray-100 w-full text-left transition-colors duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                Log Out
                             </button>
                         </form>
                     </div>

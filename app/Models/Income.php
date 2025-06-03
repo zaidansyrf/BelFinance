@@ -19,6 +19,7 @@ class Income extends Model
         'amount',
         'date',
         'description',
+        'type',
     ];
     protected $casts = [
         'date' => 'datetime',

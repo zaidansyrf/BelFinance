@@ -37,7 +37,8 @@ class UangMasukController extends Controller
                 'source_id' => $request->source_id,
                 'date' => $request->date,
                 'amount' => $request->amount,
-                'description' => $request->description
+                'description' => $request->description,
+                'type' => 'income', // Asumsikan tipe ini selalu 'income'
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');

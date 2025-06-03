@@ -33,11 +33,16 @@ class PembayaranController extends Controller
 
     public function index()
     {
-        // Ambil semua data income beserta relasi source (sumber) dan tampilkan nama sumber
-        $pembayarans = Income::with('source')->get();
+        // Ambil data income yang memiliki detail bertipe 'payment'
+        $pembayarans = Income::with('source')
+            ->whereHas('incomeDetails', function ($query) {
+                $query->where('type', 'payment');
+            })
+            ->get();
 
         return view('keuangan-pembayaran', compact('pembayarans'));
     }
+
 
     public function store(Request $request)
     {
@@ -98,6 +103,7 @@ class PembayaranController extends Controller
                     'item_id' => $detail['item_id'], // Hubungkan ke item
                     'quantity' => $detail['quantity'], // Jumlah item
                     'subtotal' => $detail['subtotal'], // Subtotal
+                    'type' => 'payment', // Tipe pembayaran
                 ]);
             }
 

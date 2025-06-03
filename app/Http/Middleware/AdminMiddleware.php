@@ -19,7 +19,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Periksa apakah user adalah admin
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== 'keuangan') {
             abort(403, 'Akses ditolak. Hanya admin yang diizinkan.');
         }
 

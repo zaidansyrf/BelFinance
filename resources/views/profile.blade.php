@@ -16,6 +16,19 @@
                                     settings</p>
                             </div>
 
+                            <div>
+                                @if (auth()->user()->role === 'owner')
+                                    <a href="{{ route('owner-beranda') }}"
+                                        class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
+                                        Back to Owner Home
+                                    </a>
+                                @elseif(auth()->user()->role === 'keuangan')
+                                    <a href="{{ route('dashboard') }}"
+                                        class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
+                                        Back to Dashboard
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                         <div class="mt-4 border-t border-gray-200 pt-4 flex items-center space-x-4">
                             <img class="h-12 w-12 rounded-full"
@@ -59,10 +72,7 @@
                                     </div>
 
                                     <div class="mt-10 flex justify-end">
-                                        <button type="reset"
-                                            class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                            Cancel
-                                        </button>
+
                                         <button type="submit"
                                             class="ml-3 bg-[#468585] hover:bg-[#468585] text-white py-2 px-4 rounded-md text-sm font-medium">
                                             Save changes
@@ -131,10 +141,7 @@
                                     </div>
 
                                     <div class="mt-6 flex justify-end">
-                                        <button type="reset"
-                                            class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                            Cancel
-                                        </button>
+
                                         <button type="submit"
                                             class="ml-3 bg-[#468585] hover:bg-[#468585] text-white py-2 px-4 rounded-md text-sm font-medium">
                                             Update password
