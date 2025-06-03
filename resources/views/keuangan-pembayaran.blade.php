@@ -30,7 +30,7 @@
                                                 <th class="py-2 px4 border-b text-left text-gray-800">Nama</th>
                                                 <th class="py-2 px4 border-b text-left text-gray-800">Sumber</th>
                                                 <th class="py-2 px4 border-b text-left text-gray-800">Total</th>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">Detail</th>
+                                                <th class="py-2 px4 border-b text-left text-gray-800">Aksi</th>
                                             </tr>
                                         </thead>
 

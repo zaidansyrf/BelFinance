@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div id="sourceOverlay"
-                        class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+                        class="px-4 py-2 hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
                         <!-- Form Sumber -->
                         <div id="sourceModal"
                             class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="flex justify-end mt-4">
                                     <button type="button" onclick="closeSourceModal()"
-                                        class="bg text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
+                                        class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
                                     <button type="submit"
                                         class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
                                 </div>

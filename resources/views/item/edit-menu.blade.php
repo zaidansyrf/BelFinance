@@ -10,15 +10,22 @@
                 @include('layouts.navbar')
 
                 <!-- Main Content -->
-                <main class="flex-1 overflow-auto p-6 bg-[#D1DDD5]">
-                    <div class="sticky justify-between items-center mt-1 px-8">
+                <main class="flex-1 overflow-auto bg-[#D1DDD5]">
+                    <div class="sticky justify-between items-center mt-12 px-8">
                         <!-- Page Header -->
                         <div class="flex justify-between items-center mb-8">
                             <h1 class="text-2xl font-semibold text-[#2B7A78]">Edit Menu Item</h1>
                         </div>
-
+                        <div class="mb-4">
+                            <button type="button"
+                                class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]"
+                                onclick="window.location.href='{{ url('/keuangan/menu') }}'">
+                                &larr; Kembali
+                            </button>
+                        </div>
                         <!-- Edit Form Card -->
                         <div class="bg-white rounded-xl shadow-sm border border-[#E0E6E5] p-6">
+                            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit Menu</h1>
                             <form action="{{ route('item.update', $item->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf

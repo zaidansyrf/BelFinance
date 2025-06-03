@@ -73,7 +73,7 @@ class AdminLaporanKeuanganController extends Controller
     // Format dates for display
     $displayAwal = $tanggalAwal ? \Carbon\Carbon::parse($tanggalAwal)->translatedFormat('d F Y') : 'Semua Data';
     $displayAkhir = $tanggalAkhir ? \Carbon\Carbon::parse($tanggalAkhir)->translatedFormat('d F Y') : 'Semua Data';
-
+    ini_set('memory_limit', '1024M');
     $pdf = Pdf::loadView('laporan.export-pdf', [
         'laporan' => $laporan,
         'tanggalAwal' => $displayAwal,

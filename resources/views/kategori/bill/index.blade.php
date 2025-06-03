@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div id="sourceOverlay"
-                        class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+                        class="px-4 py-2 hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
                         <!-- Form Sumber -->
                         <div id="sourceModal"
                             class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
