@@ -81,7 +81,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
 
 
-
+// beranda owner
+Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
+// laporan owner
+Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
 
 
 
@@ -91,7 +94,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 // Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
 
 // Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
+
 // Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
 // Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
 

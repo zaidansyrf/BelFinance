@@ -16,10 +16,16 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    public const ROLE_OWNER = 'owner';
+    public const ROLE_KEUANGAN = 'keuangan';
+
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,4 +50,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function isOwner(): bool
+    {
+        return $this->role === self::ROLE_OWNER;
+    }
+
+    public function isKeuangan(): bool
+    {
+        return $this->role === self::ROLE_KEUANGAN;
+    }
+
+
 }
