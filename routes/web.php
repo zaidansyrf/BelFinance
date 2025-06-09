@@ -90,35 +90,4 @@ Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->n
 // info profile owner
 Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
 });
-
-
-
-
-
-
-
-// Route::resource('/keuangan/pembayaran', PembayaranController::class);
-
-// Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
-
-// Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-
-// Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
-// Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-
-
-// Route::get('/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
-// Route::get('/keuangan/pengeluaran/', [ExpenseController::class, 'search'])->name('expenses.search');
-// Route::get('/pembayaran/chart', [PembayaranController::class, 'chartIncome']);
-// Route::get('/pengeluaran/chart', [ExpenseController::class, 'chartExpense']);
-// Route::get('/keuangan/detail-pesanan/{source_id}', [AdminKeuanganController::class, 'detailPesanan']);
-// Route::get('/keuangan/detail-pesanan', [PembayaranController::class, 'detail'])->name('pembayaran.detail');
-
-
 require __DIR__.'/auth.php';

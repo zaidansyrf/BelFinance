@@ -1,7 +1,7 @@
-<div class="header-wrapper bg-[#D1DDD5] px-4 py-2 lg:px-4 lg:py-2">
+<div class="header-wrapper bg-[#D1DDD5]  pt-2 px-2 pb-0 lg:pt-3 lg:px-6 ">
     <!-- header -->
     <div
-        class="header-box bg-white border border-gray-300 rounded-lg flex justify-between items-center py-4 px-6 lg:px-12">
+        class="header-box bg-white border border-gray-300 rounded-lg flex justify-between items-center py-3 px-6 lg:px-12">
         <!-- menu hamburger mobile view -->
         <div class="flex items-center lg:hidden">
             <label for="my-drawer-2" class="cursor-pointer">

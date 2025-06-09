@@ -124,10 +124,10 @@
                             </div>
 
                             <!-- Section  grafik-->
-                            <div class="bg-white shadow-md rounded-lg p-6 w-full lg:w-1/2 relative">
+                            <div class="bg-white shadow-md rounded-lg p-4 w-full relative">
                                 <h2 class="text-lg font-semibold text-black mb-4"></h2>
-                                <div class="overflow-auto">
-                                   <canvas id="combinedChart" class="w-full h-[300px] sm:h-[400px] lg:h-[500px]"></canvas>
+                                <div class="overflow-auto h-[300px] sm:h-[400px] lg:h-auto">
+                                    <canvas id="combinedChart" class="w-full h-full"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -285,11 +285,12 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, // <-- penting!
                     scales: {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: function(value) {
+                                callback: function (value) {
                                     return 'Rp' + value.toLocaleString('id-ID');
                                 }
                             }

@@ -5,7 +5,7 @@
             <div class="flex h-24 items-center justify-between">
                 <!-- Logo section -->
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center">
+                    <a href="/owner/beranda" class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="#468585" class="h-8 w-8 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -15,20 +15,16 @@
                     </a>
                 </div>
 
-                <!-- Navigation -->
+                <!-- dropdown desktop -->
                 <nav class="hidden md:flex items-center space-x-1 bg-white p-1 rounded-lg border border-gray-200">
                     <a href="{{ route('owner-beranda') }}"
                         class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
-                        {{ request()->routeIs('owner-beranda')
-                            ? 'text-white bg-[#468585]'
-                            : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
+                        {{ request()->routeIs('owner-beranda') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
                         Beranda
                     </a>
                     <a href="{{ route('laporan-owner') }}"
                         class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
-                        {{ request()->routeIs('laporan-owner')
-                            ? 'text-white bg-[#468585]'
-                            : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
+                        {{ request()->routeIs('laporan-owner') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
                         Laporan Keuangan
                     </a>
                 </nav>
@@ -46,23 +42,41 @@
                         </svg>
                     </button>
                     <div id="profile-dropdown"
-                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                        {{-- <div class=" hipy-2 px-4 border-b border-gray-100">
+                        class="hidden absolute right-0 top-full mt-6 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+                        {{-- User info (optional) --}}
+                        {{-- <div class="py-2 px-4 border-b border-gray-100">
                             <div class="font-semibold text-gray-800">{{ Auth::user()->name }}</div>
                             <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
                         </div> --}}
-                        <div class="py-2">
+
+                        <div class="py-2 mt-4">
                             <a href="{{ url('keuangan/info-profile') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#468585]"
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#468585]"
                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5.121 17.804A13.937 13.937 0 0 1 12 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
+                                </svg> -->
                                 Profile
                             </a>
                         </div>
+
+                        <!-- Mobile Navigation inside Dropdown -->
+                        <div class="mt-4 md:hidden  border-gray-100">
+                            <a href="{{ route('owner-beranda') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150
+                                {{ request()->routeIs('owner-beranda') ? 'text-[#468585] font-semibold' : '' }}">
+                                Beranda
+                            </a>
+                            <a href="{{ route('laporan-owner') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150
+                                {{ request()->routeIs('laporan-owner') ? 'text-[#468585] font-semibold' : '' }}">
+                                Laporan Keuangan
+                            </a>
+                        </div>
+
                         <div class="border-t border-gray-100"></div>
+
                         <form method="POST" action="{{ route('logout') }}" class="py-2">
                             @csrf
                             <button type="submit"
@@ -77,22 +91,19 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
     </header>
-
-
 </x-slot>
 
-
+<!-- Script: Toggle Profile Dropdown -->
 <script>
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profile-dropdown');
         dropdown.classList.toggle('hidden');
     }
-    // Optional: Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
+
+    document.addEventListener('click', function (event) {
         const button = document.getElementById('profile-menu-button');
         const dropdown = document.getElementById('profile-dropdown');
         if (!button.contains(event.target) && !dropdown.contains(event.target)) {

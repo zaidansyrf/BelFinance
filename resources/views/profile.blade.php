@@ -20,12 +20,12 @@
                                 @if (auth()->user()->role === 'owner')
                                     <a href="{{ route('owner-beranda') }}"
                                         class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
-                                        Back to Owner Home
+                                        kembali
                                     </a>
                                 @elseif(auth()->user()->role === 'keuangan')
                                     <a href="{{ route('dashboard') }}"
                                         class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
-                                        Back to Dashboard
+                                        kembali
                                     </a>
                                 @endif
                             </div>
