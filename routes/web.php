@@ -64,7 +64,10 @@ Route::middleware(['web'])->group(function () {
     Route::resource('/keuangan/menu', ItemController::class);
     Route::get('/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
     Route::get('/keuangan/menu/{id}/edit', [ItemController::class, 'edit'])->name('menu.edit');
-    Route::put('/keuangan/menu/{id}', [ItemController::class, 'update'])->name('item.update');
+    Route::put('/keuangan/menu/{id}', [ItemController::class, 'update'])->name('menu.update');
+    Route::get('keuangan/menu-terlaris', [ItemController::class, 'chart'])->name('menu.chart');
+    Route::delete('/keuangan/menu/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+
 
     Route::resource('/keuangan/kategori/sumber-masuk', SourceController::class);
     Route::resource('/keuangan/kategori/sumber-keluar', BillController::class);

@@ -58,7 +58,7 @@
                                             <tr class="text-left">
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
-                                                <th class="py-2 px-4 border-b text-left text-gray-800">Tagihan</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Kategori</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nominal</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Keterangan</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>

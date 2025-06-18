@@ -14,7 +14,7 @@
                     <div class="sticky justify-between items-center mt-12 px-8">
                         <!-- Page Header -->
                         <div class="flex justify-between items-center mb-8">
-                            <h1 class="text-2xl font-semibold text-[#2B7A78]">Edit Menu Item</h1>
+                            <h1 class="text-2xl font-semibold text-[#2B7A78]">Edit Menu</h1>
                         </div>
                         <div class="mb-4">
                             <button type="button"
@@ -26,7 +26,7 @@
                         <!-- Edit Form Card -->
                         <div class="bg-white rounded-xl shadow-sm border border-[#E0E6E5] p-6">
                             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit Menu</h1>
-                            <form action="{{ route('item.update', $item->id) }}" method="POST"
+                            <form action="{{ route('menu.update', $item->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')

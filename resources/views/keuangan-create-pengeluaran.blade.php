@@ -46,13 +46,13 @@
                                             <!-- Nama Tagihan -->
                                             <div class="mt-4">
                                                 <label for="bill_id"
-                                                    class="block text-sm font-medium text-black form-label">Nama
-                                                    Tagihan</label>
+                                                    class="block text-sm font-medium text-black form-label">
+                                                    Kategori</label>
                                                 <select name="bill_id" id="bill_id"
                                                     class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
                                                     required>
                                                     <option class="text-black" value="" selected disabled>Pilih
-                                                        Tagihan</option>
+                                                        Kategori</option>
                                                     @foreach ($bills as $bill)
                                                         <option class="text-black" value="{{ $bill->id }}">
                                                             {{ $bill->name }}</option>

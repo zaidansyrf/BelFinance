@@ -285,7 +285,18 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // <-- penting!
+                    maintainAspectRatio: false, 
+                    plugins: {
+                        legend: {
+                            position:'bottom',
+                            labels: {
+                                usePointStyle: true,     
+                                pointStyle: 'circle',    
+                                boxWidth: 10,             
+                                padding: 20               
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,

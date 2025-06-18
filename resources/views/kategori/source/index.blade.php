@@ -75,7 +75,7 @@
                                 <!-- Nama Sumber -->
                                 <div class="mb-4">
                                     <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama
-                                        Sumber</label>
+                                        Kategori</label>
                                     <input type="text" id="sourceName" name="name"
                                         class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood"
                                         required>

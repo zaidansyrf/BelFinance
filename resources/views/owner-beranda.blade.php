@@ -121,10 +121,28 @@
                     <div class="overflow-auto h-[300px] sm:h-[400px] lg:h-auto">
                         <canvas id="combinedChart" class="w-full h-full"></canvas>
                     </div>
+                    
                 </div>
 
             </div>
-        </div>
+            <div class="mb-4 card text-primary-content bg-white mt-4 w-full">
+                            <div class="card-body">
+                                <div class="overflow-hidden">
+                                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                                        <div class="bg-[#2B7A78] text-white p-4 rounded-lg">
+                                            <h3 class="text-sm">Total Menu Terjual</h3>
+                                            <p class="text-2xl font-bold">{{$totalSold}}</p>
+                                        </div>
+                                        <div class="bg-[#3AAFA9] text-white p-4 rounded-lg">
+                                            <h3 class="text-sm">Menu Terlaris</h3>
+                                            <p class="text-lg font-bold">{{ $topSellingMenu->name ?? '-' }}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+            </div>
 
         <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-5 mb-4">
             <div class="bg-white shadow-md rounded-lg p-10 mt-8">
@@ -145,67 +163,67 @@
                     </button>
                 </div>
 
-                {{-- Tabel Transaksi --}}
-                <div class="overflow-x-auto pt-6">
-                    @isset($transactions)
-                        @if ($transactions->count() > 0)
-                            <table class="min-w-full border border-gray-300">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="px-4 py-2 border">No</th>
-                                        <th class="px-4 py-2 border">Nama</th>
-                                        <th class="px-4 py-2 border">Sumber</th>
-                                        <th class="px-4 py-2 border" id="th-income">Pemasukan</th>
-                                        <th class="px-4 py-2 border" id="th-expense">Pengeluaran</th>
-                                        <th class="px-4 py-2 border">Tanggal</th>
-                                        <th class="px-4 py-2 border">Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transaction-table-body">
-                                    @foreach ($transactions as $index => $transaction)
-                                        <tr class="text-center bg-white hover:bg-gray-50"
-                                            data-type="{{ $transaction->type }}">
-                                            <td class="px-4 py-2 border nomor-urut">{{ $loop->iteration }}</td>
-                                            <td class="px-4 py-2 border">
-                                                @if ($transaction->type === 'income')
-                                                    {{ $transaction->name }}
-                                                @else
-                                                    {{ $transaction->bill->name ?? 'Tidak ada nama' }}
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}</td>
-                                            <td class="px-4 py-2 border income-col">
-                                                @if ($transaction->type === 'income')
-                                                    Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 border expense-col">
-                                                @if ($transaction->type === 'expense')
-                                                    Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 border">
-                                                {{ $transaction->created_at->format('d-m-Y') }}
-                                            </td>
-                                            <td class="px-4 py-2 border">{{ $transaction->description }}</td>
+                    {{-- Tabel Transaksi --}}
+                    <div class="overflow-x-auto pt-6">
+                        @isset($transactions)
+                            @if ($transactions->count() > 0)
+                                <table class="min-w-full border border-gray-300">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-2 border">No</th>
+                                            <th class="px-4 py-2 border">Nama</th>
+                                            <th class="px-4 py-2 border">Sumber</th>
+                                            <th class="px-4 py-2 border" id="th-income">Pemasukan</th>
+                                            <th class="px-4 py-2 border" id="th-expense">Pengeluaran</th>
+                                            <th class="px-4 py-2 border">Tanggal</th>
+                                            <th class="px-4 py-2 border">Keterangan</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody id="transaction-table-body">
+                                        @foreach ($transactions as $index => $transaction)
+                                            <tr class="text-center bg-white hover:bg-gray-50"
+                                                data-type="{{ $transaction->type }}">
+                                                <td class="px-4 py-2 border nomor-urut">{{ $loop->iteration }}</td>
+                                                <td class="px-4 py-2 border">
+                                                    @if ($transaction->type === 'income')
+                                                        {{ $transaction->name }}
+                                                    @else
+                                                        {{ $transaction->bill->name ?? 'Tidak ada nama' }}
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}</td>
+                                                <td class="px-4 py-2 border income-col">
+                                                    @if ($transaction->type === 'income')
+                                                        Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-2 border expense-col">
+                                                    @if ($transaction->type === 'expense')
+                                                        Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-2 border">
+                                                    {{ $transaction->created_at->format('d-m-Y') }}
+                                                </td>
+                                                <td class="px-4 py-2 border">{{ $transaction->description }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <p class="text-center py-4">Tidak ada transaksi hari ini.</p>
+                            @endif
                         @else
-                            <p class="text-center py-4">Tidak ada transaksi hari ini.</p>
-                        @endif
-                    @else
-                        <p class="text-center py-4">Data transaksi tidak tersedia.</p>
-                    @endisset
+                            <p class="text-center py-4">Data transaksi tidak tersedia.</p>
+                        @endisset
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -234,7 +252,17 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // <-- penting!
+                    maintainAspectRatio: false, 
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,     
+                                pointStyle: 'circle',    
+                                boxWidth: 10,             
+                                padding: 20               
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,

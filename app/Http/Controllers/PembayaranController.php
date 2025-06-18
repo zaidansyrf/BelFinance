@@ -131,16 +131,34 @@ class PembayaranController extends Controller
     }
     public function destroy($id)
     {
-        $pembayaran = Income::findOrFail($id);
+        $pembayaran = Income::with('incomeDetails')->findOrFail($id);
 
-        // Hapus detail yang terkait dulu
-        $pembayaran->incomeDetails()->delete();
+        DB::beginTransaction();
+        try {
+            // Kurangi stok item berdasarkan detail pembayaran
+            foreach ($pembayaran->incomeDetails as $detail) {
+                $item = Item::find($detail->item_id);
+                if ($item) {
+                    $item->decrement('quantity', $detail->quantity);
+                }
+            }
 
-        // Baru hapus induknya
-        $pembayaran->delete();
+            // Hapus detail yang terkait
+            $pembayaran->incomeDetails()->delete();
 
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
+            // Hapus income (pembayaran)
+            $pembayaran->delete();
+
+            DB::commit();
+
+            return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Gagal menghapus pembayaran: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus data. Silakan coba lagi.');
+        }
     }
+
 
 
 

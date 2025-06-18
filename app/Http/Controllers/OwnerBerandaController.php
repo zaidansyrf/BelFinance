@@ -6,6 +6,7 @@ use App\Models\Income;
 use App\Models\Expense;
 use App\Models\IncomeDetail;
 use App\Models\Bill;
+use App\Models\Item;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -94,11 +95,18 @@ class OwnerBerandaController extends Controller
         // Data bills untuk dropdown
         $bills = Bill::all()->pluck('name', 'id');
 
+        $topItems = Item::orderByDesc('quantity')->take(5)->get();
+        $chartData = [
+        'labels' => $topItems->pluck('name'),
+        'quantities' => $topItems->pluck('quantity'),
+    ];
+        $totalSold = Item::sum('quantity');
+        $topSellingMenu = Item::orderByDesc('quantity')->first();
         return view('owner-beranda', compact(
             'income', 'expenses', 'total_income', 'total_expenses', 'profit',
             'months', 'incomeData', 'expenseData', 'total_orders', 'summary',
             'yearlyIncome', 'yearlyExpense', 'yearlyProfit', 'currentYear',
-            'transactions', 'bills'
+            'transactions', 'bills', 'totalSold', 'topSellingMenu', 'chartData'
         ));
     }
 

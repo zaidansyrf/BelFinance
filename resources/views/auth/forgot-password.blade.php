@@ -3,7 +3,7 @@
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Reset Your Password</h1>
             <div class="mt-4 text-sm text-gray-600">
-                {{ __('Forgot your password? No problem. Just enter your email address and we\'ll send you a link to reset it.') }}
+                {{ __('Lupa password?  masukkan email yang terdaftar untuk mengubah password.') }}
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             <div class="flex items-center justify-between mt-6">
                 <a href="{{ route('login') }}"
                     class="text-sm font-medium text-[#2B7A78] hover:text-[#1a5354] transition duration-150">
-                    {{ __('Back to login') }}
+                    {{ __('Kembali ke login') }}
                 </a>
                 <button type="submit"
                     class="px-6 py-3 bg-[#2B7A78] hover:bg-[#1a5354] text-white font-medium rounded-lg shadow-md transition duration-150 transform hover:scale-[1.02]">

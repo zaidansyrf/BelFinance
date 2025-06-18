@@ -10,32 +10,53 @@ class ItemController extends Controller
 {
 
     //emthod untuk menampilkan data
-    public function index()
-    {
-      return view('item.index', [
-        'items' => DB::table('items')
-          ->orderBy('code', 'asc')
-          ->paginate(10)
-      ]);
+  public function index()
+{
+    $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
 
-    }
+    // Pie chart data
+    $topItems = Item::orderByDesc('quantity')->take(5)->get();
+    $chartData = [
+        'labels' => $topItems->pluck('name'),
+        'quantities' => $topItems->pluck('quantity'),
+    ];
+
+    $totalSold = Item::sum('quantity');
+    $topSellingMenu = Item::orderByDesc('quantity')->first();
+
+    return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
+}
+
+
 
     //method pencarian
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
+  public function search(Request $request)
+{
+    $search = $request->input('search');
 
-        $items = Item::query()
-            ->where(function ($query) use ($search) {
-                $query->where('code', 'LIKE', "%{$search}%")
-                      ->orWhere('name', 'LIKE', "%{$search}%")
-                      ->orWhere('price', 'LIKE', "%{$search}%"); // Tambahkan pencarian berdasarkan harga
-            })
-            ->orderBy('code', 'asc')
-            ->paginate(10);
+    $items = Item::query()
+        ->where(function ($query) use ($search) {
+            $query->where('code', 'LIKE', "%{$search}%")
+                  ->orWhere('name', 'LIKE', "%{$search}%")
+                  ->orWhere('price', 'LIKE', "%{$search}%");
+        })
+        ->orderBy('code', 'asc')
+        ->paginate(10);
 
-        return view('item.index', compact('items', 'search'));
-    }
+    $topItems = Item::orderByDesc('quantity')->take(5)->get();
+    $chartData = [
+        'labels' => $topItems->pluck('name'),
+        'quantities' => $topItems->pluck('quantity'),
+    ];
+
+    $totalSold = Item::sum('quantity');
+    $topSellingMenu = Item::orderByDesc('quantity')->first();
+    $totalRevenue = Item::sum(DB::raw('quantity * price'));
+
+    return view('item.index', compact('items', 'search', 'chartData', 'totalSold', 'topSellingMenu', 'totalRevenue'));
+}
+
+
 
 
     public function create()
@@ -64,7 +85,7 @@ class ItemController extends Controller
             ]);
 
             // Redirect kembali dengan pesan
-            return redirect()->route('item.index')->with('success', 'Menu berhasil ditambahkan');
+            return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
         } catch (\Exception $e) {
             // Handle errors
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
@@ -123,9 +144,20 @@ class ItemController extends Controller
 
         // Redirect back with a success message
         // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('item.index')->with('success', 'Menu berhasil dihapus');
+        return redirect()->route('menu.search')->with('success', 'Menu berhasil dihapus');
     }
 
+    public function chart()
+    {
+        $items = Item::orderByDesc('quantity')->take(5)->get();
+
+        $chartData = [
+            'labels' => $items->pluck('name'),
+            'quantities' => $items->pluck('quantity'),
+        ];
+
+        return view('item.chart', compact('chartData'));
+    }
 
 }
 

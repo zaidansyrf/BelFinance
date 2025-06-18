@@ -100,12 +100,12 @@
                 class="{{ request()->is('keuangan/kategori*') ? 'block' : 'hidden' }} bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/kategori/sumber-masuk') }}"
-                        class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-masuk*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">Sumber
+                        class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-masuk*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
                         Masuk</a>
                 </li>
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/kategori/sumber-keluar') }}"
-                        class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-keluar*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">Sumber
+                        class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-keluar*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
                         Keluar</a>
                 </li>
             </ul>
