@@ -22,7 +22,7 @@ use Carbon\Carbon;
 
                     <div class="flex justify-center w-full px-8">
                         <div class="card text-primary-content bg-white mt-4 w-full">
-                            <form method="GET" action="" class="p-6">
+                            <form method="GET" action="{{ url()->current() }}" class="p-6">
                                 <div class="flex flex-col sm:flex-row items-end gap-4">
                                     <div class="w-full sm:w-auto flex-grow">
                                         <label for="tanggal_awal" class="block text-sm font-medium text-gray-700 mb-1">Mulai Tanggal</label>
@@ -42,19 +42,19 @@ use Carbon\Carbon;
                                         </div>
                                     </div>
 
-                                    <div class="w-full sm:w-auto">
+                                   <div class="w-full sm:w-auto flex gap-2">
+                                        <button type="submit"
+                                            class="px-6 py-2 bg-[#468585] hover:bg-[#234343] text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                            Filter
+                                        </button>
                                         @if(request('tanggal_awal') || request('tanggal_akhir'))
                                             <a href="{{ url()->current() }}"
-                                                class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 bg-red-500 hover:bg-red-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                                                class="inline-flex justify-center items-center px-6 py-2 bg-red-500 hover:bg-red-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
                                                 Reset
                                             </a>
-                                        @else
-                                            <button type="submit"
-                                                class="w-full sm:w-auto px-6 py-2 bg-[#468585] hover:bg-[#234343] text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                                Filter
-                                            </button>
                                         @endif
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -127,7 +127,7 @@ use Carbon\Carbon;
 
                                         </table>
                                         <div class="mt-4">
-                                            {{ $laporan->links() }}
+                                            {{ $laporan->appends(request()->except('page'))->links() }}
                                         </div>
                                     </div>
                                 </div>
