@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('login-belfinance');
     }
 
     /**
@@ -26,9 +26,27 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        if ($request->filled('remember')) {
+            Auth::login(Auth::user(), $request->boolean('remember'));
+        }
+
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Debugging: Log user role
+        \Log::info('User role after login: ' . Auth::user()->role);
+
+        // Redirect based on role
+        $user = Auth::user();
+        $role = $user->role; // Assuming 'role' is a column in your users table
+
+        if ($role === 'owner') {
+            return redirect()->route('owner-beranda');
+        } elseif ($role === 'admin') {
+            return redirect()->route('dashboard');
+        }
+
+        // Default redirect if role is not recognized
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -42,6 +60,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login-belfinance');
     }
-}
+
+
+};

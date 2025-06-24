@@ -24,6 +24,8 @@ use App\Http\Controllers\admin\TagihanController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 
 
@@ -32,58 +34,63 @@ Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [AuthenticatedSessionController::class,'create'])->name('login-belfinance');
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 
-Route::get('/login-belfinance', function () {
-    return view("login-belfinance");
+
+Route::middleware(['web'])->group(function () {
+    Route::get('/keuangan/dashboard',[AdminKeuanganController::class, 'view'])->name(('dashboard'));
+    Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
+    Route::get('/keuangan/pembayaran/create', [KeuanganCreatePembayaranController::class, 'view'])->name('pembayaran.create');
+    Route::resource('/keuangan/pembayaran', PembayaranController::class);
+    Route::get('/keuangan/pembayaran/{id}', [PembayaranController::class, 'show'])->name('pembayaran.show');
+    Route::delete('/keuangan/pembayaran/{income}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
+
+    Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
+    Route::delete('/keuangan/uang-masuk/{income}', [UangMasukController::class, 'destroy'])->name('income.destroy');
+    Route::get('/keuangan/uang-masuk/', [UangMasukController::class, 'search'])->name('uang-masuk.search');
+    Route::resource('/keuangan/uang-masuk', UangMasukController::class);
+    Route::get('/keuangan/uang-masuk/', [UangMasukController::class, 'search'])->name('uang-masuk.search');
+
+    Route::resource('/keuangan/pengeluaran', ExpenseController::class);
+    Route::get('/keuangan/pengeluaran/', [ExpenseController::class, 'search'])->name('expenses.search');
+    // hapus pengeluaran
+    Route::delete('/keuangan/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+    // update
+    Route::put('/keuangan/pengeluaran/{expense}/edit', [ExpenseController::class, 'update'])->name('expenses.update');
+    // show
+    Route::post('/keuangan/pengeluaran/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
+
+    Route::resource('/keuangan/menu', ItemController::class);
+    Route::get('/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
+    Route::get('/keuangan/menu/{id}/edit', [ItemController::class, 'edit'])->name('menu.edit');
+    Route::put('/keuangan/menu/{id}', [ItemController::class, 'update'])->name('menu.update');
+    Route::get('keuangan/menu-terlaris', [ItemController::class, 'chart'])->name('menu.chart');
+    Route::delete('/keuangan/menu/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+
+
+    Route::resource('/keuangan/kategori/sumber-masuk', SourceController::class);
+    Route::resource('/keuangan/kategori/sumber-keluar', BillController::class);
+    //laporan
+    Route::get('/keuangan/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
+    Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
+    //Info Profile
+    Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
+    Route::get('/keuangan/info-profile/edit', [AdminKeuanganInfoProfileController::class, 'edit'])->name('info-profile.edit');
+    Route::post('/keuangan/info-profile/update', [AdminKeuanganInfoProfileController::class, 'update'])->name('info-profile.update');
+    Route::get('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePasswordForm'])->name('info-profile.change-password-form');
+    Route::post('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePassword'])->name('info-profile.update-password');
 });
 
-Route::get('/admin/keuangan/dashboard',[AdminKeuanganController::class, 'view']);
-Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
-Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
-Route::resource('keuangan/uang-masuk', UangMasukController::class);
-// Route::get('/keuangan/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::resource('keuangan/pembayaran', PembayaranController::class);
-Route::resource('keuangan/pengeluaran', ExpenseController::class);
 
-// Route::get('/keuangan/create-pembayaran',[KeuanganCreatePembayaranController::class, 'view']);
-Route::get('/keuangan/detail-pemasukkan',[DetailPemasukkanController::class, 'view']);
-// Route::get('/keuangan/pengeluaran',[PengeluaranController::class, 'view']);
-Route::resource('/admin/keuangan/kategori/sumber-masuk', SourceController::class);
-Route::resource('/admin/keuangan/kategori/sumber-keluar', BillController::class);
-// Route::get('/admin/keuangan/laporan-keuangan',[AdminLaporanKeuanganController::class, 'view']);
-Route::get('/admin/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-// Route::get('/admin/keuangan/menu',[AdminKeuanganMenuController::class, 'view']);
-// Route::get('/admin/keuangan/kategori/sumber-keluar',[AdminKeuanganKategoriSumberKeluarController::class, 'view']);
-Route::get('/admin/keuangan/laporan-keuangan/pembayaran',[AdminKeuanganLaporanPembayaranController::class, 'view']);
-Route::get('/admin/keuangan/laporan-keuangan/pemasukkan',[AdminKeuanganLaporanPemasukkanController::class, 'view']);
-Route::get('/admin/keuangan/laporan-keuangan/pengeluaran',[AdminKeuanganLaporanPengeluaranController::class, 'view']);
-// Route::get('/admin/keuangan/laporan-keuangan/sumber',[AdminKeuanganLaporanSumberController::class, 'view']);
-// Route::get('/admin/hutang',[AdminHutangController::class, 'view']);
-Route::get('/owner/beranda',[OwnerBerandaController::class, 'view']);
-Route::get('/owner/laporan-keuangan',[OwnerLaporanKeuanganController::class, 'view']);
-Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view']);
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware(['web', 'auth'])->group(function () {
+    // beranda owner
+Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
+// laporan owner
+Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
+// info profile owner
+Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
 });
-
-
-// Route::prefix('menu')->name('menu.')->group(function() {
-//     Route::get('/', [MenuController::class, 'index'])->name('index');
-//     Route::get('/create', [MenuController::class, 'create'])->name('create');
-//     Route::post('/', [MenuController::class, 'store'])->name('store');
-//     Route::get('/{id}/edit', [MenuController::class, 'edit'])->name('edit');
-//     Route::put('/{id}', [MenuController::class, 'update'])->name('update');
-//     Route::delete('/{id}', [MenuController::class, 'destroy'])->name('destroy');
-// });
-Route::resource('/admin/keuangan/menu', ItemController::class);
-
-
-
 require __DIR__.'/auth.php';

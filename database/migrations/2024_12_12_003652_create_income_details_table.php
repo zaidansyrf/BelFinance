@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('income_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('income_id')->constrained('incomes');
+            $table->foreignId('income_id')->constrained('incomes')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items');
             $table->integer('quantity');
             $table->integer('subtotal');

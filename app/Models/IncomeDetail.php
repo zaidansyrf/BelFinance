@@ -19,10 +19,13 @@ class IncomeDetail extends Model
     public function income()
     {
         return $this->belongsTo(Income::class);
+
     }
 
     public function item()
     {
         return $this->belongsTo(Item::class);
+
     }
+
 }

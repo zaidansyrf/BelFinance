@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class AdminMiddleware
 {
@@ -15,6 +18,15 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Periksa apakah user adalah admin
+        if (!Auth::check() || Auth::user()->role !== 'keuangan') {
+            abort(403, 'Akses ditolak. Hanya admin yang diizinkan.');
+        }
+
         return $next($request);
     }
+
+
+
+
 }

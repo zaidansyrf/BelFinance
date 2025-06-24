@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->date('date');
             $table->text('description');
+            $table->enum('type', ['payment', 'income'])->default('payment');
             $table->timestamps();
         });
     }

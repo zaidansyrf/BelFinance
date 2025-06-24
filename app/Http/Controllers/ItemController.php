@@ -4,97 +4,160 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-      // Retrieve all item items from the database
-      $items = Item::all();
-      return view('item.index', compact('items'));
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    //emthod untuk menampilkan data
+  public function index()
+{
+    $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
+
+    // Pie chart data
+    $topItems = Item::orderByDesc('quantity')->take(5)->get();
+    $chartData = [
+        'labels' => $topItems->pluck('name'),
+        'quantities' => $topItems->pluck('quantity'),
+    ];
+
+    $totalSold = Item::sum('quantity');
+    $topSellingMenu = Item::orderByDesc('quantity')->first();
+
+    return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
+}
+
+
+
+    //method pencarian
+  public function search(Request $request)
+{
+    $search = $request->input('search');
+
+    $items = Item::query()
+        ->where(function ($query) use ($search) {
+            $query->where('code', 'LIKE', "%{$search}%")
+                  ->orWhere('name', 'LIKE', "%{$search}%")
+                  ->orWhere('price', 'LIKE', "%{$search}%");
+        })
+        ->orderBy('code', 'asc')
+        ->paginate(10);
+
+    $topItems = Item::orderByDesc('quantity')->take(5)->get();
+    $chartData = [
+        'labels' => $topItems->pluck('name'),
+        'quantities' => $topItems->pluck('quantity'),
+    ];
+
+    $totalSold = Item::sum('quantity');
+    $topSellingMenu = Item::orderByDesc('quantity')->first();
+    $totalRevenue = Item::sum(DB::raw('quantity * price'));
+
+    return view('item.index', compact('items', 'search', 'chartData', 'totalSold', 'topSellingMenu', 'totalRevenue'));
+}
+
+
+
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    //method menyimpan data ke database
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
+            'code' => 'required|string|max:255|unique:items,code',
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ]);
+        try {
+            // membuat item baru
+            Item::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'code' => $request->code
+            ]);
 
-        // Coba jika inputan tidak berupa angka
-        if (!is_numeric($request->quantity)) {
-            return redirect()->back()->with('error', 'Harus berupa angka');
+            // Redirect kembali dengan pesan
+            return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
         }
-
-        // Create a new item item
-        Item::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-        ]);
-
-        // Redirect back with a success message
-        // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        // Menampilkan detail item berdasarkan ID
+        $item = Item::findOrFail($id);
+        return view('item.show', compact('item'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    //method edit
     public function edit(string $id)
     {
-        //
+        // Menampilkan form edit item berdasarkan ID
+        $item = Item::findOrFail($id);
+        return view('item.edit-menu', compact('item'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //method update
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:1',
+            'code' => 'required|string|max:255|unique:items,code,' . $id,
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
+        ]);
+
+        try {
+            // Update item
+            $item = Item::findOrFail($id);
+            $item->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'code' => $request->code
+            ]);
+
+            // Redirect kembali dengan pesan
+            return redirect()->route('menu.search')->with('success', 'Menu berhasil diperbarui');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui menu');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //method hapus
     public function destroy(string $id)
     {
         Item::destroy($id);
 
         // Redirect back with a success message
         // Kembali ke halaman admin/keuangan/menu
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
+        return redirect()->route('menu.search')->with('success', 'Menu berhasil dihapus');
     }
-    public function search(Request $request)
-{
-    $query = $request->input('search');
-    $items = Item::where('name', 'like', '%' . $query . '%')->get();
 
-    return view('menu.index', compact('items'));
-}
+    public function chart()
+    {
+        $items = Item::orderByDesc('quantity')->take(5)->get();
+
+        $chartData = [
+            'labels' => $items->pluck('name'),
+            'quantities' => $items->pluck('quantity'),
+        ];
+
+        return view('item.chart', compact('chartData'));
+    }
 
 }
 
