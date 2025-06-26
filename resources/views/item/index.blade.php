@@ -142,12 +142,7 @@
                                         class="w-full p-2 border border-gray-300 rounded-md"
                                         placeholder="cth. Ayam Goreng" required>
                                 </div>
-                                <div class="mb-4">
-                                    <label for="menuCode" class="block text-sm font-medium text-gray-700">Kode
-                                        Menu</label>
-                                    <input type="text" name="code" id="menuCode"
-                                        class="w-full p-2 border border-gray-300 rounded-md" placeholder="" required>
-                                </div>
+                                <input type="hidden" name="code" id="menuCode" />
                                 <div class="mb-4">
                                     <label for="menuJumlah"
                                         class="block text-sm font-medium text-gray-700">Jumlah</label>

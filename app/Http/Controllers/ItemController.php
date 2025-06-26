@@ -64,33 +64,53 @@ class ItemController extends Controller
         //
     }
 
-    //method menyimpan data ke database
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:0',
-            'price' => 'required|numeric|min:1',
-            'code' => 'required|string|max:255|unique:items,code',
-        ], [
-            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
-        ]);
-        try {
-            // membuat item baru
-            Item::create([
-                'name' => $request->name,
-                'price' => $request->price,
-                'quantity' => $request->quantity,
-                'code' => $request->code
-            ]);
 
-            // Redirect kembali dengan pesan
-            return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
-        } catch (\Exception $e) {
-            // Handle errors
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
+        public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'quantity' => 'required|integer|min:0',
+        'price' => 'required|numeric|min:1',
+    ]);
+
+    try {
+        $words = explode(' ', strtoupper($request->name));
+        $prefix = '';
+
+        if (count($words) > 0) {
+            $prefix = $words[0];
+
+            if (strlen($prefix) < 3 && isset($words[1])) {
+                $prefix .= substr($words[1], 0, 3 - strlen($prefix));
+            }
+
+            $prefix = substr($prefix, 0, 3);
         }
+
+        $lastItem = Item::where('code', 'LIKE', $prefix . '%')
+                        ->orderBy('code', 'desc')
+                        ->first();
+
+        $nextNumber = 1;
+        if ($lastItem) {
+            $lastNumber = (int)substr($lastItem->code, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        }
+        //generate code
+        $newCode = $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT); 
+
+        Item::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'code' => $newCode,
+        ]);
+
+        return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
     }
+}
 
     public function show(string $id)
     {
