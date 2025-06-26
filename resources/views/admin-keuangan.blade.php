@@ -39,50 +39,62 @@
                                 <p class="text-sm">Laba/Rugi Tahun {{ $currentYear }}</p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                             <!-- card pemasukkan total -->
-                            <div
-                                class="relative text-white p-4 rounded-lg w-full text-center shadow-md overflow-hidden"
-                                style="background-color: #55AD9B;">
-                                <div class="absolute inset-0 opacity-50 pointer-events-none">
-                                    <svg viewBox="0 0 122.88 68.04" xmlns="http://www.w3.org/2000/svg"
-                                        class="w-full h-full object-contain">
-                                        <path d="M2.03,56.52c-2.66,2.58-2.72,6.83-0.13,9.49c2.58,2.66,6.83,2.72,9.49,0.13l27.65-26.98l23.12,22.31 c2.67,2.57,6.92,2.49,9.49-0.18l37.77-38.22v19.27c0,3.72,3.01,6.73,6.73,6.73s6.73-3.01,6.73-6.73V6.71h-0.02 c0-1.74-0.67-3.47-2-4.78c-1.41-1.39-3.29-2.03-5.13-1.91H82.4c-3.72,0-6.73,3.01-6.73,6.73c0,3.72,3.01,6.73,6.73,6.73h17.63 L66.7,47.2L43.67,24.97c-2.6-2.5-6.73-2.51-9.33,0.03L2.03,56.52z" 
-                                            fill="white"
-                                            fill-opacity="0.3" />
+                            <div class="relative text-white p-4 rounded-lg w-full shadow-md overflow-hidden flex items-center justify-start space-x-4" style="background-color: #55AD9B;">
+                                <div class="bg-white p-3 rounded-xl z-10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="green" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M14 5h7v7" />
                                     </svg>
                                 </div>
-                                <p class="text-lg font-bold relative z-10">Rp.
-                                    {{ number_format($income->sum('amount'), 0, ',', '.') }}</p>
-                                <p class="text-sm relative z-10">Pemasukan Hari Ini</p>
+                                <div class="z-10">
+                                    <p class="text-lg font-bold">Rp. {{ number_format($income->sum('amount'), 0, ',', '.') }}</p>
+                                    <p class="text-sm">Pemasukan Hari Ini</p>
+                                </div>
                             </div>
                             <!-- card pengeluaran total -->
-                            <div
-                                 class="relative text-white p-4 rounded-lg w-full text-center shadow-md overflow-hidden"
-                                 style="background-color: #D35D6E;">
-                                <div class="absolute inset-0 opacity-50 pointer-events-none">
-                                    <svg viewBox="0 0 122.88 68.04" xmlns="http://www.w3.org/2000/svg"
-                                        class="w-full h-full">
-                                        <path d="M2.03,11.52C-0.63,8.94-0.68,4.69,1.9,2.03c2.58-2.66,6.83-2.72,9.49-0.13l27.65,26.98L62.16,6.57 c2.67-2.57,6.92-2.49,9.49,0.18l37.77,38.22V25.7c0-3.72,3.01-6.73,6.73-6.73s6.73,3.01,6.73,6.73v35.63h-0.02 c0,1.74-0.67,3.47-2,4.78c-1.41,1.39-3.29,2.03-5.13,1.91H82.4c-3.72,0-6.73-3.01-6.73-6.73c0-3.72,3.01-6.73,6.73-6.73h17.63 L66.7,20.84L43.67,43.07c-2.6,2.5-6.73,2.51-9.33-0.03L2.03,11.52z"
-                                         fill="white" 
-                                         fill-opacity="0.3" />
+                            <div class="relative text-white p-4 rounded-lg w-full shadow-md overflow-hidden flex items-center space-x-4" style="background-color: #D35D6E;">
+                                <div class="bg-white p-3 rounded-xl z-10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l6 6 4-4 8 8M14 17h7v-7" />
                                     </svg>
                                 </div>
-                                <p class="text-lg font-bold relative z-10">Rp.
-                                    {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</p>
-                                <p class="text-sm relative z-10">Pengeluaran Hari Ini</p>
+
+                                <div class="z-10">
+                                    <p class="text-lg font-bold">Rp. {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</p>
+                                    <p class="text-sm">Pengeluaran Hari Ini</p>
+                                </div>
                             </div>
+
                             <!-- card jumlah transaksi -->
-                            <div
-                                class="relative text-white p-4 rounded-lg w-full text-center shadow-md overflow-hidden"
-                                 style="background-color: #6A8CAF;">
-                                <p class="text-lg font-bold">{{ $total_orders }}</p>
-                                <p class="text-sm">Jumlah Pesanan</p>
+                            <div class="relative text-white p-4 rounded-lg w-full shadow-md overflow-hidden flex items-center space-x-4" style="background-color: #6A8CAF;">
+                                <div class="bg-white p-3 rounded-xl z-10">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-black" viewBox="0 0 92.04 122.88" fill="none" stroke="blue">
+                                        <path d="M21.74,33.56h48.65c0.24,0,0.44,0.2,0.44,0.44c0,3.15,0,1.05,0,4.19c0,0.24-0.2,0.44-0.44,0.44H21.74 c-0.29,0-0.53-0.24-0.53-0.53c0-3.09,0-0.93,0-4.02C21.21,33.8,21.45,33.56,21.74,33.56L21.74,33.56z M9.25,7.23h7.81V2.33 c0-1.28,1.28-2.33,2.85-2.33h0c1.57,0,2.85,1.05,2.85,2.33v4.89h12.4V2.33C35.16,1.05,36.44,0,38,0h0c1.57,0,2.85,1.05,2.85,2.33 v4.89h12.4V2.33C53.25,1.05,54.53,0,56.1,0h0c1.57,0,2.85,1.05,2.85,2.33v4.89h12.4V2.33c0-1.28,1.28-2.33,2.85-2.33h0 c1.57,0,2.85,1.05,2.85,2.33v4.89h5.74c5.09,0,9.25,4.16,9.25,9.25v97.15c0,5.09-4.16,9.25-9.25,9.25H9.25 c-5.09,0-9.25-4.16-9.25-9.25V16.48C0,11.39,4.16,7.23,9.25,7.23L9.25,7.23z M9.99,15.1h7.07v3.47c0,1.28,1.28,2.33,2.85,2.33h0 c1.57,0,2.85-1.05,2.85-2.33V15.1h12.4v3.47c0,1.28,1.28,2.33,2.85,2.33h0c1.57,0,2.85-1.05,2.85-2.33V15.1h12.4v3.47 c0,1.28,1.28,2.33,2.85,2.33h0c1.57,0,2.85-1.05,2.85-2.33V15.1h12.4v3.47c0,1.28,1.28,2.33,2.85,2.33h0 c1.57,0,2.85-1.05,2.85-2.33V15.1h5c1.43,0,2.61,1.18,2.61,2.61v94.68c0,1.42-1.18,2.61-2.61,2.61H9.99 c-1.42,0-2.61-1.17-2.61-2.61V17.71C7.38,16.28,8.56,15.1,9.99,15.1L9.99,15.1z M21.74,104.89h48.65c0.24,0,0.44-0.2,0.44-0.44 c0-3.15,0-1.05,0-4.19c0-0.24-0.2-0.44-0.44-0.44H21.74c-0.29,0-0.53,0.24-0.53,0.53c0,2.73,0,1.29,0,4.02 C21.21,104.65,21.45,104.89,21.74,104.89L21.74,104.89z M21.74,88.33h48.65c0.24,0,0.44-0.2,0.44-0.44c0-3.15,0-0.57,0-3.71 c0-0.24-0.2-0.44-0.44-0.44H21.74c-0.29,0-0.53,0.24-0.53,0.53c0,3.09,0,0.45,0,3.54C21.21,88.09,21.45,88.33,21.74,88.33 L21.74,88.33z M21.74,71.76h48.65c0.24,0,0.44-0.2,0.44-0.44c0-3.15,0-1.53,0-4.67c0-0.24-0.2-0.44-0.44-0.44H21.74 c-0.29,0-0.53,0.24-0.53,0.53c0,3.09,0,1.41,0,4.5C21.21,71.52,21.45,71.76,21.74,71.76L21.74,71.76z M21.74,55.2h48.65 c0.24,0,0.44-0.2,0.44-0.44c0-3.15,0-1.05,0-4.19c0-0.24-0.2-0.44-0.44-0.44H21.74c-0.29,0-0.53,0.24-0.53,0.53 c0,3.09,0,0.93,0,4.02C21.21,54.96,21.45,55.2,21.74,55.2L21.74,55.2z"/>
+                                    </svg>
+                                </div>
+                                <div class="z-10">
+                                    <p class="text-lg font-bold">{{ $total_orders }}</p>
+                                    <p class="text-sm">Jumlah Pesanan</p>
+                                </div>
                             </div>
-                            <div
-                                class="bg-gradient-to-r {{ $profit >= 0 ? 'from-profit-green to-profit-green' : 'from-loss-red to-loss-red' }} text-white p-4 rounded-lg w-full text-center shadow-md">
-                                <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
-                                <p class="text-sm">Keuntungan Hari Ini</p>
+                            <!-- card profit -->
+                            <div class="bg-gradient-to-r {{ $profit >= 0 ? 'from-profit-green to-profit-green' : 'from-loss-red to-loss-red' }} text-white p-4 rounded-lg w-full shadow-md flex items-center space-x-4">
+                                <div class="bg-white p-3 rounded-xl z-10">
+                                    @if($profit >= 0)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M14 5h7v7" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l6 6 4-4 8 8M14 17h7v-7" />
+                                        </svg>
+                                    @endif
+                                </div>
+                                <div class="z-10">
+                                    <p class="text-sm">Keuntungan Hari Ini</p>
+                                    <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>

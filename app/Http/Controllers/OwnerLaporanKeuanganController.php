@@ -13,7 +13,7 @@ class OwnerLaporanKeuanganController extends Controller
     {
         $tanggalAwal = $request->tanggal_awal;
         $tanggalAkhir = $request->tanggal_akhir;
-        $type = $request->query('type'); // Tambahkan ini
+        $type = $request->query('type'); // meminta data berupa tipe
 
         $incomeQuery = Income::with('source')
             ->selectRaw("'pemasukan' as jenis, name as nama, source_id, amount as jumlah, date as tanggal, description as keterangan, NULL as bill_id");
@@ -33,7 +33,6 @@ class OwnerLaporanKeuanganController extends Controller
             $expenseQuery->whereBetween('expenses.date', [$tanggalAwal, $tanggalAkhir]);
         }
 
-        // Tambahkan logika filter berdasarkan jenis transaksi
         if ($type === 'pemasukan') {
             $laporan = $incomeQuery->orderBy('tanggal', 'desc')->paginate(10);
         } elseif ($type === 'pengeluaran') {

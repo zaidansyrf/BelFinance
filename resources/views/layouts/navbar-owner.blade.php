@@ -35,11 +35,9 @@
                         class="relative flex rounded-full bg-gray-100 p-1 text-gray-400 hover:text-[#468585] focus:outline-none focus:ring-2 focus:ring-[#468585] focus:ring-offset-2 transition-colors duration-200"
                         aria-expanded="false" aria-haspopup="true" onclick="toggleProfileDropdown()">
                         <span class="sr-only">View profile</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
+                        <img class="h-12 w-12 rounded-full"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=68585&color=fff"
+                                alt="Profile photo">
                     </button>
                     <div id="profile-dropdown"
                         class="hidden absolute right-0 top-full mt-6 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">

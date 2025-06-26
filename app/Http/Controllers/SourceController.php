@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class SourceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // $sources = Source::all();
@@ -20,17 +17,11 @@ class SourceController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -40,17 +31,11 @@ class SourceController extends Controller
         return redirect()->route('sumber-masuk.index')->with('success', 'Sumber berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $source = Source::findOrFail($id);
@@ -59,9 +44,6 @@ class SourceController extends Controller
         return view('keuangan-source-edit', compact('source'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -72,9 +54,6 @@ class SourceController extends Controller
         return redirect()->route('sumber-masuk.index')->with('success', 'Sumber berhasil diupdate.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         Source::findOrFail($id)->delete();

@@ -27,7 +27,7 @@ class BillController extends Controller
     }
     public function destroy(Bill $sumber_keluar)
     {
-        // Pastikan data ditemukan
+        // pengecekan data untuk sumber
         if (!$sumber_keluar) {
             return redirect()->route('sumber-keluar.index')->with('error', 'Data tidak ditemukan.');
         }

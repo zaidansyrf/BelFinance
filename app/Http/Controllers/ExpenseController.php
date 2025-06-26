@@ -17,12 +17,11 @@ class ExpenseController extends Controller
         ->get()
         ->keyBy('month');
 
-    // Buat array dengan semua bulan (1-12) dengan nilai default 0
     $months = [];
     for ($i = 1; $i <= 12; $i++) {
         $months[] = [
             'month' => $i,
-            'total' => $monthlyExpense[$i]->total ?? 0  // Jika tidak ada transaksi, nilai = 0
+            'total' => $monthlyExpense[$i]->total ?? 0  // tidak ada transaksi, nilai = 0
         ];
     }
 
@@ -56,7 +55,6 @@ class ExpenseController extends Controller
 
         return view('expenses.index', compact('expenses', 'search'));
     }
-
 
     public function create()
     {
@@ -125,8 +123,5 @@ class ExpenseController extends Controller
         $expense->delete();
         return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil dihapus!');
     }
-
-
-
 
 }

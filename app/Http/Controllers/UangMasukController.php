@@ -13,8 +13,8 @@ class UangMasukController extends Controller
     public function index()
     {
         $income = Income::with(['source'])
-                        ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal masuk (terbaru dulu)
-                        ->paginate(10); // Menampilkan 10 item per halaman
+                        ->orderBy('created_at', 'desc') //sorting berdasar data masuk
+                        ->paginate(10); // tampil 10 data
 
         $sources = Source::all();
 
@@ -38,7 +38,7 @@ class UangMasukController extends Controller
                 'date' => $request->date,
                 'amount' => $request->amount,
                 'description' => $request->description,
-                'type' => 'income', // Asumsikan tipe ini selalu 'income'
+                'type' => 'income', 
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
@@ -78,11 +78,12 @@ class UangMasukController extends Controller
 
     public function destroy(Income $income)
     {
+        // pengecekan untuk menghapus income
         try {
-            // Hapus data income_details terkait dulu
+            // hapus data berelasi income_details
             $income->incomeDetails()->delete();
 
-            // Baru hapus data income
+            // hapus income
             $income->delete();
 
             return redirect()->back()->with('success', 'Data berhasil dihapus');
@@ -91,7 +92,5 @@ class UangMasukController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data.');
         }
     }
-
-
 
 }
