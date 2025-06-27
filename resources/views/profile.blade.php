@@ -32,7 +32,7 @@
                         </div>
                         <div class="mt-4 border-t border-gray-200 pt-4 flex items-center space-x-4">
                             <img class="h-12 w-12 rounded-full"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=68585&color=fff"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random&color=fff"
                                 alt="Profile photo">
 
                             <div>

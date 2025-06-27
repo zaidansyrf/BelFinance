@@ -36,7 +36,7 @@
                         aria-expanded="false" aria-haspopup="true" onclick="toggleProfileDropdown()">
                         <span class="sr-only">View profile</span>
                         <img class="h-12 w-12 rounded-full"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=68585&color=fff"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random&color=fff"
                                 alt="Profile photo">
                     </button>
                     <div id="profile-dropdown"

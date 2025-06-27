@@ -55,7 +55,7 @@
                     <div class="w-12 h-12 rounded-full">
                         <a class="inline-flex items-center justify-center p-2 hover:text-[#000000] mt-2">
                             <img class="h-12 w-12 rounded-full"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=68585&color=fff"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random&color=fff"
                                 alt="Profile photo">
                         </a>
                     </div>

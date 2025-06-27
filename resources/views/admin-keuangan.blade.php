@@ -65,7 +65,6 @@
                                     <p class="text-sm">Pengeluaran Hari Ini</p>
                                 </div>
                             </div>
-
                             <!-- card jumlah transaksi -->
                             <div class="relative text-white p-4 rounded-lg w-full shadow-md overflow-hidden flex items-center space-x-4" style="background-color: #6A8CAF;">
                                 <div class="bg-white p-3 rounded-xl z-10">
@@ -79,21 +78,21 @@
                                 </div>
                             </div>
                             <!-- card profit -->
-                            <div class="bg-gradient-to-r {{ $profit >= 0 ? 'from-profit-green to-profit-green' : 'from-loss-red to-loss-red' }} text-white p-4 rounded-lg w-full shadow-md flex items-center space-x-4">
-                                <div class="bg-white p-3 rounded-xl z-10">
-                                    @if($profit >= 0)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M14 5h7v7" />
-                                        </svg>
-                                    @else
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l6 6 4-4 8 8M14 17h7v-7" />
-                                        </svg>
-                                    @endif
+                            <div class="{{ $profit > 0 ? 'bg-gradient-to-r from-profit-green to-profit-green' : ($profit < 0 ? 'bg-gradient-to-r from-loss-red to-loss-red' : 'bg-black') }} text-white p-4 rounded-lg w-full shadow-md flex items-center space-x-4">
+                                <div class="bg-white p-3 rounded-xl z-10 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-6 h-6 {{ $profit > 0 ? 'text-green-600' : ($profit < 0 ? 'text-red-600' : 'text-gray-500') }}"
+                                        fill="currentColor"
+                                        viewBox="0 0 122.88 120.5">
+                                            <path class="st0" d="M64.82,68.27l48.4,0.8c0,17.19-8.55,33.26-22.81,42.86L64.82,68.27L64.82,68.27z M59.99,59.92L59.44,3.63 L59.41,0l3.61,0.25h0.01h0.01c4.56,0.32,8.98,1.12,13.21,2.33c4.23,1.21,8.29,2.86,12.13,4.87c19.67,10.34,33.27,30.56,34.34,54.02l0.16,3.61l-3.61-0.11l-56.02-1.72l-3.23-0.1L59.99,59.92L59.99,59.92z M66.19,7.33l0.48,49.31l49.06,1.5 c-2.1-19.45-13.88-36.02-30.48-44.74c-3.41-1.79-7.04-3.26-10.84-4.35C71.74,8.28,69,7.71,66.19,7.33L66.19,7.33z M55.19,65.31l27.6,47.8c-8.38,4.84-17.92,7.39-27.6,7.39C24.71,120.5,0,95.78,0,65.31c0-29.57,23.31-53.9,52.86-55.14L55.19,65.31L55.19,65.31z"/>
+                                    </svg>
                                 </div>
+
                                 <div class="z-10">
-                                    <p class="text-sm">Keuntungan Hari Ini</p>
-                                    <p class="text-lg font-bold">Rp. {{ number_format($profit, 0, ',', '.') }}</p>
+                                    <p class="text-lg font-bold {{ $profit === null ? 'text-gray-900' : 'text-white' }}">
+                                        {{ $profit === null ? '-' : 'Rp. ' . number_format($profit, 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-sm {{ $profit === null ? 'text-gray-700' : 'text-white' }}">Keuntungan Hari Ini</p>
                                 </div>
                             </div>
                         </div>
