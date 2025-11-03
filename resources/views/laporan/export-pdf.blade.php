@@ -119,10 +119,12 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>LAPORAN KEUANGAN</h1>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative;">
+        <img src="{{ public_path('storage/logo_belindo_resized.png') }}" 
+            style="height:60px; position:absolute; left:0;">
+        <h1 style="margin:0; font-size:22px; color:#2B7A78; font-weight:bold; text-align:center;">LAPORAN KEUANGAN</h1>
     </div>
-
+    <hr style="border: 1px solid #2B7A78; margin-bottom: 15px;">
     <div class="info-period">
         <p>Periode: {{ $tanggalAwal }} s/d {{ $tanggalAkhir }}</p>
         <p>Tanggal Cetak: {{ date('d F Y') }}</p>
