@@ -15,7 +15,7 @@ class Item extends Model
     protected $table = 'items';
 
     // Define the fillable columns
-    protected $fillable = ['name', 'price', 'quantity', 'code', 'image'];
+    protected $fillable = ['name', 'description', 'price', 'quantity', 'code', 'image'];
 
     // Define the relationship with income details
     public function incomeDetails()

@@ -75,6 +75,9 @@
                                         </div>
                                     </div>
 
+                                    <!-- Description Field -->
+                                    @include('ai._deskripsi-menu-field', ['value' => old('description', $item->description)])
+
                                     <!-- Image Field -->
                                     <div>
                                         <label for="image" class="block text-sm font-medium text-gray-700 mb-2">

@@ -18,6 +18,14 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
+    // AI (Vikey Plan, API kompatibel OpenAI: /chat/completions)
+    'vikey' => [
+        'base_url' => env('VIKEY_BASE_URL', 'https://api-plan.vikey.ai/v1'),
+        'api_key' => env('VIKEY_API_KEY'),
+        'model' => env('VIKEY_MODEL', 'vikey/plan'),
+        'timeout' => (int) env('VIKEY_TIMEOUT', 60),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

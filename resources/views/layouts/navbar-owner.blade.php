@@ -27,6 +27,11 @@
                         {{ request()->routeIs('laporan-owner') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
                         Laporan Keuangan
                     </a>
+                    <a href="{{ route('ai.asisten') }}"
+                        class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
+                        {{ request()->routeIs('ai.asisten') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
+                        Tanya AI
+                    </a>
                 </nav>
 
                 <!-- Profile -->
@@ -72,6 +77,11 @@
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150
                                 {{ request()->routeIs('laporan-owner') ? 'text-[#468585] font-semibold' : '' }}">
                                 Laporan Keuangan
+                            </a>
+                            <a href="{{ route('ai.asisten') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150
+                                {{ request()->routeIs('ai.asisten') ? 'text-[#468585] font-semibold' : '' }}">
+                                Tanya AI
                             </a>
                         </div>
 

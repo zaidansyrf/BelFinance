@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminKeuanganInfoProfileController;
 use App\Http\Controllers\AdminLaporanKeuanganController;
+use App\Http\Controllers\AiController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\ExpenseController;
@@ -61,11 +62,19 @@ Route::middleware(['auth', 'role:keuangan'])->prefix('keuangan')->group(function
 
     // Laporan
     Route::get('/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
+
+    // AI: buat deskripsi menu
+    Route::post('/menu/deskripsi-ai', [AiController::class, 'deskripsiMenu'])
+        ->middleware('throttle:20,1')->name('ai.deskripsi-menu');
 });
 
-// Export PDF: keuangan dan owner
+// Export PDF & AI: keuangan dan owner
 Route::middleware(['auth', 'role:keuangan,owner'])->group(function () {
     Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
+
+    Route::get('/ai/asisten', [AiController::class, 'asisten'])->name('ai.asisten');
+    Route::post('/ai/tanya', [AiController::class, 'tanya'])->middleware('throttle:30,1')->name('ai.tanya');
+    Route::post('/ai/insight', [AiController::class, 'insight'])->middleware('throttle:10,1')->name('ai.insight');
 });
 
 // Profil & ganti password: semua role

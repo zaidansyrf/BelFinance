@@ -50,6 +50,9 @@
                             <x-menu-image :item="$item" size="w-full h-24 sm:h-28" text="text-2xl" class="rounded-none" />
                             <div class="p-3">
                                 <p class="text-sm font-medium text-gray-800 leading-tight line-clamp-2">{{ $item->name }}</p>
+                                @if ($item->description)
+                                    <p class="mt-0.5 text-xs text-gray-500 leading-snug line-clamp-2">{{ $item->description }}</p>
+                                @endif
                                 <p class="mt-1 text-sm font-semibold text-[#2B7A78]">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
                             </div>
                             <span x-show="qtyOf({{ $item->id }})" x-text="qtyOf({{ $item->id }})"

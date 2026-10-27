@@ -78,6 +78,9 @@
                             </div>
                         </div>
         </div>
+        <div class="px-8">
+            @include('ai._insight')
+        </div>
         <div class="flex-1 bg-[#D1DDD5] overflow-hidden px-8 mt-12 mb-4">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Analytic</h1>
             <div class="flex flex-col lg:flex-row gap-6">

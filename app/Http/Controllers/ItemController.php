@@ -50,6 +50,7 @@ class ItemController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
             'code' => 'required|string|max:255|unique:items,code',
@@ -61,6 +62,7 @@ class ItemController extends Controller
             // membuat item baru
             Item::create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
                 'code' => $request->code,
@@ -89,6 +91,7 @@ class ItemController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
             'code' => 'required|string|max:255|unique:items,code,'.$id,
@@ -112,6 +115,7 @@ class ItemController extends Controller
 
             $item->update([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
                 'code' => $request->code,

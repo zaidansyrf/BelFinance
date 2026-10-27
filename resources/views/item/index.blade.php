@@ -73,7 +73,12 @@
                                                         <x-menu-image :item="$menu" />
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">
+                                                        {{ $menu->name }}
+                                                        @if ($menu->description)
+                                                            <p class="text-xs text-gray-500 max-w-xs truncate">{{ $menu->description }}</p>
+                                                        @endif
+                                                    </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">Rp
@@ -166,6 +171,7 @@
                                         class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp "
                                         required step="1" min="0" inputmode="numeric">
                                 </div>
+                                @include('ai._deskripsi-menu-field', ['id' => 'menuDescription'])
                                 <div class="mb-4">
                                     <label for="menuImage" class="block text-sm font-medium text-gray-700">Gambar
                                         <span class="text-gray-400 font-normal">(opsional, maks. 2 MB)</span></label>
