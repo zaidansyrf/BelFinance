@@ -14,13 +14,15 @@ class AdminMiddleware
     /**
      * Handle an incoming request.
      *
+     * Contoh pemakaian di route: ->middleware('role:keuangan') atau 'role:keuangan,owner'
+     *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        // Periksa apakah user adalah admin
-        if (!Auth::check() || Auth::user()->role !== 'keuangan') {
-            abort(403, 'Akses ditolak. Hanya admin yang diizinkan.');
+        // Periksa apakah role user termasuk role yang diizinkan
+        if (!Auth::check() || !in_array(Auth::user()->role, $roles, true)) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki izin untuk halaman ini.');
         }
 
         return $next($request);

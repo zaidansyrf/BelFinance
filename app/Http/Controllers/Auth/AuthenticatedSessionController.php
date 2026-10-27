@@ -41,12 +41,16 @@ class AuthenticatedSessionController extends Controller
 
         if ($role === 'owner') {
             return redirect()->route('owner-beranda');
-        } elseif ($role === 'admin') {
+        } elseif ($role === 'keuangan') {
             return redirect()->route('dashboard');
         }
 
-        // Default redirect if role is not recognized
-        return redirect()->route('dashboard');
+        // Role tidak dikenali: jangan biarkan tetap login
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login-belfinance')->withErrors(['name' => 'Role akun tidak dikenali.']);
     }
 
     /**

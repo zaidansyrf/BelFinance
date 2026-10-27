@@ -70,7 +70,7 @@
             {{ __('Log in') }}
         </button>
 
-        <!-- Optional: Sign up link
+        {{-- Optional: Sign up link (registrasi publik dimatikan)
         <div class="mt-6 text-center">
             <span class="text-sm text-gray-600">
                 {{ __("Don't have an account?") }}
@@ -79,7 +79,7 @@
                 href="{{ route('register') }}">
                 {{ __('Sign up') }}
             </a>
-        </div> -->
+        </div> --}}
     </form>
     <script>
     const togglePassword = document.getElementById('togglePassword');
