@@ -75,6 +75,30 @@
                                         </div>
                                     </div>
 
+                                    <!-- Image Field -->
+                                    <div>
+                                        <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Gambar <span class="text-gray-400 font-normal">(opsional, JPG/PNG/WEBP, maks. 2 MB)</span>
+                                        </label>
+                                        <div class="flex items-center gap-4">
+                                            <x-menu-image :item="$item" size="h-24 w-24" text="text-2xl" id="imagePreview" />
+                                            <div class="flex-1 space-y-2">
+                                                <input type="file" id="image" name="image"
+                                                    accept="image/png,image/jpeg,image/webp"
+                                                    class="file-input file-input-bordered w-full">
+                                                @if ($item->image)
+                                                    <label class="flex items-center gap-2 text-sm text-gray-600">
+                                                        <input type="checkbox" name="remove_image" value="1" class="checkbox checkbox-sm">
+                                                        Hapus gambar (kembali ke inisial)
+                                                    </label>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @error('image')
+                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
                                     <!-- Form Actions -->
                                     <div class="flex justify-end space-x-4 pt-4">
                                         <a href="{{ route('menu.search') }}"
@@ -96,58 +120,19 @@
             <!-- Sidebar Content -->
             @include('layouts.sidebar')
         </div>
-
-        <!-- Modal for Add Menu (hidden by default) -->
-        <div id="menuOverlay"
-            class="hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center p-4">
-            <div class="bg-white rounded-xl p-6 w-full max-w-md">
-                <h2 class="text-xl font-semibold text-[#2B7A78] mb-4">Add New Menu</h2>
-
-                <form method="POST" action="{{ route('menu.store') }}">
-                    @csrf
-                    <div class="space-y-4">
-                        <div>
-                            <label for="menuName" class="block text-sm font-medium text-gray-700 mb-1">Menu Name</label>
-                            <input type="text" name="name" id="menuName" required
-                                class="w-full px-4 py-2 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585]"
-                                placeholder="e.g. Fried Chicken">
-                        </div>
-
-                        <div>
-                            <label for="menuCode" class="block text-sm font-medium text-gray-700 mb-1">Menu Code</label>
-                            <input type="text" name="code" id="menuCode" required
-                                class="w-full px-4 py-2 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585]">
-                        </div>
-
-                        <div>
-                            <label for="menuJumlah"
-                                class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                            <input type="number" name="quantity" id="menuJumlah" required value="0"
-                                class="w-full px-4 py-2 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585]">
-                        </div>
-
-                        <div>
-                            <label for="menuPrice" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
-                                <input type="number" name="price" id="menuPrice" required step="1"
-                                    min="0"
-                                    class="w-full pl-10 pr-4 py-2 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585]">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button type="button" onclick="closeModal()"
-                            class="px-5 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-5 py-2 bg-[#468585] text-white rounded-lg hover:bg-[#3a7171]">
-                            Save
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
+
+    <script>
+        // Pratinjau gambar baru sebelum disimpan
+        document.getElementById('image').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const preview = document.getElementById('imagePreview');
+            const img = document.createElement('img');
+            img.id = 'imagePreview';
+            img.className = 'h-24 w-24 object-cover rounded-lg bg-gray-100';
+            img.src = URL.createObjectURL(file);
+            preview.replaceWith(img);
+        });
+    </script>
 </x-app-layout>

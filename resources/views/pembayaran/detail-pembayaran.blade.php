@@ -38,6 +38,15 @@
                                                     {{ $pembayaran->created_at->format('d F Y H:i') }}
                                                 </p>
                                             </div>
+                                            <div class="mt-2">
+                                                <p class="text-sm text-gray-600">Dicatat oleh:</p>
+                                                <p class="font-medium text-black">
+                                                    {{ $pembayaran->creator->name ?? '-' }}
+                                                    @if ($pembayaran->creator)
+                                                        <span class="text-xs text-gray-500">({{ $pembayaran->creator->role }})</span>
+                                                    @endif
+                                                </p>
+                                            </div>
 
                                         </div>
                                         <div>
@@ -49,6 +58,21 @@
                                             <div class="mt-2">
                                                 <p class="text-sm text-gray-600">Sumber:</p>
                                                 <p class="font-medium text-black">{{ $pembayaran->source->name }}</p>
+                                            </div>
+                                            @if ($pembayaran->paid_amount !== null)
+                                                <div class="mt-2">
+                                                    <p class="text-sm text-gray-600">Uang diterima / kembalian:</p>
+                                                    <p class="font-medium text-black">
+                                                        Rp {{ number_format($pembayaran->paid_amount, 0, ',', '.') }} /
+                                                        Rp {{ number_format($pembayaran->change_amount, 0, ',', '.') }}
+                                                    </p>
+                                                </div>
+                                            @endif
+                                            <div class="mt-4">
+                                                <a href="{{ route('kasir.struk', $pembayaran) }}" target="_blank"
+                                                    class="inline-block bg-[#468585] text-white text-sm font-semibold py-2 px-4 rounded-lg hover:bg-[#376e6e]">
+                                                    Cetak struk
+                                                </a>
                                             </div>
 
                                         </div>
@@ -72,15 +96,16 @@
                                                     <tr>
                                                         <td class="py-3 px-4 text-black">
                                                             {{ $detail->item->name ?? '-' }}</td>
+                                                        {{-- Harga saat transaksi (dari subtotal tersimpan), bukan harga menu sekarang --}}
                                                         <td class="py-3 px-4 text-right text-black">
                                                             Rp
-                                                            {{ number_format($detail->item->price ?? 0, 0, ',', '.') }}
+                                                            {{ number_format($detail->subtotal / max($detail->quantity, 1), 0, ',', '.') }}
                                                         </td>
                                                         <td class="py-3 px-4 text-right text-black">
                                                             {{ $detail->quantity ?? 0 }}</td>
                                                         <td class="py-3 px-4 text-right text-black">
                                                             Rp
-                                                            {{ number_format(($detail->item->price ?? 0) * ($detail->quantity ?? 0), 0, ',', '.') }}
+                                                            {{ number_format($detail->subtotal, 0, ',', '.') }}
                                                         </td>
                                                     </tr>
                                                 @endforeach

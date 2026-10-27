@@ -17,17 +17,10 @@
                             </div>
 
                             <div>
-                                @if (auth()->user()->role === 'owner')
-                                    <a href="{{ route('owner-beranda') }}"
-                                        class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
-                                        kembali
-                                    </a>
-                                @elseif(auth()->user()->role === 'keuangan')
-                                    <a href="{{ route('dashboard') }}"
-                                        class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
-                                        kembali
-                                    </a>
-                                @endif
+                                <a href="{{ route(auth()->user()->homeRoute()) }}"
+                                    class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
+                                    kembali
+                                </a>
                             </div>
                         </div>
                         <div class="mt-4 border-t border-gray-200 pt-4 flex items-center space-x-4">

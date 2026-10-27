@@ -36,6 +36,13 @@ npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed
+php artisan storage:link   # agar gambar menu bisa tampil
+```
+
+Registrasi publik dimatikan. Untuk membuat akun baru (misalnya kasir):
+
+```bash
+php artisan belfinance:buat-user --role=kasir
 ```
 
 Lalu jalankan dua perintah ini di terminal terpisah:
