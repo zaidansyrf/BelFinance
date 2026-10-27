@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vite",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "laravel",
+      "runtimeExecutable": "C:/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64/php.exe",
+      "runtimeArgs": ["artisan", "serve", "--host=127.0.0.1", "--port=8000"],
+      "port": 8000
+    }
+  ]
+}

@@ -95,7 +95,7 @@
                                         <p class="text-black text-lg">Status: Owner</p>
                                     </div>
 
-                                    <a href="{{ url('/profile/edit') }}"
+                                    <a href="{{ route('info-profile') }}"
                                         class="bg-[#2B7A78] text-white py-3 px-6 rounded-md text-center block hover:bg-[#22665c] text-lg font-semibold">Edit</a>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                             onclick="setActiveLink(event)">Button</a>
                     </li>
                     <li>
-                        <a href="{{ url('/owner/laporan-keuangan') }}"
+                        <a href="{{ route('laporan-owner') }}"
                             class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left"
                             onclick="setActiveLink(event)">Laporan Keuangan</a>
                     </li>

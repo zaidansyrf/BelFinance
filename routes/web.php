@@ -1,101 +1,81 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminKeuanganController;
-use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\DetailPemasukkanController;
-use App\Http\Controllers\KeuanganCreatePembayaranController;
-use App\Http\Controllers\KeuanganCreatePengeluaranController;
-use App\Http\Controllers\UangMasukController;
-use App\Http\Controllers\AdminLaporanKeuanganController;
-use App\Http\Controllers\AdminKeuanganLaporanPembayaranController;
-use App\Http\Controllers\AdminKeuanganLaporanPemasukkanController;
-use App\Http\Controllers\AdminKeuanganLaporanPengeluaranController;
-use App\Http\Controllers\AdminKeuanganLaporanSumberController;
 use App\Http\Controllers\AdminKeuanganInfoProfileController;
-use App\Http\Controllers\AdminKeuanganMenuController;
-use App\Http\Controllers\OwnerBerandaController;
-use App\Http\Controllers\OwnerLaporanKeuanganController;
-use App\Http\Controllers\OwnerInfoProfileController;
-use App\Http\Controllers\SourceController;
-use App\Http\Controllers\admin\MenuController;
-use App\Http\Controllers\admin\TagihanController;
-use App\Http\Controllers\BillController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\AdminLaporanKeuanganController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-
-
+use App\Http\Controllers\BillController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\OwnerBerandaController;
+use App\Http\Controllers\OwnerInfoProfileController;
+use App\Http\Controllers\OwnerLaporanKeuanganController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\SourceController;
+use App\Http\Controllers\UangMasukController;
+use Illuminate\Support\Facades\Route;
 
 // Fallback route
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });
 
-Route::get('/', [AuthenticatedSessionController::class,'create'])->middleware('guest')->name('login-belfinance');
-
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->middleware('guest')->name('login-belfinance');
+// Login (POST), logout, dan reset password ada di routes/auth.php
 
 // Halaman admin keuangan: wajib login dan role keuangan
-Route::middleware(['auth', 'role:keuangan'])->group(function () {
-    Route::get('/keuangan/dashboard',[AdminKeuanganController::class, 'view'])->name(('dashboard'));
-    Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
-    Route::get('/keuangan/pembayaran/create', [KeuanganCreatePembayaranController::class, 'view'])->name('pembayaran.create');
-    Route::resource('/keuangan/pembayaran', PembayaranController::class);
-    Route::get('/keuangan/pembayaran/{id}', [PembayaranController::class, 'show'])->name('pembayaran.show');
-    Route::delete('/keuangan/pembayaran/{income}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
+Route::middleware(['auth', 'role:keuangan'])->prefix('keuangan')->group(function () {
+    Route::get('/dashboard', [AdminKeuanganController::class, 'view'])->name('dashboard');
 
-    Route::get('/keuangan/uang-masuk',[UangMasukController::class, 'index']);
-    Route::delete('/keuangan/uang-masuk/{income}', [UangMasukController::class, 'destroy'])->name('income.destroy');
-    Route::get('/keuangan/uang-masuk/', [UangMasukController::class, 'search'])->name('uang-masuk.search');
-    Route::resource('/keuangan/uang-masuk', UangMasukController::class);
-    Route::get('/keuangan/uang-masuk/', [UangMasukController::class, 'search'])->name('uang-masuk.search');
+    // Pembayaran (pesanan)
+    Route::resource('pembayaran', PembayaranController::class)
+        ->only(['index', 'create', 'store', 'show', 'destroy']);
 
-    Route::resource('/keuangan/pengeluaran', ExpenseController::class);
-    Route::get('/keuangan/pengeluaran/', [ExpenseController::class, 'search'])->name('expenses.search');
-    // hapus pengeluaran
-    Route::delete('/keuangan/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
-    // update
-    Route::put('/keuangan/pengeluaran/{expense}/edit', [ExpenseController::class, 'update'])->name('expenses.update');
-    // show
-    Route::post('/keuangan/pengeluaran/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
+    // Uang masuk
+    Route::get('/uang-masuk', [UangMasukController::class, 'search'])->name('uang-masuk.search');
+    Route::post('/uang-masuk', [UangMasukController::class, 'store'])->name('uang-masuk.store');
+    Route::delete('/uang-masuk/{income}', [UangMasukController::class, 'destroy'])->name('income.destroy');
 
-    Route::resource('/keuangan/menu', ItemController::class);
-    Route::get('/keuangan/menu/', [ItemController::class, 'search'])->name('menu.search');
-    Route::get('/keuangan/menu/{id}/edit', [ItemController::class, 'edit'])->name('menu.edit');
-    Route::put('/keuangan/menu/{id}', [ItemController::class, 'update'])->name('menu.update');
-    Route::get('keuangan/menu-terlaris', [ItemController::class, 'chart'])->name('menu.chart');
-    Route::delete('/keuangan/menu/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+    // Pengeluaran
+    Route::get('/pengeluaran', [ExpenseController::class, 'search'])->name('expenses.search');
+    Route::get('/pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran.create');
+    Route::post('/pengeluaran', [ExpenseController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
+    Route::get('/pengeluaran/{expense}/edit', [ExpenseController::class, 'edit'])->name('pengeluaran.edit');
+    Route::put('/pengeluaran/{expense}/edit', [ExpenseController::class, 'update'])->name('expenses.update');
+    Route::delete('/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 
+    // Menu
+    Route::get('/menu', [ItemController::class, 'search'])->name('menu.search');
+    Route::post('/menu', [ItemController::class, 'store'])->name('menu.store');
+    Route::get('/menu/{id}/edit', [ItemController::class, 'edit'])->name('menu.edit');
+    Route::put('/menu/{id}', [ItemController::class, 'update'])->name('menu.update');
+    Route::delete('/menu/{id}', [ItemController::class, 'destroy'])->name('menu.destroy');
 
-    Route::resource('/keuangan/kategori/sumber-masuk', SourceController::class);
-    Route::resource('/keuangan/kategori/sumber-keluar', BillController::class);
-    //laporan
-    Route::get('/keuangan/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
+    // Kategori
+    Route::resource('kategori/sumber-masuk', SourceController::class)
+        ->only(['index', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('kategori/sumber-keluar', BillController::class)
+        ->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+    // Laporan
+    Route::get('/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
 });
 
 // Dipakai bersama oleh keuangan dan owner (export PDF & profil)
 Route::middleware(['auth', 'role:keuangan,owner'])->group(function () {
     Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
-    //Info Profile
-    Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
-    Route::get('/keuangan/info-profile/edit', [AdminKeuanganInfoProfileController::class, 'edit'])->name('info-profile.edit');
+
+    Route::get('/keuangan/info-profile', [AdminKeuanganInfoProfileController::class, 'view'])->name('info-profile');
     Route::post('/keuangan/info-profile/update', [AdminKeuanganInfoProfileController::class, 'update'])->name('info-profile.update');
-    Route::get('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePasswordForm'])->name('info-profile.change-password-form');
     Route::post('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePassword'])->name('info-profile.update-password');
 });
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
-
-
 // Halaman owner: wajib login dan role owner
-Route::middleware(['auth', 'role:owner'])->group(function () {
-    // beranda owner
-Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
-// laporan owner
-Route::get('/owner/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
-// info profile owner
-Route::get('/owner/info-profile',[OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/beranda', [OwnerBerandaController::class, 'view'])->name('owner-beranda');
+    Route::get('/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
+    Route::get('/info-profile', [OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
 });
+
 require __DIR__.'/auth.php';

@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                    <li><a class="text-black" href="{{ url('keuangan/info-profile') }}">
+                    <li><a class="text-black" href="{{ route('info-profile') }}">
 
                             Info Profile</a></li>
                     <li>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a href="{{ url('keuangan/info-profile') }}" class="text-black">Info Profile</a></li>
+                <li><a href="{{ route('info-profile') }}" class="text-black">Info Profile</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

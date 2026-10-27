@@ -157,7 +157,7 @@
                                                         @php static $no = 1; @endphp
                                                         <td class="px-4 py-2 border">{{ $no++ }}</td>
                                                         <td class="px-4 py-2 border">
-                                                            @if ($transaction->type === 'income')
+                                                            @if ($transaction->jenis === 'income')
                                                                 {{ $transaction->name }}
                                                             @else
                                                                 {{ $transaction->bill->name ?? 'Tidak ada nama' }}
@@ -166,21 +166,21 @@
                                                         <td class="px-4 py-2 border">
                                                             {{ $transaction->source->name ?? '-' }}</td>
                                                         <td class="px-4 py-2 border">
-                                                            @if ($transaction->type === 'income')
+                                                            @if ($transaction->jenis === 'income')
                                                                 Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                             @else
                                                                 -
                                                             @endif
                                                         </td>
                                                         <td class="px-4 py-2 border">
-                                                            @if ($transaction->type === 'expense')
+                                                            @if ($transaction->jenis === 'expense')
                                                                 Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                             @else
                                                                 -
                                                             @endif
                                                         </td>
                                                         <td class="px-4 py-2 border">
-                                                            {{ $transaction->created_at->format('d-m-Y') }}
+                                                            {{ $transaction->date->format('d-m-Y') }}
                                                         </td>
                                                         <td class="px-4 py-2 border">{{ $transaction->description }}</td>
                                                     </tr>
@@ -221,21 +221,21 @@
                                                 <td class="px-4 py-2 border">{{ $transaction->name }}</td>
                                                 <td class="px-4 py-2 border">{{ $transaction->source }}</td>
                                                 <td class="px-4 py-2 border">
-                                                    @if ($transaction->type === 'income')
+                                                    @if ($transaction->jenis === 'income')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    @if ($transaction->type === 'expense')
+                                                    @if ($transaction->jenis === 'expense')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    {{ $transaction->created_at->format('d-m-Y') }}
+                                                    {{ $transaction->date->format('d-m-Y') }}
                                                 </td>
                                                 <td class="px-4 py-2 border">{{ $transaction->description }}</td>
                                             </tr>

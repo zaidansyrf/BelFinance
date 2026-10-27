@@ -8,63 +8,34 @@ use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-
-    //emthod untuk menampilkan data
-  public function index()
-{
-    $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
-
-    // Pie chart data
-    $topItems = Item::orderByDesc('quantity')->take(5)->get();
-    $chartData = [
-        'labels' => $topItems->pluck('name'),
-        'quantities' => $topItems->pluck('quantity'),
-    ];
-
-    $totalSold = Item::sum('quantity');
-    $topSellingMenu = Item::orderByDesc('quantity')->first();
-
-    return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
-}
-
-
-
-    //method pencarian
-  public function search(Request $request)
-{
-    $search = $request->input('search');
-
-    $items = Item::query()
-        ->where(function ($query) use ($search) {
-            $query->where('code', 'LIKE', "%{$search}%")
-                  ->orWhere('name', 'LIKE', "%{$search}%")
-                  ->orWhere('price', 'LIKE', "%{$search}%");
-        })
-        ->orderBy('code', 'asc')
-        ->paginate(10);
-
-    $topItems = Item::orderByDesc('quantity')->take(5)->get();
-    $chartData = [
-        'labels' => $topItems->pluck('name'),
-        'quantities' => $topItems->pluck('quantity'),
-    ];
-
-    $totalSold = Item::sum('quantity');
-    $topSellingMenu = Item::orderByDesc('quantity')->first();
-    $totalRevenue = Item::sum(DB::raw('quantity * price'));
-
-    return view('item.index', compact('items', 'search', 'chartData', 'totalSold', 'topSellingMenu', 'totalRevenue'));
-}
-
-
-
-
-    public function create()
+    // method pencarian
+    public function search(Request $request)
     {
-        //
+        $search = $request->input('search');
+
+        $items = Item::query()
+            ->where(function ($query) use ($search) {
+                $query->where('code', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%")
+                    ->orWhere('price', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('code', 'asc')
+            ->paginate(10);
+
+        $topItems = Item::orderByDesc('quantity')->take(5)->get();
+        $chartData = [
+            'labels' => $topItems->pluck('name'),
+            'quantities' => $topItems->pluck('quantity'),
+        ];
+
+        $totalSold = Item::sum('quantity');
+        $topSellingMenu = Item::orderByDesc('quantity')->first();
+        $totalRevenue = Item::sum(DB::raw('quantity * price'));
+
+        return view('item.index', compact('items', 'search', 'chartData', 'totalSold', 'topSellingMenu', 'totalRevenue'));
     }
 
-    //method menyimpan data ke database
+    // method menyimpan data ke database
     public function store(Request $request)
     {
         $request->validate([
@@ -81,7 +52,7 @@ class ItemController extends Controller
                 'name' => $request->name,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
-                'code' => $request->code
+                'code' => $request->code,
             ]);
 
             // Redirect kembali dengan pesan
@@ -92,29 +63,23 @@ class ItemController extends Controller
         }
     }
 
-    public function show(string $id)
-    {
-        // Menampilkan detail item berdasarkan ID
-        $item = Item::findOrFail($id);
-        return view('item.show', compact('item'));
-    }
-
-    //method edit
+    // method edit
     public function edit(string $id)
     {
         // Menampilkan form edit item berdasarkan ID
         $item = Item::findOrFail($id);
+
         return view('item.edit-menu', compact('item'));
     }
 
-    //method update
+    // method update
     public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:1',
-            'code' => 'required|string|max:255|unique:items,code,' . $id,
+            'code' => 'required|string|max:255|unique:items,code,'.$id,
         ], [
             'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ]);
@@ -126,7 +91,7 @@ class ItemController extends Controller
                 'name' => $request->name,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
-                'code' => $request->code
+                'code' => $request->code,
             ]);
 
             // Redirect kembali dengan pesan
@@ -137,7 +102,7 @@ class ItemController extends Controller
         }
     }
 
-    //method hapus
+    // method hapus
     public function destroy(string $id)
     {
         Item::destroy($id);
@@ -146,18 +111,4 @@ class ItemController extends Controller
         // Kembali ke halaman admin/keuangan/menu
         return redirect()->route('menu.search')->with('success', 'Menu berhasil dihapus');
     }
-
-    public function chart()
-    {
-        $items = Item::orderByDesc('quantity')->take(5)->get();
-
-        $chartData = [
-            'labels' => $items->pluck('name'),
-            'quantities' => $items->pluck('quantity'),
-        ];
-
-        return view('item.chart', compact('chartData'));
-    }
-
 }
-
