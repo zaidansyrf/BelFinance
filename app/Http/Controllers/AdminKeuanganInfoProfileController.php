@@ -30,7 +30,11 @@ class AdminKeuanganInfoProfileController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'new_password' => 'required|string|min:8|confirmed',
+            'current_password' => 'required|current_password',
+            'new_password' => 'required|string|min:8|confirmed|different:current_password',
+        ], [
+            'current_password.current_password' => 'Password lama tidak sesuai.',
+            'new_password.different' => 'Password baru harus berbeda dari password lama.',
         ]);
 
         $user = auth()->user();

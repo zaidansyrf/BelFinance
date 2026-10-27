@@ -33,11 +33,9 @@ class PembayaranController extends Controller
 
     public function index()
     {
-        // Ambil data income yang memiliki detail bertipe 'payment'
+        // Ambil data income bertipe 'payment' (kolom type ada di tabel incomes)
         $pembayarans = Income::with('source')
-            ->whereHas('incomeDetails', function ($query) {
-                $query->where('type', 'payment');
-            })
+            ->where('type', 'payment')
             ->get();
 
         return view('keuangan-pembayaran', compact('pembayarans'));
@@ -73,9 +71,6 @@ class PembayaranController extends Controller
                 $subtotal = $itemData->price * $item['quantity'];
                 $totalAmount += $subtotal;
 
-                // Tambahkan quantity ke item
-                $itemData->increment('quantity', $item['quantity']);
-
                 $items[] = [
                     'item_id' => $item['item_id'],
                     'quantity' => $item['quantity'],
@@ -94,6 +89,7 @@ class PembayaranController extends Controller
                 'date' => now(),
                 'description' => 'Pesanan baru',
                 'source_id' => $request->source_id,
+                'type' => 'payment', // Tipe pembayaran
             ]);
 
             // Simpan data ke tabel `income_details`
@@ -103,8 +99,10 @@ class PembayaranController extends Controller
                     'item_id' => $detail['item_id'], // Hubungkan ke item
                     'quantity' => $detail['quantity'], // Jumlah item
                     'subtotal' => $detail['subtotal'], // Subtotal
-                    'type' => 'payment', // Tipe pembayaran
                 ]);
+
+                // Tambahkan quantity ke item (di dalam transaksi agar ikut di-rollback)
+                $itemDataMap->get($detail['item_id'])->increment('quantity', $detail['quantity']);
             }
 
             // Commit transaksi

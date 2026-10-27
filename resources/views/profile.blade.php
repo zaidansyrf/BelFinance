@@ -92,7 +92,26 @@
                             <div class="px-4 py-5 sm:p-6">
                                 <form method="POST" action="{{ route('info-profile.update-password') }}">
                                     @csrf
+                                    @if (session('status'))
+                                        <div class="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700">{{ session('status') }}</div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <ul class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700 list-disc list-inside">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
+
+                                        <!-- Current Password -->
+                                        <div class="sm:col-span-6 relative">
+                                            <label for="current-password"
+                                                class="block text-sm font-medium text-gray-700">Current password</label>
+                                            <input type="password" id="current-password" name="current_password"
+                                                autocomplete="current-password"
+                                                class="mt-1 block w-full border rounded-md p-2 pr-10 border-gray-300 sm:text-sm" />
+                                        </div>
 
                                         <!-- New Password -->
                                         <div class="sm:col-span-6 relative">

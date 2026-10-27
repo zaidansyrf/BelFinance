@@ -34,11 +34,11 @@ Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });
 
-Route::get('/', [AuthenticatedSessionController::class,'create'])->name('login-belfinance');
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::get('/', [AuthenticatedSessionController::class,'create'])->middleware('guest')->name('login-belfinance');
 
 
-Route::middleware(['web'])->group(function () {
+// Halaman admin keuangan: wajib login dan role keuangan
+Route::middleware(['auth', 'role:keuangan'])->group(function () {
     Route::get('/keuangan/dashboard',[AdminKeuanganController::class, 'view'])->name(('dashboard'));
     Route::get('/keuangan/pembayaran',[PembayaranController::class, 'index']);
     Route::get('/keuangan/pembayaran/create', [KeuanganCreatePembayaranController::class, 'view'])->name('pembayaran.create');
@@ -73,6 +73,10 @@ Route::middleware(['web'])->group(function () {
     Route::resource('/keuangan/kategori/sumber-keluar', BillController::class);
     //laporan
     Route::get('/keuangan/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
+});
+
+// Dipakai bersama oleh keuangan dan owner (export PDF & profil)
+Route::middleware(['auth', 'role:keuangan,owner'])->group(function () {
     Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
     //Info Profile
     Route::get('/keuangan/info-profile',[AdminKeuanganInfoProfileController::class, 'view']);
@@ -82,10 +86,11 @@ Route::middleware(['web'])->group(function () {
     Route::post('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePassword'])->name('info-profile.update-password');
 });
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
 
 
-Route::middleware(['web', 'auth'])->group(function () {
+// Halaman owner: wajib login dan role owner
+Route::middleware(['auth', 'role:owner'])->group(function () {
     // beranda owner
 Route::get('/owner/beranda',[OwnerBerandaController::class, 'view'])->name('owner-beranda');
 // laporan owner
