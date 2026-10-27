@@ -182,10 +182,10 @@
                                     <tbody id="transaction-table-body">
                                         @foreach ($transactions as $index => $transaction)
                                             <tr class="text-center bg-white hover:bg-gray-50"
-                                                data-type="{{ $transaction->type }}">
+                                                data-type="{{ $transaction->jenis }}">
                                                 <td class="px-4 py-2 border nomor-urut">{{ $loop->iteration }}</td>
                                                 <td class="px-4 py-2 border">
-                                                    @if ($transaction->type === 'income')
+                                                    @if ($transaction->jenis === 'income')
                                                         {{ $transaction->name }}
                                                     @else
                                                         {{ $transaction->bill->name ?? 'Tidak ada nama' }}
@@ -193,21 +193,21 @@
                                                 </td>
                                                 <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}</td>
                                                 <td class="px-4 py-2 border income-col">
-                                                    @if ($transaction->type === 'income')
+                                                    @if ($transaction->jenis === 'income')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border expense-col">
-                                                    @if ($transaction->type === 'expense')
+                                                    @if ($transaction->jenis === 'expense')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    {{ $transaction->created_at->format('d-m-Y') }}
+                                                    {{ $transaction->date->format('d-m-Y') }}
                                                 </td>
                                                 <td class="px-4 py-2 border">{{ $transaction->description }}</td>
                                             </tr>

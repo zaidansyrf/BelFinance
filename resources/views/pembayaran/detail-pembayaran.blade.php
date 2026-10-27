@@ -101,29 +101,6 @@
 
 
 
-                                    <!-- Tombol Aksi -->
-                                    <div class="flex justify-end gap-4 mt-6">
-                                        @if ($pembayaran->status === 'pending')
-                                            <form action="{{ route('pembayaran.approve', $pembayaran->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600">
-                                                    Setujui Pembayaran
-                                                </button>
-                                            </form>
-                                            <form action="{{ route('pembayaran.reject', $pembayaran->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="bg-red-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-600">
-                                                    Tolak Pembayaran
-                                                </button>
-                                            </form>
-                                        @endif
-
-
-                                    </div>
                                 </div>
                             </div>
                         </div>

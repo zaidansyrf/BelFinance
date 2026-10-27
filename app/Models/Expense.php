@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
-    use HasFactory;
+    use Auditable, HasFactory;
 
     protected $fillable = [
         'source_id',
@@ -20,7 +21,7 @@ class Expense extends Model
     protected $casts = [
         'date' => 'datetime',
     ];
-    
+
     // Relationships
     public function source()
     {

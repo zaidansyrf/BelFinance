@@ -69,17 +69,6 @@
             class="w-full py-3 px-4 bg-[#2B7A78] hover:bg-[#1a5354] text-white font-medium rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.02]">
             {{ __('Log in') }}
         </button>
-
-        {{-- Optional: Sign up link (registrasi publik dimatikan)
-        <div class="mt-6 text-center">
-            <span class="text-sm text-gray-600">
-                {{ __("Don't have an account?") }}
-            </span>
-            <a class="text-sm font-medium text-[#2B7A78] hover:text-[#1a5354] transition duration-150"
-                href="{{ route('register') }}">
-                {{ __('Sign up') }}
-            </a>
-        </div> --}}
     </form>
     <script>
     const togglePassword = document.getElementById('togglePassword');

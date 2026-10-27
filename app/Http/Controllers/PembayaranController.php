@@ -2,35 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use App\Models\Income;
-use App\Models\Source;
 use App\Models\IncomeDetail;
+use App\Models\Item;
+use App\Models\Source;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
-    public function chartIncome()
-{
-    $monthlyIncome = Income::selectRaw('MONTH(date) as month, SUM(amount) as total')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
-
-    // Buat array dengan semua bulan (1-12) dengan nilai default 0
-    $months = [];
-    for ($i = 1; $i <= 12; $i++) {
-        $months[] = [
-            'month' => $i,
-            'total' => $monthlyIncome[$i]->total ?? 0  // Jika tidak ada transaksi, nilai = 0
-        ];
-    }
-
-    return response()->json($months);
-}
-
     public function index()
     {
         // Ambil data income bertipe 'payment' (kolom type ada di tabel incomes)
@@ -40,7 +20,6 @@ class PembayaranController extends Controller
 
         return view('keuangan-pembayaran', compact('pembayarans'));
     }
-
 
     public function store(Request $request)
     {
@@ -54,7 +33,6 @@ class PembayaranController extends Controller
             'items.*.item_id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
-
 
         // Persiapan data
         $selectedItems = $request->items;
@@ -115,7 +93,8 @@ class PembayaranController extends Controller
             DB::rollBack();
 
             // Log error dan kembalikan ke halaman sebelumnya dengan pesan error
-            \Log::error('Gagal menyimpan data pembayaran: ' . $e->getMessage());
+            \Log::error('Gagal menyimpan data pembayaran: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Gagal menyimpan data. Silakan coba lagi.');
         }
     }
@@ -127,65 +106,20 @@ class PembayaranController extends Controller
 
         return view('keuangan-create-pembayaran', compact('allItems', 'allSources'));
     }
+
     public function destroy($id)
     {
-        $pembayaran = Income::with('incomeDetails')->findOrFail($id);
+        $pembayaran = Income::findOrFail($id);
 
-        DB::beginTransaction();
         try {
-            // Kurangi stok item berdasarkan detail pembayaran
-            foreach ($pembayaran->incomeDetails as $detail) {
-                $item = Item::find($detail->item_id);
-                if ($item) {
-                    $item->decrement('quantity', $detail->quantity);
-                }
-            }
-
-            // Hapus detail yang terkait
-            $pembayaran->incomeDetails()->delete();
-
-            // Hapus income (pembayaran)
-            $pembayaran->delete();
-
-            DB::commit();
+            $pembayaran->hapus();
 
             return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error('Gagal menghapus pembayaran: ' . $e->getMessage());
+            \Log::error('Gagal menghapus pembayaran: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Gagal menghapus data. Silakan coba lagi.');
         }
-    }
-
-
-
-
-    public function detail(Request $request)
-    {
-        $request->validate([
-            'source_id' => 'required|exists:sources,id',
-            'date' => 'required|date',
-        ]);
-
-        $incomes = Income::where('source_id', $request->source_id)
-            ->whereDate('date', $request->date)
-            ->with(['incomeDetails.item', 'source'])
-            ->get();
-
-        $details = [];
-
-        foreach ($incomes as $income) {
-            foreach ($income->incomeDetails as $detail) {
-                $details[] = [
-                    'sumber' => $income->source->name,
-                    'menu' => $detail->item->name,
-                    'jumlah' => $detail->quantity,
-                    'total' => $detail->subtotal,
-                ];
-            }
-        }
-
-        return view('pembayaran.detail-pengbayaran', compact('details'));
     }
 
     public function show($id)
@@ -195,25 +129,4 @@ class PembayaranController extends Controller
 
         return view('pembayaran.detail-pembayaran', compact('pembayaran'));
     }
-
-    public function dailySummary()
-{
-    $summary = Income::with('source')
-        ->select('source_id', DB::raw('COUNT(*) as jumlah'), DB::raw('DATE(date) as tanggal'))
-        ->whereDate('date', today())
-        ->groupBy('source_id', DB::raw('DATE(date)'))
-        ->get()
-        ->map(function ($item) {
-            return [
-                'tipe' => $item->source->name ?? 'Tidak diketahui',
-                'jumlah' => $item->jumlah,
-                'tanggal' => $item->tanggal,
-                'source_id' => $item->source_id,
-            ];
-        });
-
-    return view('keuangan-detail-pesanan', compact('summary'));
-}
-
-
 }
