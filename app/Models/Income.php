@@ -18,6 +18,8 @@ class Income extends Model
         'source_id',
         'name',
         'amount',
+        'paid_amount',
+        'change_amount',
         'date',
         'description',
         'type',

@@ -55,6 +55,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Gambar</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)
@@ -67,6 +68,9 @@
                                             @foreach ($items as $menu)
                                                 <tr class="hover:bg-gray-100/50">
                                                     <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}
+                                                    </td>
+                                                    <td class="py-2 px-4 border-b">
+                                                        <x-menu-image :item="$menu" />
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
@@ -90,7 +94,7 @@
                                             @endforeach
                                             @if ($items->isEmpty())
                                                 <tr>
-                                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak
+                                                    <td colspan="7" class="px-4 py-2 text-center text-black">Tidak
                                                         ada data tersedia.</td>
                                                 </tr>
                                             @endif
@@ -133,7 +137,7 @@
                         <div id="menuModal"
                             class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
                             <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                            <form method="POST" action="{{ route('menu.store') }}">
+                            <form method="POST" action="{{ route('menu.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-4">
                                     <label for="menuName" class="block text-sm font-medium text-gray-700">Nama
@@ -161,6 +165,12 @@
                                     <input type="number" name="price" id="menuPrice"
                                         class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp "
                                         required step="1" min="0" inputmode="numeric">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="menuImage" class="block text-sm font-medium text-gray-700">Gambar
+                                        <span class="text-gray-400 font-normal">(opsional, maks. 2 MB)</span></label>
+                                    <input type="file" name="image" id="menuImage" accept="image/png,image/jpeg,image/webp"
+                                        class="file-input file-input-bordered file-input-sm w-full mt-1">
                                 </div>
                                 <div class="flex justify-end mt-4">
                                     <button type="button" onclick="closeModal()"
@@ -235,6 +245,15 @@
                 icon: 'error',
                 title: 'Gagal!',
                 text: '{{ session('error') }}',
+                showConfirmButton: true
+            });
+        @endif
+
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Data menu belum valid',
+                html: @json(implode('<br>', array_map('e', $errors->all()))),
                 showConfirmButton: true
             });
         @endif

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Income;
-use App\Models\IncomeDetail;
 use App\Models\Item;
 use App\Models\Source;
+use App\Services\PenjualanService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
@@ -21,12 +20,9 @@ class PembayaranController extends Controller
         return view('keuangan-pembayaran', compact('pembayarans'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, PenjualanService $penjualan)
     {
-        // Validasi input
-        // dd($request->all());
-
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'source_id' => 'required|exists:sources,id',
             'items' => 'required|array',
@@ -34,65 +30,11 @@ class PembayaranController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Persiapan data
-        $selectedItems = $request->items;
-        $totalAmount = 0;
-        $items = [];
-
-        // Ambil data item dari database
-        $itemIds = collect($selectedItems)->pluck('item_id');
-        $itemDataMap = Item::whereIn('id', $itemIds)->get()->keyBy('id');
-
-        foreach ($selectedItems as $item) {
-            $itemData = $itemDataMap->get($item['item_id']);
-            if ($itemData) {
-                $subtotal = $itemData->price * $item['quantity'];
-                $totalAmount += $subtotal;
-
-                $items[] = [
-                    'item_id' => $item['item_id'],
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $subtotal,
-                ];
-            }
-        }
-
-        // Gunakan transaksi untuk menjamin konsistensi data
-        DB::beginTransaction();
         try {
-            // Simpan data ke tabel `incomes`
-            $income = Income::create([
-                'name' => $request->name,
-                'amount' => $totalAmount,
-                'date' => now(),
-                'description' => 'Pesanan baru',
-                'source_id' => $request->source_id,
-                'type' => 'payment', // Tipe pembayaran
-            ]);
+            $penjualan->simpan($data);
 
-            // Simpan data ke tabel `income_details`
-            foreach ($items as $detail) {
-                IncomeDetail::create([
-                    'income_id' => $income->id, // Hubungkan ke income
-                    'item_id' => $detail['item_id'], // Hubungkan ke item
-                    'quantity' => $detail['quantity'], // Jumlah item
-                    'subtotal' => $detail['subtotal'], // Subtotal
-                ]);
-
-                // Tambahkan quantity ke item (di dalam transaksi agar ikut di-rollback)
-                $itemDataMap->get($detail['item_id'])->increment('quantity', $detail['quantity']);
-            }
-
-            // Commit transaksi
-            DB::commit();
-
-            // Redirect ke halaman lain
             return redirect()->route('pembayaran.index')->with('success', 'Pesanan berhasil disimpan!');
         } catch (\Exception $e) {
-            // Rollback transaksi jika ada error
-            DB::rollBack();
-
-            // Log error dan kembalikan ke halaman sebelumnya dengan pesan error
             \Log::error('Gagal menyimpan data pembayaran: '.$e->getMessage());
 
             return redirect()->back()->with('error', 'Gagal menyimpan data. Silakan coba lagi.');
@@ -125,7 +67,7 @@ class PembayaranController extends Controller
     public function show($id)
     {
         // Ambil data income berdasarkan ID
-        $pembayaran = Income::with(['source', 'incomeDetails.item'])->findOrFail($id);
+        $pembayaran = Income::with(['source', 'incomeDetails.item', 'creator'])->findOrFail($id);
 
         return view('pembayaran.detail-pembayaran', compact('pembayaran'));
     }

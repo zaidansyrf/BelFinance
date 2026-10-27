@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerInfoProfileController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
@@ -62,14 +63,30 @@ Route::middleware(['auth', 'role:keuangan'])->prefix('keuangan')->group(function
     Route::get('/laporan-keuangan', [AdminLaporanKeuanganController::class, 'index'])->name('laporan-keuangan');
 });
 
-// Dipakai bersama oleh keuangan dan owner (export PDF & profil)
+// Export PDF: keuangan dan owner
 Route::middleware(['auth', 'role:keuangan,owner'])->group(function () {
     Route::get('/laporan/export-pdf', [AdminLaporanKeuanganController::class, 'exportPdf'])->name('laporan.export-pdf');
+});
+
+// Profil & ganti password: semua role
+Route::middleware(['auth', 'role:keuangan,owner,kasir'])->group(function () {
 
     Route::get('/keuangan/info-profile', [AdminKeuanganInfoProfileController::class, 'view'])->name('info-profile');
     Route::post('/keuangan/info-profile/update', [AdminKeuanganInfoProfileController::class, 'update'])->name('info-profile.update');
     Route::post('/profile/change-password', [AdminKeuanganInfoProfileController::class, 'changePassword'])->name('info-profile.update-password');
 });
+
+// Halaman kasir (POS): wajib login dan role kasir
+Route::middleware(['auth', 'role:kasir'])->prefix('kasir')->name('kasir.')->group(function () {
+    Route::get('/pos', [KasirController::class, 'pos'])->name('pos');
+    Route::post('/pos', [KasirController::class, 'checkout'])->name('checkout');
+    Route::get('/beranda', [KasirController::class, 'beranda'])->name('beranda');
+});
+
+// Struk bisa dibuka kasir (transaksinya sendiri) dan keuangan (semua transaksi)
+Route::get('/struk/{income}', [KasirController::class, 'struk'])
+    ->middleware(['auth', 'role:kasir,keuangan'])
+    ->name('kasir.struk');
 
 // Halaman owner: wajib login dan role owner
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {

@@ -18,9 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // User yang sudah login dan membuka halaman guest diarahkan sesuai role
         $middleware->redirectUsersTo(function () {
-            return auth()->user()?->role === 'owner'
-                ? route('owner-beranda')
-                : route('dashboard');
+            return route(auth()->user()?->homeRoute() ?? 'login');
         });
     })
     ->withExceptions(function (Exceptions $exceptions) {

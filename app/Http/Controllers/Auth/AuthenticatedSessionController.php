@@ -32,17 +32,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Debugging: Log user role
-        \Log::info('User role after login: ' . Auth::user()->role);
-
-        // Redirect based on role
-        $user = Auth::user();
-        $role = $user->role; // Assuming 'role' is a column in your users table
-
-        if ($role === 'owner') {
-            return redirect()->route('owner-beranda');
-        } elseif ($role === 'keuangan') {
-            return redirect()->route('dashboard');
+        // Redirect sesuai role (keuangan, owner, kasir)
+        if ($home = Auth::user()->homeRoute()) {
+            return redirect()->route($home);
         }
 
         // Role tidak dikenali: jangan biarkan tetap login
@@ -66,6 +58,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->route('login-belfinance');
     }
-
-
-};
+}
