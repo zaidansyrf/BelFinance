@@ -86,9 +86,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="px-8">
-                        @include('ai._insight')
-                    </div>
+                    @if (auth()->user()->isOwner())
+                        <div class="px-8">
+                            @include('ai._insight')
+                        </div>
+                    @endif
                     <div class="flex-1 bg-[#D1DDD5] overflow-auto px-8 mt-12 mb-4">
                         <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Analytic</h1>
                         <div class="flex flex-col lg:flex-row gap-6">

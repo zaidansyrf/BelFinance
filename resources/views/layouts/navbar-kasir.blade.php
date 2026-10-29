@@ -25,6 +25,11 @@
                         {{ request()->routeIs('kasir.beranda') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
                         Hari Ini
                     </a>
+                    <a href="{{ route('kasir.shift') }}"
+                        class="whitespace-nowrap px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
+                        {{ request()->routeIs('kasir.shift') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
+                        Shift
+                    </a>
                 </nav>
 
                 <!-- Profil -->

@@ -15,12 +15,32 @@ class Item extends Model
     protected $table = 'items';
 
     // Define the fillable columns
-    protected $fillable = ['name', 'description', 'price', 'quantity', 'code', 'image'];
+    protected $fillable = ['name', 'description', 'price', 'quantity', 'stock', 'code', 'image'];
 
     // Define the relationship with income details
     public function incomeDetails()
     {
         return $this->hasMany(IncomeDetail::class);
+    }
+
+    // Stok di bawah atau sama dengan angka ini dianggap menipis
+    public const STOK_MENIPIS = 5;
+
+    public function lacakStok(): bool
+    {
+        return $this->stock !== null;
+    }
+
+    public function stokMenipis(): bool
+    {
+        return $this->lacakStok() && $this->stock <= self::STOK_MENIPIS;
+    }
+
+    public function kembalikanStok(int $jumlah): void
+    {
+        if ($this->lacakStok()) {
+            $this->increment('stock', $jumlah);
+        }
     }
 
     /**

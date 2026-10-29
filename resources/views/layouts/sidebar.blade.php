@@ -123,6 +123,15 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('shift.index') }}"
+                class="{{ request()->routeIs('shift.index') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2 flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z" />
+                </svg>
+                <span>Shift Kasir</span>
+            </a>
+        </li>
+        <li>
             <a href="{{ route('ai.asisten') }}"
                 class="{{ request()->routeIs('ai.asisten') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2 flex items-center gap-2 group">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"

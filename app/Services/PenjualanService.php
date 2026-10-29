@@ -44,7 +44,7 @@ class PenjualanService
     }
 
     /**
-     * @param  array{name: string, source_id: int|string, items: array, paid_amount?: int|string|null, description?: string|null}  $data
+     * @param  array{name: string, source_id: int|string, shift_id?: int|null, items: array, paid_amount?: int|string|null, description?: string|null}  $data
      *
      * @throws ValidationException jika uang diterima kurang dari total
      */
@@ -54,13 +54,18 @@ class PenjualanService
 
         $paid = isset($data['paid_amount']) && $data['paid_amount'] !== '' ? (int) $data['paid_amount'] : null;
         if ($paid !== null && $paid < $total) {
+            $rp = fn (int $nilai) => 'Rp '.number_format($nilai, 0, ',', '.');
+
             throw ValidationException::withMessages([
-                'paid_amount' => 'Uang diterima kurang dari total belanja (Rp '.number_format($total, 0, ',', '.').').',
+                'paid_amount' => "Uang kurang {$rp($total - $paid)}. Total belanja {$rp($total)}, uang diterima {$rp($paid)}.",
             ]);
         }
 
         return DB::transaction(function () use ($data, $total, $details, $paid) {
+            $this->kurangiStok($details);
+
             $income = Income::create([
+                'shift_id' => $data['shift_id'] ?? null,
                 'name' => $data['name'],
                 'amount' => $total,
                 'paid_amount' => $paid,
@@ -85,5 +90,37 @@ class PenjualanService
 
             return $income;
         });
+    }
+
+    /**
+     * Kurangi stok menu yang dilacak. Baris dikunci agar dua kasir tidak menjual stok yang sama.
+     *
+     * @param  array<int, array{item: Item, quantity: int, subtotal: int}>  $details
+     *
+     * @throws ValidationException jika stok tidak cukup
+     */
+    private function kurangiStok(array $details): void
+    {
+        $kurang = [];
+        foreach ($details as $detail) {
+            $item = Item::lockForUpdate()->find($detail['item']->id);
+            if (! $item->lacakStok()) {
+                continue;
+            }
+
+            if ($item->stock < $detail['quantity']) {
+                $kurang[] = "{$item->name} (sisa {$item->stock}, diminta {$detail['quantity']})";
+
+                continue;
+            }
+
+            $item->decrement('stock', $detail['quantity']);
+        }
+
+        if ($kurang) {
+            throw ValidationException::withMessages([
+                'items' => 'Stok tidak cukup: '.implode('; ', $kurang).'.',
+            ]);
+        }
     }
 }

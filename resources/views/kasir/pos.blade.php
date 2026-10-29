@@ -3,7 +3,7 @@
     @include('layouts.navbar-kasir')
 
     @php
-        $menuData = $items->mapWithKeys(fn ($item) => [$item->id => ['id' => $item->id, 'name' => $item->name, 'price' => $item->price]]);
+        $menuData = $items->mapWithKeys(fn ($item) => [$item->id => ['id' => $item->id, 'name' => $item->name, 'price' => $item->price, 'stock' => $item->stock]]);
         $oldCart = collect(old('items', []))
             ->filter(fn ($row) => isset($row['item_id'], $menuData[$row['item_id']]))
             ->map(fn ($row) => ['id' => (int) $row['item_id'], 'qty' => (int) $row['quantity']])
@@ -44,8 +44,9 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
                     @foreach ($items as $item)
                         <button type="button" @click="add({{ $item->id }})"
+                            @disabled($item->lacakStok() && $item->stock < 1)
                             x-show="matches(@js($item->name . ' ' . $item->code))"
-                            class="group relative text-left bg-white rounded-xl shadow-sm hover:shadow-md border-2 transition overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#468585]"
+                            class="group relative text-left bg-white rounded-xl shadow-sm hover:shadow-md border-2 transition overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#468585] disabled:opacity-50 disabled:cursor-not-allowed"
                             :class="qtyOf({{ $item->id }}) ? 'border-[#468585]' : 'border-transparent'">
                             <x-menu-image :item="$item" size="w-full h-24 sm:h-28" text="text-2xl" class="rounded-none" />
                             <div class="p-3">
@@ -54,6 +55,11 @@
                                     <p class="mt-0.5 text-xs text-gray-500 leading-snug line-clamp-2">{{ $item->description }}</p>
                                 @endif
                                 <p class="mt-1 text-sm font-semibold text-[#2B7A78]">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
+                                @if ($item->lacakStok())
+                                    <p class="mt-0.5 text-xs font-medium {{ $item->stock < 1 ? 'text-red-600' : ($item->stokMenipis() ? 'text-amber-600' : 'text-gray-500') }}">
+                                        {{ $item->stock < 1 ? 'Stok habis' : 'Sisa '.$item->stock }}
+                                    </p>
+                                @endif
                             </div>
                             <span x-show="qtyOf({{ $item->id }})" x-text="qtyOf({{ $item->id }})"
                                 class="absolute top-2 right-2 min-w-7 h-7 px-2 rounded-full bg-[#DB5461] text-white text-sm font-bold flex items-center justify-center shadow"></span>
@@ -143,8 +149,21 @@
                             <div class="relative mt-1">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">Rp</span>
                                 <input id="paid" type="number" min="0" name="paid_amount" x-model.number="paid" :disabled="!isCash"
-                                    inputmode="numeric" placeholder="0"
-                                    class="w-full pl-10 pr-3 py-2.5 text-lg font-semibold rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#468585] focus:border-[#468585]">
+                                    inputmode="numeric" placeholder="0" :aria-invalid="kurang" aria-describedby="paid-kurang"
+                                    class="w-full pl-10 pr-3 py-2.5 text-lg font-semibold rounded-lg border"
+                                    :class="kurang
+                                        ? 'border-red-500 bg-red-50 text-red-700 focus:ring-2 focus:ring-red-400 focus:border-red-500'
+                                        : 'border-gray-300 focus:ring-2 focus:ring-[#468585] focus:border-[#468585]'">
+                            </div>
+                            <div id="paid-kurang" x-show="kurang" x-cloak role="alert"
+                                class="mt-2 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                                <svg class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="font-semibold">Uang kurang <span x-text="rupiah(-change)"></span></p>
+                                    <p class="text-red-600">Total belanja <span x-text="rupiah(total)"></span>, uang diterima baru <span x-text="rupiah(paid)"></span>.</p>
+                                </div>
                             </div>
                             <div class="mt-2 flex flex-wrap gap-2">
                                 <button type="button" @click="paid = total" class="text-xs px-3 py-1.5 rounded-md bg-white border border-gray-300 hover:bg-gray-100">Uang pas</button>
@@ -163,17 +182,16 @@
                                 <span class="text-gray-700 font-medium">Total</span>
                                 <span class="text-2xl font-bold text-[#2B7A78]" x-text="rupiah(total)"></span>
                             </div>
-                            <div x-show="isCash && paid !== null && paid !== ''" x-cloak class="flex justify-between text-sm">
+                            <div x-show="isCash && paidFilled && !kurang" x-cloak class="flex justify-between text-sm">
                                 <span class="text-gray-600">Kembalian</span>
-                                <span class="font-semibold" :class="change < 0 ? 'text-red-600' : 'text-gray-800'"
-                                    x-text="change < 0 ? 'Kurang ' + rupiah(-change) : rupiah(change)"></span>
+                                <span class="font-semibold text-gray-800" x-text="rupiah(change)"></span>
                             </div>
                         </div>
 
                         <button type="submit" :disabled="!canPay || submitting"
-                            class="w-full py-3 rounded-xl text-white text-lg font-semibold bg-[#2B7A78] hover:bg-[#205C5D] disabled:bg-gray-300 disabled:cursor-not-allowed transition">
-                            <span x-show="!submitting">Bayar</span>
+                            class="w-full py-3 rounded-xl text-white text-lg font-semibold bg-[#2B7A78] hover:bg-[#205C5D] disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition">
                             <span x-show="submitting" x-cloak>Menyimpan...</span>
+                            <span x-show="!submitting" x-text="blocker ?? 'Bayar'">Bayar</span>
                         </button>
                     </div>
                 </form>
@@ -212,9 +230,24 @@
                 get change() {
                     return Number(this.paid || 0) - this.total;
                 },
+                get paidFilled() {
+                    return this.paid !== null && this.paid !== '';
+                },
+                // Uang tunai sudah diisi tapi belum cukup untuk total
+                get kurang() {
+                    return this.isCash && this.cart.length > 0 && this.paidFilled && this.change < 0;
+                },
+                // Alasan tombol Bayar belum bisa ditekan (null = siap bayar)
+                get blocker() {
+                    if (!this.cart.length) return 'Pilih menu dulu';
+                    if (!this.jenis) return 'Pilih jenis pesanan';
+                    if (!this.sourceId) return 'Pilih metode pembayaran';
+                    if (this.isCash && !this.paidFilled) return 'Isi uang diterima';
+                    if (this.kurang) return 'Uang kurang ' + this.rupiah(-this.change);
+                    return null;
+                },
                 get canPay() {
-                    if (!this.cart.length || !this.sourceId || !this.jenis) return false;
-                    return !this.isCash || (this.paid !== null && this.paid !== '' && this.change >= 0);
+                    return this.blocker === null;
                 },
                 // Nominal uang cepat: pecahan di atas total
                 get quickCash() {
@@ -238,8 +271,9 @@
                 },
                 add(id) {
                     const row = this.cart.find((r) => r.id === id);
-                    if (row) row.qty = Math.min(row.qty + 1, 999);
-                    else this.cart.push({ id, qty: 1 });
+                    const max = this.menu[id]?.stock ?? 999;
+                    if (row) row.qty = Math.min(row.qty + 1, 999, max);
+                    else if (max > 0) this.cart.push({ id, qty: 1 });
                 },
                 dec(id) {
                     const row = this.cart.find((r) => r.id === id);
@@ -248,7 +282,7 @@
                     if (row.qty <= 0) this.cart = this.cart.filter((r) => r.id !== id);
                 },
                 normalize(row) {
-                    row.qty = Math.max(0, Math.min(999, parseInt(row.qty) || 0));
+                    row.qty = Math.max(0, Math.min(999, this.menu[row.id]?.stock ?? 999, parseInt(row.qty) || 0));
                     if (row.qty === 0) this.cart = this.cart.filter((r) => r.id !== row.id);
                 },
                 reset() {

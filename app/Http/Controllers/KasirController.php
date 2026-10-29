@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Models\Item;
+use App\Models\Shift;
 use App\Models\Source;
 use App\Services\PenjualanService;
 use Illuminate\Http\Request;
@@ -20,6 +21,10 @@ class KasirController extends Controller
      */
     public function pos()
     {
+        if ($this->perluBukaShift()) {
+            return $this->redirectBukaShift();
+        }
+
         $items = Item::orderBy('name')->get();
         $sources = Source::orderBy('id')->get();
 
@@ -33,6 +38,10 @@ class KasirController extends Controller
 
     public function checkout(Request $request, PenjualanService $penjualan)
     {
+        if ($this->perluBukaShift()) {
+            return $this->redirectBukaShift();
+        }
+
         $data = $request->validate([
             'name' => ['required', Rule::in(self::JENIS_PESANAN)],
             'source_id' => 'required|exists:sources,id',
@@ -52,7 +61,10 @@ class KasirController extends Controller
             $data['paid_amount'] = null;
         }
 
-        $income = $penjualan->simpan($data + ['description' => 'Transaksi POS']);
+        $income = $penjualan->simpan($data + [
+            'description' => 'Transaksi POS',
+            'shift_id' => Shift::aktifUntuk(auth()->user())?->id,
+        ]);
 
         return redirect()->route('kasir.struk', $income)->with('success', 'Transaksi berhasil disimpan.');
     }
@@ -110,6 +122,21 @@ class KasirController extends Controller
 
     private function isCash(?Source $source): bool
     {
-        return $source && in_array(strtoupper(trim($source->name)), ['CASH', 'TUNAI'], true);
+        return $source?->isCash() ?? false;
+    }
+
+    /**
+     * Kasir wajib membuka shift dulu sebelum berjualan. Owner boleh langsung berjualan.
+     */
+    private function perluBukaShift(): bool
+    {
+        $user = auth()->user();
+
+        return $user->isKasir() && ! Shift::aktifUntuk($user);
+    }
+
+    private function redirectBukaShift()
+    {
+        return redirect()->route('kasir.shift')->with('error', 'Buka shift dulu sebelum mulai berjualan.');
     }
 }

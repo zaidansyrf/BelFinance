@@ -60,6 +60,7 @@
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)
                                                 </th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Stok</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
                                             </tr>
@@ -80,6 +81,16 @@
                                                         @endif
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}
+                                                    </td>
+                                                    <td class="py-2 px-4 border-b text-black">
+                                                        @if ($menu->lacakStok())
+                                                            <span class="{{ $menu->stock < 1 ? 'text-red-600 font-semibold' : ($menu->stokMenipis() ? 'text-amber-600 font-semibold' : '') }}">{{ $menu->stock }}</span>
+                                                            @if ($menu->stokMenipis())
+                                                                <span class="text-xs text-amber-600">{{ $menu->stock < 1 ? '(habis)' : '(menipis)' }}</span>
+                                                            @endif
+                                                        @else
+                                                            <span class="text-gray-400">-</span>
+                                                        @endif
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">Rp
                                                         {{ number_format($menu->price, 0, ',', '.') }}</td>
@@ -163,6 +174,12 @@
                                     <input type="number" name="quantity" id="menuJumlah"
                                         class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 10"
                                         required value="0">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="menuStock"
+                                        class="block text-sm font-medium text-gray-700">Stok <span class="font-normal text-gray-500">(kosongkan bila tidak dilacak)</span></label>
+                                    <input type="number" name="stock" id="menuStock" min="0"
+                                        class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 20">
                                 </div>
                                 <div class="mb-4">
                                     <label for="menuPrice"

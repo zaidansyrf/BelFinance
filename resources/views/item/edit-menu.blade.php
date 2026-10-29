@@ -61,6 +61,16 @@
                                             class="w-full px-4 py-2.5 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585] placeholder-gray-400">
                                     </div>
 
+                                    <!-- Stock Field -->
+                                    <div>
+                                        <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Stok <span class="font-normal text-gray-500">(kosongkan bila tidak dilacak)</span>
+                                        </label>
+                                        <input type="number" id="stock" name="stock" min="0"
+                                            value="{{ old('stock', $item->stock) }}"
+                                            class="w-full px-4 py-2.5 border border-[#D1DDD5] rounded-lg focus:ring-2 focus:ring-[#468585] focus:border-[#468585] placeholder-gray-400">
+                                    </div>
+
                                     <!-- Price Field -->
                                     <div>
                                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">

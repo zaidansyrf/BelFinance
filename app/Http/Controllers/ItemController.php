@@ -52,6 +52,7 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'quantity' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0|max:1000000',
             'price' => 'required|numeric|min:1',
             'code' => 'required|string|max:255|unique:items,code',
             'image' => self::IMAGE_RULES,
@@ -65,6 +66,7 @@ class ItemController extends Controller
                 'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
+                'stock' => $request->filled('stock') ? (int) $request->stock : null,
                 'code' => $request->code,
                 'image' => $request->file('image')?->store('menu', 'public'),
             ]);
@@ -93,6 +95,7 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'quantity' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0|max:1000000',
             'price' => 'required|numeric|min:1',
             'code' => 'required|string|max:255|unique:items,code,'.$id,
             'image' => self::IMAGE_RULES,
@@ -118,6 +121,7 @@ class ItemController extends Controller
                 'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
+                'stock' => $request->filled('stock') ? (int) $request->stock : null,
                 'code' => $request->code,
                 'image' => $image,
             ]);

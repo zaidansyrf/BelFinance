@@ -6,9 +6,13 @@ use App\Services\Ai\AiException;
 use App\Services\Ai\AsistenKeuangan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AiController extends Controller
 {
+    // Batas pertanyaan per hari untuk role keuangan; owner tanpa batas
+    public const BATAS_HARIAN_KEUANGAN = 20;
+
     public function __construct(private AsistenKeuangan $asisten) {}
 
     /**
@@ -27,6 +31,10 @@ class AiController extends Controller
             'riwayat.*.role' => 'required|in:user,assistant',
             'riwayat.*.content' => 'required|string|max:4000',
         ]);
+
+        if ($pesanBatas = $this->batasHarian($request)) {
+            return response()->json(['pesan' => $pesanBatas], 429);
+        }
 
         return $this->jalankan(function () use ($data) {
             $jawaban = $this->asisten->tanya($data['pesan'], $data['riwayat'] ?? []);
@@ -54,6 +62,26 @@ class AiController extends Controller
         return $this->jalankan(fn () => [
             'deskripsi' => $this->asisten->deskripsiMenu($data['name'], $data['price'] ?? null),
         ]);
+    }
+
+    /**
+     * Keuangan dibatasi pertanyaan per hari; owner bebas. Mengembalikan pesan bila batas habis.
+     */
+    private function batasHarian(Request $request): ?string
+    {
+        $user = $request->user();
+        if ($user->isOwner()) {
+            return null;
+        }
+
+        $key = 'ai-tanya-harian:'.$user->id.':'.now()->toDateString();
+        if (RateLimiter::tooManyAttempts($key, self::BATAS_HARIAN_KEUANGAN)) {
+            return 'Batas '.self::BATAS_HARIAN_KEUANGAN.' pertanyaan per hari sudah habis. Coba lagi besok atau hubungi owner.';
+        }
+
+        RateLimiter::hit($key, 86400);
+
+        return null;
     }
 
     private function jalankan(callable $aksi): JsonResponse

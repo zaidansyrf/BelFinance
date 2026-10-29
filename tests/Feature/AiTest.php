@@ -7,6 +7,7 @@ use App\Models\Expense;
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Models\Item;
+use App\Models\Shift;
 use App\Models\Source;
 use App\Models\User;
 use App\Services\Ai\KonteksKeuangan;
@@ -161,10 +162,6 @@ class AiTest extends TestCase
         $this->actingAs($kasir)->postJson(route('ai.insight'))->assertForbidden();
         $this->actingAs($kasir)->postJson(route('ai.deskripsi-menu'), ['name' => 'X'])->assertForbidden();
 
-        // Deskripsi menu hanya untuk keuangan (pengelola menu)
-        $this->actingAs(User::factory()->owner()->create())
-            ->postJson(route('ai.deskripsi-menu'), ['name' => 'X'])->assertForbidden();
-
         Http::assertNothingSent();
     }
 
@@ -196,7 +193,10 @@ class AiTest extends TestCase
 
         $this->assertSame('Teh manis dingin yang segar.', Item::sole()->description);
 
-        $this->actingAs(User::factory()->kasir()->create())
+        $kasir = User::factory()->kasir()->create();
+        Shift::create(['user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 0]);
+
+        $this->actingAs($kasir)
             ->get(route('kasir.pos'))
             ->assertSee('Teh manis dingin yang segar.');
     }

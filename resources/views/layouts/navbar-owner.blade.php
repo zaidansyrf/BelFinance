@@ -1,3 +1,16 @@
+@php
+    // Owner punya akses ke semua fitur; menu operasional ditaruh di dropdown "Kelola"
+    $kelolaMenu = [
+        ['Pegawai', 'pegawai.index'],
+        ['Shift Kasir', 'shift.index'],
+        ['Kasir (POS)', 'kasir.pos'],
+        ['Menu & Stok', 'menu.search'],
+        ['Pembayaran', 'pembayaran.index'],
+        ['Uang Masuk', 'uang-masuk.search'],
+        ['Pengeluaran', 'expenses.search'],
+        ['Dashboard Keuangan', 'dashboard'],
+    ];
+@endphp
 <x-slot name="header">
     <!-- Fixed header with white background and shadow -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-200">
@@ -32,6 +45,18 @@
                         {{ request()->routeIs('ai.asisten') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
                         Tanya AI
                     </a>
+                    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                        <button type="button" @click="open = !open"
+                            class="px-4 py-2 text-sm font-medium rounded-md text-gray-700 hover:text-[#468585] hover:bg-gray-50 transition-colors duration-200">
+                            Kelola &#9662;
+                        </button>
+                        <div x-show="open" x-cloak
+                            class="absolute left-0 top-full mt-2 w-52 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 py-1 z-50">
+                            @foreach ($kelolaMenu as [$label, $route])
+                                <a href="{{ route($route) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ $label }}</a>
+                            @endforeach
+                        </div>
+                    </div>
                 </nav>
 
                 <!-- Profile -->
@@ -83,6 +108,10 @@
                                 {{ request()->routeIs('ai.asisten') ? 'text-[#468585] font-semibold' : '' }}">
                                 Tanya AI
                             </a>
+                            @foreach ($kelolaMenu as [$label, $route])
+                                <a href="{{ route($route) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150">{{ $label }}</a>
+                            @endforeach
                         </div>
 
                         <div class="border-t border-gray-100"></div>

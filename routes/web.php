@@ -12,7 +12,9 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OwnerBerandaController;
 use App\Http\Controllers\OwnerInfoProfileController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
+use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UangMasukController;
 use Illuminate\Support\Facades\Route;
@@ -74,8 +76,14 @@ Route::middleware(['auth', 'role:keuangan,owner'])->group(function () {
 
     Route::get('/ai/asisten', [AiController::class, 'asisten'])->name('ai.asisten');
     Route::post('/ai/tanya', [AiController::class, 'tanya'])->middleware('throttle:30,1')->name('ai.tanya');
-    Route::post('/ai/insight', [AiController::class, 'insight'])->middleware('throttle:10,1')->name('ai.insight');
+
+    // Riwayat shift semua kasir
+    Route::get('/shift', [ShiftController::class, 'index'])->name('shift.index');
 });
+
+// Analisis dashboard AI: khusus owner (keuangan hanya dapat Tanya AI yang dibatasi per hari)
+Route::post('/ai/insight', [AiController::class, 'insight'])
+    ->middleware(['auth', 'role:owner', 'throttle:10,1'])->name('ai.insight');
 
 // Profil & ganti password: semua role
 Route::middleware(['auth', 'role:keuangan,owner,kasir'])->group(function () {
@@ -90,6 +98,11 @@ Route::middleware(['auth', 'role:kasir'])->prefix('kasir')->name('kasir.')->grou
     Route::get('/pos', [KasirController::class, 'pos'])->name('pos');
     Route::post('/pos', [KasirController::class, 'checkout'])->name('checkout');
     Route::get('/beranda', [KasirController::class, 'beranda'])->name('beranda');
+
+    // Shift: buka dengan modal awal, tutup dengan hitung kas
+    Route::get('/shift', [ShiftController::class, 'show'])->name('shift');
+    Route::post('/shift/buka', [ShiftController::class, 'buka'])->name('shift.buka');
+    Route::post('/shift/tutup', [ShiftController::class, 'tutup'])->name('shift.tutup');
 });
 
 // Struk bisa dibuka kasir (transaksinya sendiri) dan keuangan (semua transaksi)
@@ -102,6 +115,12 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::get('/beranda', [OwnerBerandaController::class, 'view'])->name('owner-beranda');
     Route::get('/laporan', [OwnerLaporanKeuanganController::class, 'view'])->name('laporan-owner');
     Route::get('/info-profile', [OwnerInfoProfileController::class, 'view'])->name('owner-info-profile');
+
+    // Kelola akun pegawai (kasir & keuangan)
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 });
 
 require __DIR__.'/auth.php';
