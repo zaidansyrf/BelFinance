@@ -1,6 +1,7 @@
 # Deploy BelFinance ke VPS dengan Docker
 
-Isi stack: `app` (Nginx + PHP 8.4), `db` (MySQL 8.0), dan `caddy` (HTTPS otomatis).
+Isi stack: `app` (Nginx + PHP 8.4) dan `db` (MySQL 8.0).
+Aplikasi terbuka di `127.0.0.1:8086`; Nginx di VPS meneruskan domain ke sana.
 Database dan foto menu disimpan di volume Docker, jadi aman saat image diperbarui.
 
 Kebutuhan VPS: Linux dengan Docker dan Docker Compose, RAM minimal 2 GB, serta port 80 dan 443 terbuka.
@@ -26,13 +27,23 @@ Isi `.env`:
 
 - `APP_KEY`: hasil perintah pertama. Simpan baik-baik; jangan diganti setelah aplikasi dipakai.
 - `DB_PASSWORD` dan `DB_ROOT_PASSWORD`: dua hasil berikutnya.
-- `APP_URL` dan `SITE_ADDRESS`: domainmu.
+- `APP_URL`: domainmu.
+- `APP_PORT`: ubah bila port 8086 sudah terpakai.
 - `VIKEY_API_KEY`: bila fitur AI dipakai.
 
 Nyalakan (migrasi database berjalan otomatis):
 
 ```bash
 docker compose up -d --build
+```
+
+Sambungkan domain (cukup sekali; ganti `domainmu.com`, dan sesuaikan port bila `APP_PORT` diubah):
+
+```bash
+sed 's/domainmu.com/DOMAIN-KAMU/' docker/nginx-vps.conf > /etc/nginx/sites-available/belfinance
+ln -s /etc/nginx/sites-available/belfinance /etc/nginx/sites-enabled/belfinance
+nginx -t && systemctl reload nginx
+certbot --nginx -d DOMAIN-KAMU
 ```
 
 ## 2. Data awal
@@ -102,5 +113,4 @@ docker compose exec -T db sh -c 'mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "
 
 - `docker compose down -v` menghapus database dan foto menu. Pakai `docker compose down` tanpa `-v`.
 - Mengubah `.env` cukup dengan `docker compose up -d`, tanpa `--build`.
-- Bila belum punya domain, isi `SITE_ADDRESS=:80`, `APP_URL=http://IP-VPS`, dan
-  `SESSION_SECURE_COOKIE=false`. Password akan terkirim tanpa enkripsi, jadi pakai hanya sementara.
+- Bila belum punya domain, pakai `APP_URL=http://IP-VPS` dan `SESSION_SECURE_COOKIE=false` sementara.

@@ -4,6 +4,9 @@ services:
     image: belfinance:latest
     restart: unless-stopped
     env_file: .env
+    # Hanya terbuka di VPS itu sendiri; Nginx VPS yang meneruskan domain ke sini.
+    ports:
+      - "127.0.0.1:${APP_PORT:-8086}:80"
     environment:
       DB_CONNECTION: mysql
       DB_HOST: db
@@ -31,25 +34,6 @@ services:
       retries: 20
       start_period: 30s
 
-  # Pintu masuk dari internet; mengurus sertifikat HTTPS otomatis.
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    environment:
-      SITE_ADDRESS: ${SITE_ADDRESS:?isi SITE_ADDRESS di .env}
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy-data:/data
-      - caddy-config:/config
-    depends_on:
-      - app
-
 volumes:
   storage:
   db-data:
-  caddy-data:
-  caddy-config:
