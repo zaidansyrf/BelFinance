@@ -1,20 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
 
 use Illuminate\Http\Request;
 
 class AdminKeuanganInfoProfileController extends Controller
 {
-    public function view(){
+    public function view()
+    {
         return view('profile');
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
+            'email' => 'required|string|email|max:255|unique:users,email,'.auth()->id(),
         ]);
 
         $user = auth()->user();
@@ -22,15 +23,15 @@ class AdminKeuanganInfoProfileController extends Controller
 
         return redirect()->back()->with('status', 'Profile updated successfully.');
     }
-    public function edit(){
-        $user = auth()->user();
-        return view('profile.edit', compact('user'));
-    }
 
     public function changePassword(Request $request)
     {
         $request->validate([
-            'new_password' => 'required|string|min:8|confirmed',
+            'current_password' => 'required|current_password',
+            'new_password' => 'required|string|min:8|confirmed|different:current_password',
+        ], [
+            'current_password.current_password' => 'Password lama tidak sesuai.',
+            'new_password.different' => 'Password baru harus berbeda dari password lama.',
         ]);
 
         $user = auth()->user();
@@ -38,13 +39,5 @@ class AdminKeuanganInfoProfileController extends Controller
         $user->save();
 
         return back()->with('status', 'Password successfully updated.');
-    }
-
-
-
-
-
-    public function changePasswordForm(){
-        return view('profile.change-password');
     }
 }

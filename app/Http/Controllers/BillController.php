@@ -11,9 +11,8 @@ class BillController extends Controller
 {
     public function index()
     {
-        $Bills = Bill::all();
         return view('kategori.bill.index', [
-            'Bills' => DB::table('Bills')->paginate(5)
+            'Bills' => Bill::paginate(5)
         ]);
     }
     public function store(Request $request)

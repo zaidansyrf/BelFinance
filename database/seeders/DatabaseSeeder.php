@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 
         // Panggil seeder lainnya
         $this->call([
-            Source::class,
+            source::class,
             bill::class,
             item::class,
             KeuanganSeeder::class,

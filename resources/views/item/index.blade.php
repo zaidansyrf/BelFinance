@@ -55,10 +55,12 @@
                                         <thead>
                                             <tr>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Gambar</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Kode Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nama Menu</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Jumlah (Terjual)
                                                 </th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Stok</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Harga</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
                                             </tr>
@@ -68,9 +70,27 @@
                                                 <tr class="hover:bg-gray-100/50">
                                                     <td class="py-2 px-4 border-b text-black">{{ $loop->iteration }}
                                                     </td>
+                                                    <td class="py-2 px-4 border-b">
+                                                        <x-menu-image :item="$menu" />
+                                                    </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
-                                                    <td class="py-2 px-4 border-b text-black">{{ $menu->name }}</td>
+                                                    <td class="py-2 px-4 border-b text-black">
+                                                        {{ $menu->name }}
+                                                        @if ($menu->description)
+                                                            <p class="text-xs text-gray-500 max-w-xs truncate">{{ $menu->description }}</p>
+                                                        @endif
+                                                    </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->quantity }}
+                                                    </td>
+                                                    <td class="py-2 px-4 border-b text-black">
+                                                        @if ($menu->lacakStok())
+                                                            <span class="{{ $menu->stock < 1 ? 'text-red-600 font-semibold' : ($menu->stokMenipis() ? 'text-amber-600 font-semibold' : '') }}">{{ $menu->stock }}</span>
+                                                            @if ($menu->stokMenipis())
+                                                                <span class="text-xs text-amber-600">{{ $menu->stock < 1 ? '(habis)' : '(menipis)' }}</span>
+                                                            @endif
+                                                        @else
+                                                            <span class="text-gray-400">-</span>
+                                                        @endif
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">Rp
                                                         {{ number_format($menu->price, 0, ',', '.') }}</td>
@@ -90,7 +110,7 @@
                                             @endforeach
                                             @if ($items->isEmpty())
                                                 <tr>
-                                                    <td colspan="6" class="px-4 py-2 text-center text-black">Tidak
+                                                    <td colspan="7" class="px-4 py-2 text-center text-black">Tidak
                                                         ada data tersedia.</td>
                                                 </tr>
                                             @endif
@@ -133,7 +153,7 @@
                         <div id="menuModal"
                             class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
                             <h3 class="text-xl font-semibold mb-4">Tambah Menu</h3>
-                            <form method="POST" action="{{ route('menu.store') }}">
+                            <form method="POST" action="{{ route('menu.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-4">
                                     <label for="menuName" class="block text-sm font-medium text-gray-700">Nama
@@ -151,11 +171,24 @@
                                         required value="0">
                                 </div>
                                 <div class="mb-4">
+                                    <label for="menuStock"
+                                        class="block text-sm font-medium text-gray-700">Stok <span class="font-normal text-gray-500">(kosongkan bila tidak dilacak)</span></label>
+                                    <input type="number" name="stock" id="menuStock" min="0"
+                                        class="w-full p-2 border border-gray-300 rounded-md" placeholder="cth. 20">
+                                </div>
+                                <div class="mb-4">
                                     <label for="menuPrice"
                                         class="block text-sm font-medium text-gray-700">Harga</label>
                                     <input type="number" name="price" id="menuPrice"
                                         class="w-full p-2 border border-gray-300 rounded-md" placeholder="Rp "
                                         required step="1" min="0" inputmode="numeric">
+                                </div>
+                                @include('ai._deskripsi-menu-field', ['id' => 'menuDescription'])
+                                <div class="mb-4">
+                                    <label for="menuImage" class="block text-sm font-medium text-gray-700">Gambar
+                                        <span class="text-gray-400 font-normal">(opsional, maks. 2 MB)</span></label>
+                                    <input type="file" name="image" id="menuImage" accept="image/png,image/jpeg,image/webp"
+                                        class="file-input file-input-bordered file-input-sm w-full mt-1">
                                 </div>
                                 <div class="flex justify-end mt-4">
                                     <button type="button" onclick="closeModal()"
@@ -230,6 +263,15 @@
                 icon: 'error',
                 title: 'Gagal!',
                 text: '{{ session('error') }}',
+                showConfirmButton: true
+            });
+        @endif
+
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Data menu belum valid',
+                html: @json(implode('<br>', array_map('e', $errors->all()))),
                 showConfirmButton: true
             });
         @endif

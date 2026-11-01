@@ -16,10 +16,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
     public const ROLE_OWNER = 'owner';
+
     public const ROLE_KEUANGAN = 'keuangan';
 
+    public const ROLE_KASIR = 'kasir';
+
+    public const ROLES = [self::ROLE_KEUANGAN, self::ROLE_OWNER, self::ROLE_KASIR];
 
     protected $fillable = [
         'name',
@@ -51,7 +54,6 @@ class User extends Authenticatable
         ];
     }
 
-
     public function isOwner(): bool
     {
         return $this->role === self::ROLE_OWNER;
@@ -62,5 +64,21 @@ class User extends Authenticatable
         return $this->role === self::ROLE_KEUANGAN;
     }
 
+    public function isKasir(): bool
+    {
+        return $this->role === self::ROLE_KASIR;
+    }
 
+    /**
+     * Nama route halaman awal setelah login, sesuai role.
+     */
+    public function homeRoute(): ?string
+    {
+        return match ($this->role) {
+            self::ROLE_KEUANGAN => 'dashboard',
+            self::ROLE_OWNER => 'owner-beranda',
+            self::ROLE_KASIR => 'kasir.pos',
+            default => null,
+        };
+    }
 }

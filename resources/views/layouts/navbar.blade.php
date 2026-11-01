@@ -12,10 +12,10 @@
                     </path>
                 </svg>
             </label>
-            <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, {{ Auth::user()->name }}</span>
+            <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if (Auth::user()->isOwner()) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">Owner</span>@endif</span>
         </div>
         <div class="bg-transparent hidden lg:flex items-center w-full justify-between">
-            <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, {{ Auth::user()->name }}</span>
+            <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if (Auth::user()->isOwner()) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">Owner</span>@endif</span>
             <!-- dropdown menu profile -->
             <div class="dropdown dropdown-end mr-4">
                 <div tabindex="0" role="button">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                    <li><a class="text-black" href="{{ url('keuangan/info-profile') }}">
+                    <li><a class="text-black" href="{{ route(Auth::user()->isOwner() ? 'owner-info-profile' : 'info-profile') }}">
 
                             Info Profile</a></li>
                     <li>
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <ul tabindex="0" class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                <li><a href="{{ url('keuangan/info-profile') }}" class="text-black">Info Profile</a></li>
+                <li><a href="{{ route(Auth::user()->isOwner() ? 'owner-info-profile' : 'info-profile') }}" class="text-black">Info Profile</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

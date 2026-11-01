@@ -6,7 +6,7 @@ use Carbon\Carbon;
     $hariIni = Carbon::today()->toDateString();
 @endphp
 <x-app-layout>
-    @include('layouts.navbar-owner')
+<x-panel plain>
     <div class="min-h-screen bg-[#D1DDD5] pt-10">
 
         <div class="flex-1 bg-[#D1DDD5] overflow-auto">
@@ -126,4 +126,5 @@ use Carbon\Carbon;
         </div>
 
     </div>
+</x-panel>
 </x-app-layout>

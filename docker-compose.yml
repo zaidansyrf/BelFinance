@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    image: belfinance:latest
+    restart: unless-stopped
+    env_file: .env
+    # Hanya terbuka di VPS itu sendiri; Nginx VPS yang meneruskan domain ke sini.
+    ports:
+      - "127.0.0.1:${APP_PORT:-8086}:80"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+    volumes:
+      - storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:?isi DB_DATABASE di .env}
+      MYSQL_USER: ${DB_USERNAME:?isi DB_USERNAME di .env}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?isi DB_PASSWORD di .env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?isi DB_ROOT_PASSWORD di .env}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  storage:
+  db-data:

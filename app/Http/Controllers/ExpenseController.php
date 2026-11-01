@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Bill;
 use App\Models\Expense;
 use App\Models\Source;
-use App\Models\Bill;
+use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
@@ -34,24 +34,23 @@ class ExpenseController extends Controller
         ->paginate(10);
         return view('expenses.index', compact('expenses'));
     }
-
     public function search(Request $request)
     {
         $search = $request->input('search');
 
         $expenses = Expense::query()
-        ->join('sources', 'expenses.source_id', '=', 'sources.id')
-        ->join('bills', 'expenses.bill_id', '=', 'bills.id') // JOIN ke tabel tagihan
-        ->where(function ($query) use ($search) {
-            $query->where('sources.name', 'LIKE', "%{$search}%")
-                ->orWhere('bills.name', 'LIKE', "%{$search}%")
-                ->orWhere('expenses.amount', 'LIKE', "%{$search}%")
-                ->orWhere('expenses.description', 'LIKE', "%{$search}%")
-                ->orWhere('expenses.date', 'LIKE', "%{$search}%");
-        })
-        ->select('expenses.*')
-        ->orderBy('expenses.date', 'asc')
-        ->paginate(10);
+            ->join('sources', 'expenses.source_id', '=', 'sources.id')
+            ->join('bills', 'expenses.bill_id', '=', 'bills.id') // JOIN ke tabel tagihan
+            ->where(function ($query) use ($search) {
+                $query->where('sources.name', 'LIKE', "%{$search}%")
+                    ->orWhere('bills.name', 'LIKE', "%{$search}%")
+                    ->orWhere('expenses.amount', 'LIKE', "%{$search}%")
+                    ->orWhere('expenses.description', 'LIKE', "%{$search}%")
+                    ->orWhere('expenses.date', 'LIKE', "%{$search}%");
+            })
+            ->select('expenses.*')
+            ->orderBy('expenses.date', 'asc')
+            ->paginate(10);
 
         return view('expenses.index', compact('expenses', 'search'));
     }
@@ -60,6 +59,7 @@ class ExpenseController extends Controller
     {
         $bills = Bill::all();
         $sources = Source::all();
+
         return view('keuangan-create-pengeluaran', compact('sources', 'bills'));
     }
 
@@ -75,6 +75,7 @@ class ExpenseController extends Controller
 
         try {
             Expense::create($validatedData);
+
             return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil ditambahkan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran!');
@@ -86,6 +87,7 @@ class ExpenseController extends Controller
         $expense = Expense::with(['source', 'bill'])->findOrFail($id);
         $sources = Source::all();
         $bills = Bill::all();
+
         return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
 
     }
@@ -95,6 +97,7 @@ class ExpenseController extends Controller
         $expense = Expense::with(['source', 'bill'])->findOrFail($id);
         $bills = Bill::all();
         $sources = Source::all();
+
         return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
     }
 
@@ -111,6 +114,7 @@ class ExpenseController extends Controller
         try {
             $expense = Expense::findOrFail($id);
             $expense->update($validatedData);
+
             return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil diperbarui!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memperbarui data pengeluaran!');
@@ -121,7 +125,7 @@ class ExpenseController extends Controller
     {
         $expense = Expense::findOrFail($id);
         $expense->delete();
+
         return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil dihapus!');
     }
-
 }

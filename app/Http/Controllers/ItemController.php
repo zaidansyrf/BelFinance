@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
+    // Gambar menu opsional: jpg/png/webp, maksimal 2 MB
+    private const IMAGE_RULES = 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048';
 
-    //emthod untuk menampilkan data
+    private const IMAGE_MESSAGES = [
+        'image.image' => 'File gambar tidak valid.',
+        'image.mimes' => 'Gambar harus berformat JPG, PNG, atau WEBP.',
+        'image.max' => 'Ukuran gambar maksimal 2 MB.',
+    ];
+
+    // method untuk menampilkan data
     public function index()
     {
         $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
@@ -26,7 +35,8 @@ class ItemController extends Controller
 
         return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
     }
-    //method pencarian
+
+    // method pencarian
     public function search(Request $request)
     {
         $search = $request->input('search');
@@ -58,46 +68,58 @@ class ItemController extends Controller
         //
     }
 
-
+    // method menyimpan data ke database
     public function store(Request $request)
     {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'quantity' => 'required|integer|min:0',
-        'price' => 'required|numeric|min:1',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
+            'quantity' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0|max:1000000',
+            'price' => 'required|numeric|min:1',
+            'code' => 'nullable|string|max:255|unique:items,code',
+            'image' => self::IMAGE_RULES,
+        ], [
+            'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
+        ] + self::IMAGE_MESSAGES);
 
         try {
-            $words = explode(' ', strtoupper($request->name));
-            $prefix = '';
+            $code = $request->code;
+            if (empty($code)) {
+                $words = explode(' ', strtoupper($request->name));
+                $prefix = '';
 
-            if (count($words) > 0) {
-                $prefix = $words[0];
+                if (count($words) > 0) {
+                    $prefix = $words[0];
 
-                if (strlen($prefix) < 3 && isset($words[1])) {
-                    $prefix .= substr($words[1], 0, 3 - strlen($prefix));
+                    if (strlen($prefix) < 3 && isset($words[1])) {
+                        $prefix .= substr($words[1], 0, 3 - strlen($prefix));
+                    }
+
+                    $prefix = substr($prefix, 0, 3);
                 }
 
-                $prefix = substr($prefix, 0, 3);
-            }
+                $lastItem = Item::where('code', 'LIKE', $prefix . '%')
+                                ->orderBy('code', 'desc')
+                                ->first();
 
-            $lastItem = Item::where('code', 'LIKE', $prefix . '%')
-                            ->orderBy('code', 'desc')
-                            ->first();
-
-            $nextNumber = 1;
-            if ($lastItem) {
-                $lastNumber = (int)substr($lastItem->code, strlen($prefix));
-                $nextNumber = $lastNumber + 1;
+                $nextNumber = 1;
+                if ($lastItem) {
+                    $lastNumber = (int)substr($lastItem->code, strlen($prefix));
+                    $nextNumber = $lastNumber + 1;
+                }
+                // generate code
+                $code = $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
             }
-            //generate code
-            $newCode = $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT); 
 
             Item::create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
-                'code' => $newCode,
+                'stock' => $request->filled('stock') ? (int) $request->stock : null,
+                'code' => $code,
+                'image' => $request->file('image')?->store('menu', 'public'),
             ]);
 
             return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
@@ -113,64 +135,80 @@ class ItemController extends Controller
         return view('item.show', compact('item'));
     }
 
-    //method edit
+    // method edit
     public function edit(string $id)
     {
         // tampilkan form edit item berdasarkan ID
         $item = Item::findOrFail($id);
+
         return view('item.edit-menu', compact('item'));
     }
 
-    //method update
+    // method update
     public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
             'quantity' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0|max:1000000',
             'price' => 'required|numeric|min:1',
-            'code' => 'required|string|max:255|unique:items,code,' . $id,
+            'code' => 'required|string|max:255|unique:items,code,'.$id,
+            'image' => self::IMAGE_RULES,
+            'remove_image' => 'nullable|boolean',
         ], [
             'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
-        ]);
+        ] + self::IMAGE_MESSAGES);
 
         try {
             // Update item
             $item = Item::findOrFail($id);
+            $oldImage = $item->image;
+
+            $image = $oldImage;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image')->store('menu', 'public');
+            } elseif ($request->boolean('remove_image')) {
+                $image = null;
+            }
+
             $item->update([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
-                'code' => $request->code
+                'stock' => $request->filled('stock') ? (int) $request->stock : null,
+                'code' => $request->code,
+                'image' => $image,
             ]);
 
-            // redirect dengan alert
+            // Hapus file gambar lama setelah data berhasil diperbarui
+            if ($oldImage && $oldImage !== $image) {
+                Storage::disk('public')->delete($oldImage);
+            }
+
             return redirect()->route('menu.search')->with('success', 'Menu berhasil diperbarui');
         } catch (\Exception $e) {
-            // handle errors
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui menu');
         }
     }
 
-    //method hapus
+    // method hapus
     public function destroy(string $id)
     {
-        Item::destroy($id);
+        $item = Item::findOrFail($id);
 
-        // redirect dengan alert ke halaman admin/keuangan/menu
+        // Menu yang sudah pernah terjual tidak bisa dihapus (dipakai di riwayat transaksi)
+        if ($item->incomeDetails()->exists()) {
+            return redirect()->route('menu.search')
+                ->with('error', "Menu {$item->name} sudah pernah terjual sehingga tidak bisa dihapus.");
+        }
+
+        $item->delete();
+        if ($item->image) {
+            Storage::disk('public')->delete($item->image);
+        }
+
         return redirect()->route('menu.search')->with('success', 'Menu berhasil dihapus');
     }
-
-    public function chart()
-    {
-        $items = Item::orderByDesc('quantity')->take(5)->get();
-
-        $chartData = [
-            'labels' => $items->pluck('name'),
-            'quantities' => $items->pluck('quantity'),
-        ];
-
-        return view('item.chart', compact('chartData'));
-    }
-
 }
-

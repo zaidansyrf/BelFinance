@@ -32,21 +32,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Debugging: Log user role
-        \Log::info('User role after login: ' . Auth::user()->role);
-
-        // Redirect based on role
-        $user = Auth::user();
-        $role = $user->role; // Assuming 'role' is a column in your users table
-
-        if ($role === 'owner') {
-            return redirect()->route('owner-beranda');
-        } elseif ($role === 'admin') {
-            return redirect()->route('dashboard');
+        // Redirect sesuai role (keuangan, owner, kasir)
+        if ($home = Auth::user()->homeRoute()) {
+            return redirect()->route($home);
         }
 
-        // Default redirect if role is not recognized
-        return redirect()->route('dashboard');
+        // Role tidak dikenali: jangan biarkan tetap login
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login-belfinance')->withErrors(['name' => 'Role akun tidak dikenali.']);
     }
 
     /**
@@ -62,6 +58,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->route('login-belfinance');
     }
-
-
-};
+}

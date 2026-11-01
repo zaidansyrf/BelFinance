@@ -1,7 +1,6 @@
 @section('title', 'Dashboard')
 <x-app-layout>
-
-    @include('layouts.navbar-owner')
+<x-panel plain>
 
     <!-- main content -->
     <div class="flex-1 bg-[#D1DDD5] overflow-auto pt-10">
@@ -90,6 +89,19 @@
                                 </div>
                             </div>
                         </div>
+        </div>
+        <div class="px-8">
+            @include('ai._insight')
+        </div>
+        @php $analisisSaran = app(\App\Services\SaranUsahaService::class)->analisis(); @endphp
+        <div class="px-8 mt-6">
+            <div class="bg-white rounded-lg shadow p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-semibold text-[#2B7A78]">Saran Usaha</h2>
+                    <a href="{{ route('saran.index') }}" class="text-sm text-[#2B7A78] hover:underline">Lihat semua &rarr;</a>
+                </div>
+                @include('saran._daftar', $analisisSaran + ['batas' => 3])
+            </div>
         </div>
         <div class="flex-1 bg-[#D1DDD5] overflow-hidden px-8 mt-12 mb-4">
             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Analytic</h1>
@@ -195,10 +207,10 @@
                                     <tbody id="transaction-table-body">
                                         @foreach ($transactions as $index => $transaction)
                                             <tr class="text-center bg-white hover:bg-gray-50"
-                                                data-type="{{ $transaction->type }}">
+                                                data-type="{{ $transaction->jenis }}">
                                                 <td class="px-4 py-2 border nomor-urut">{{ $loop->iteration }}</td>
                                                 <td class="px-4 py-2 border">
-                                                    @if ($transaction->type === 'income')
+                                                    @if ($transaction->jenis === 'income')
                                                         {{ $transaction->name }}
                                                     @else
                                                         {{ $transaction->bill->name ?? 'Tidak ada nama' }}
@@ -206,21 +218,21 @@
                                                 </td>
                                                 <td class="px-4 py-2 border">{{ $transaction->source->name ?? '-' }}</td>
                                                 <td class="px-4 py-2 border income-col">
-                                                    @if ($transaction->type === 'income')
+                                                    @if ($transaction->jenis === 'income')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border expense-col">
-                                                    @if ($transaction->type === 'expense')
+                                                    @if ($transaction->jenis === 'expense')
                                                         Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
                                                 <td class="px-4 py-2 border">
-                                                    {{ $transaction->created_at->format('d-m-Y') }}
+                                                    {{ $transaction->date->format('d-m-Y') }}
                                                 </td>
                                                 <td class="px-4 py-2 border">{{ $transaction->description }}</td>
                                             </tr>
@@ -237,7 +249,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -425,4 +436,5 @@
         window.addEventListener('DOMContentLoaded', () => filterTable('all'));
     </script>
 
+</x-panel>
 </x-app-layout>
