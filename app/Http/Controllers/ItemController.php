@@ -18,6 +18,24 @@ class ItemController extends Controller
         'image.max' => 'Ukuran gambar maksimal 2 MB.',
     ];
 
+    // method untuk menampilkan data
+    public function index()
+    {
+        $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
+
+        // Pie chart data
+        $topItems = Item::orderByDesc('quantity')->take(5)->get();
+        $chartData = [
+            'labels' => $topItems->pluck('name'),
+            'quantities' => $topItems->pluck('quantity'),
+        ];
+
+        $totalSold = Item::sum('quantity');
+        $topSellingMenu = Item::orderByDesc('quantity')->first();
+
+        return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
+    }
+
     // method pencarian
     public function search(Request $request)
     {
@@ -45,6 +63,11 @@ class ItemController extends Controller
         return view('item.index', compact('items', 'search', 'chartData', 'totalSold', 'topSellingMenu', 'totalRevenue'));
     }
 
+    public function create()
+    {
+        //
+    }
+
     // method menyimpan data ke database
     public function store(Request $request)
     {
@@ -54,35 +77,68 @@ class ItemController extends Controller
             'quantity' => 'required|integer|min:0',
             'stock' => 'nullable|integer|min:0|max:1000000',
             'price' => 'required|numeric|min:1',
-            'code' => 'required|string|max:255|unique:items,code',
+            'code' => 'nullable|string|max:255|unique:items,code',
             'image' => self::IMAGE_RULES,
         ], [
             'code.unique' => 'Kode sudah digunakan, silakan gunakan kode lain.',
         ] + self::IMAGE_MESSAGES);
+
         try {
-            // membuat item baru
+            $code = $request->code;
+            if (empty($code)) {
+                $words = explode(' ', strtoupper($request->name));
+                $prefix = '';
+
+                if (count($words) > 0) {
+                    $prefix = $words[0];
+
+                    if (strlen($prefix) < 3 && isset($words[1])) {
+                        $prefix .= substr($words[1], 0, 3 - strlen($prefix));
+                    }
+
+                    $prefix = substr($prefix, 0, 3);
+                }
+
+                $lastItem = Item::where('code', 'LIKE', $prefix . '%')
+                                ->orderBy('code', 'desc')
+                                ->first();
+
+                $nextNumber = 1;
+                if ($lastItem) {
+                    $lastNumber = (int)substr($lastItem->code, strlen($prefix));
+                    $nextNumber = $lastNumber + 1;
+                }
+                // generate code
+                $code = $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            }
+
             Item::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
                 'stock' => $request->filled('stock') ? (int) $request->stock : null,
-                'code' => $request->code,
+                'code' => $code,
                 'image' => $request->file('image')?->store('menu', 'public'),
             ]);
 
-            // Redirect kembali dengan pesan
             return redirect()->route('menu.search')->with('success', 'Menu berhasil ditambahkan');
         } catch (\Exception $e) {
-            // Handle errors
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan menu');
         }
+    }
+
+    public function show(string $id)
+    {
+        // tampilkan detail item berdasarkan ID
+        $item = Item::findOrFail($id);
+        return view('item.show', compact('item'));
     }
 
     // method edit
     public function edit(string $id)
     {
-        // Menampilkan form edit item berdasarkan ID
+        // tampilkan form edit item berdasarkan ID
         $item = Item::findOrFail($id);
 
         return view('item.edit-menu', compact('item'));
@@ -131,10 +187,8 @@ class ItemController extends Controller
                 Storage::disk('public')->delete($oldImage);
             }
 
-            // Redirect kembali dengan pesan
             return redirect()->route('menu.search')->with('success', 'Menu berhasil diperbarui');
         } catch (\Exception $e) {
-            // Handle errors
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui menu');
         }
     }
@@ -155,7 +209,6 @@ class ItemController extends Controller
             Storage::disk('public')->delete($item->image);
         }
 
-        // Kembali ke halaman admin/keuangan/menu
         return redirect()->route('menu.search')->with('success', 'Menu berhasil dihapus');
     }
 }

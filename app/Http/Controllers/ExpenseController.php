@@ -9,6 +9,31 @@ use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
+    public function chartExpense()
+    {
+        $monthlyExpense = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    $months = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $months[] = [
+            'month' => $i,
+            'total' => $monthlyExpense[$i]->total ?? 0  // tidak ada transaksi, nilai = 0
+        ];
+    }
+
+    return response()->json($months);
+    }
+    public function index()
+    {
+        $expenses = Expense::with(['sources', 'bills'])
+        ->orderBy('date', 'desc')
+        ->paginate(10);
+        return view('expenses.index', compact('expenses'));
+    }
     public function search(Request $request)
     {
         $search = $request->input('search');

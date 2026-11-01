@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class UangMasukController extends Controller
 {
+    public function index()
+    {
+        $income = Income::with(['source'])
+                        ->orderBy('created_at', 'desc') //sorting berdasar data masuk
+                        ->paginate(10); // tampil 10 data
+
+        $sources = Source::all();
+
+        return view('keuangan-uang-masuk', compact('income', 'sources'));
+    }
     public function store(Request $request)
     {
         $request->validate([
@@ -25,7 +35,7 @@ class UangMasukController extends Controller
                 'date' => $request->date,
                 'amount' => $request->amount,
                 'description' => $request->description,
-                'type' => 'income', // Asumsikan tipe ini selalu 'income'
+                'type' => 'income', 
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
@@ -62,6 +72,7 @@ class UangMasukController extends Controller
 
     public function destroy(Income $income)
     {
+        // pengecekan untuk menghapus income
         try {
             $income->hapus();
 

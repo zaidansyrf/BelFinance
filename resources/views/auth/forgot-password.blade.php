@@ -3,7 +3,7 @@
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Reset Your Password</h1>
             <div class="mt-4 text-sm text-gray-600">
-                {{ __('Lupa password?  masukkan email yang terdaftar untuk mengubah password.') }}
+                {{ __('Masukkan email yang terdaftar untuk mendapat verifikasi.') }}
             </div>
         </div>
 
