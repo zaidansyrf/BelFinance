@@ -1,8 +1,6 @@
 @section('title', 'Kelola Pegawai')
 <x-app-layout>
-    @include('layouts.navbar-owner')
-
-    <div class="bg-[#D1DDD5] min-h-screen pt-28 px-4 sm:px-8 pb-8">
+    <x-panel>
         <div class="max-w-4xl mx-auto space-y-6">
             <h1 class="text-xl font-semibold text-[#2B7A78]">Kelola Pegawai</h1>
 
@@ -76,5 +74,5 @@
                 @endforelse
             </div>
         </div>
-    </div>
+    </x-panel>
 </x-app-layout>

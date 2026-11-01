@@ -10,25 +10,31 @@
                             d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <span class="hidden sm:inline text-xl font-bold text-[#468585]">BelFinance</span>
-                    <span class="ml-1 sm:ml-2 text-xs font-semibold uppercase tracking-wide text-white bg-[#DB5461] px-2 py-0.5 rounded">Kasir</span>
+                    <span class="hidden sm:inline ml-2 text-xs font-semibold uppercase tracking-wide text-white bg-[#DB5461] px-2 py-0.5 rounded">Kasir</span>
                 </a>
 
                 <!-- Navigasi -->
-                <nav class="flex items-center space-x-1 bg-white p-1 rounded-lg border border-gray-200">
+                <nav class="flex min-w-0 items-center space-x-1 overflow-x-auto bg-white p-1 rounded-lg border border-gray-200">
+                    @if (auth()->user()->isOwner())
+                        <a href="{{ route('owner-beranda') }}"
+                            class="whitespace-nowrap px-3 sm:px-4 py-2 text-sm font-semibold rounded-md text-[#DB5461] hover:bg-gray-50">
+                            &larr; Owner
+                        </a>
+                    @endif
                     <a href="{{ route('kasir.pos') }}"
                         class="whitespace-nowrap px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
                         {{ request()->routeIs('kasir.pos') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
-                        Kasir
+                        Jualan
                     </a>
                     <a href="{{ route('kasir.beranda') }}"
                         class="whitespace-nowrap px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
                         {{ request()->routeIs('kasir.beranda') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
-                        Hari Ini
+                        Hasil Hari Ini
                     </a>
                     <a href="{{ route('kasir.shift') }}"
                         class="whitespace-nowrap px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200
                         {{ request()->routeIs('kasir.shift') ? 'text-white bg-[#468585]' : 'text-gray-700 hover:text-[#468585] hover:bg-gray-50' }}">
-                        Shift
+                        Buka/Tutup Kas
                     </a>
                 </nav>
 
@@ -47,6 +53,10 @@
                     </button>
                     <div x-show="open" x-cloak
                         class="absolute right-0 top-full mt-3 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
+                        @if (auth()->user()->isOwner())
+                            <a href="{{ route('owner-beranda') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">&larr; Kembali ke Menu Owner</a>
+                        @endif
                         <a href="{{ route('info-profile') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
                         <div class="border-t border-gray-100 my-1"></div>

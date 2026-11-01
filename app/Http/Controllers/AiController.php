@@ -52,6 +52,15 @@ class AiController extends Controller
         });
     }
 
+    public function saranUsaha(Request $request): JsonResponse
+    {
+        return $this->jalankan(function () use ($request) {
+            $saran = $this->asisten->saranUsaha($request->boolean('segarkan'));
+
+            return ['html' => AsistenKeuangan::keHtml($saran['isi']), 'dibuat' => $saran['dibuat']];
+        });
+    }
+
     public function deskripsiMenu(Request $request): JsonResponse
     {
         $data = $request->validate([

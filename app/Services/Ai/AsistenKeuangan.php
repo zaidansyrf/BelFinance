@@ -2,6 +2,7 @@
 
 namespace App\Services\Ai;
 
+use App\Services\SaranUsahaService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -26,6 +27,7 @@ class AsistenKeuangan
     public function __construct(
         private VikeyClient $client,
         private KonteksKeuangan $konteks,
+        private SaranUsahaService $saranUsaha,
     ) {}
 
     public function aktif(): bool
@@ -73,6 +75,44 @@ class AsistenKeuangan
                     **Yang perlu diperhatikan** – maksimal 3 poin (mis. pengeluaran yang naik, hari sepi, menu yang tidak laku).
                     **Saran** – maksimal 3 poin tindakan konkret untuk minggu ini.
                     Total maksimal 180 kata.
+                    TXT],
+            ], temperature: 0.4, maxTokens: 3000);
+
+            return ['isi' => $isi, 'dibuat' => now()->format('H:i')];
+        });
+    }
+
+    /**
+     * Rencana tindakan untuk owner: AI mengolah temuan aturan (SaranUsahaService) dan data per menu.
+     * Disimpan di cache 30 menit.
+     *
+     * @return array{isi: string, dibuat: string}
+     */
+    public function saranUsaha(bool $segarkan = false): array
+    {
+        $key = 'ai-saran-usaha:'.now()->toDateString();
+        if ($segarkan) {
+            Cache::forget($key);
+        }
+
+        return Cache::remember($key, now()->addMinutes(30), function () {
+            $analisis = $this->saranUsaha->analisis();
+            $data = json_encode([
+                'periode' => $analisis['periode'],
+                'jumlah_transaksi' => $analisis['transaksi'],
+                'temuan_otomatis' => $analisis['saran']->map(fn ($s) => $s['judul'].': '.$s['detail'])->all(),
+                'data_menu' => $this->saranUsaha->dataMenu(),
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+            $isi = $this->client->chat([
+                ['role' => 'system', 'content' => $this->sistemDenganData()."\n\nDATA PENJUALAN PER MENU DAN TEMUAN OTOMATIS:\n".$data],
+                ['role' => 'user', 'content' => <<<'TXT'
+                    Kamu penasihat usaha untuk owner rumah makan yang awam soal analisis. Dari data menu dan temuan otomatis di atas, buat rencana tindakan dengan format:
+                    **Yang sebaiknya dilakukan minggu ini** – maksimal 4 poin berurutan dari yang paling penting. Tiap poin: tindakan konkret + alasan singkat dari angka.
+                    **Soal harga** – menu mana yang layak diturunkan atau dinaikkan harganya, dan ke kisaran berapa (berdasarkan harga menu sejenis dan penjualannya).
+                    **Ide menu atau paket** – maksimal 2 ide berdasarkan menu yang laris atau sering dibeli bersamaan.
+                    Gunakan kata-kata sederhana tanpa istilah teknis. Bila data masih sedikit, katakan terus terang bahwa sarannya masih perkiraan.
+                    Jangan mengarang angka di luar data. Total maksimal 220 kata.
                     TXT],
             ], temperature: 0.4, maxTokens: 3000);
 
