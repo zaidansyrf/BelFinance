@@ -33,14 +33,15 @@ class RoleAccessTest extends TestCase
             ['/owner/beranda'],
             ['/owner/laporan'],
             ['/owner/info-profile'],
+            ['/owner/pegawai'],
         ];
     }
 
     public static function halamanKasir(): array
     {
         return [
-            ['/kasir/pos'],
             ['/kasir/beranda'],
+            ['/kasir/shift'],
         ];
     }
 
@@ -49,6 +50,7 @@ class RoleAccessTest extends TestCase
         return [
             ['/keuangan/info-profile'],
             ['/laporan/export-pdf'],
+            ['/shift'],
         ];
     }
 
@@ -75,9 +77,9 @@ class RoleAccessTest extends TestCase
     }
 
     #[DataProvider('halamanKeuangan')]
-    public function test_owner_is_forbidden_from_keuangan_pages(string $url): void
+    public function test_owner_can_open_keuangan_pages(string $url): void
     {
-        $this->actingAs(User::factory()->owner()->create())->get($url)->assertForbidden();
+        $this->actingAs(User::factory()->owner()->create())->get($url)->assertOk();
     }
 
     #[DataProvider('halamanOwner')]
@@ -106,10 +108,25 @@ class RoleAccessTest extends TestCase
     }
 
     #[DataProvider('halamanKasir')]
-    public function test_keuangan_and_owner_are_forbidden_from_kasir_pages(string $url): void
+    public function test_keuangan_is_forbidden_from_kasir_pages(string $url): void
     {
         $this->actingAs(User::factory()->keuangan()->create())->get($url)->assertForbidden();
-        $this->actingAs(User::factory()->owner()->create())->get($url)->assertForbidden();
+    }
+
+    #[DataProvider('halamanKasir')]
+    public function test_owner_can_open_kasir_pages(string $url): void
+    {
+        $this->actingAs(User::factory()->owner()->create())->get($url)->assertOk();
+    }
+
+    public function test_owner_can_open_pos_without_shift(): void
+    {
+        $this->actingAs(User::factory()->owner()->create())->get('/kasir/pos')->assertOk();
+    }
+
+    public function test_keuangan_is_forbidden_from_pos(): void
+    {
+        $this->actingAs(User::factory()->keuangan()->create())->get('/kasir/pos')->assertForbidden();
     }
 
     #[DataProvider('halamanSelainKasir')]

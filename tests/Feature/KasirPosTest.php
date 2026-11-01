@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Income;
 use App\Models\Item;
+use App\Models\Shift;
 use App\Models\Source;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +27,7 @@ class KasirPosTest extends TestCase
         parent::setUp();
 
         $this->kasir = User::factory()->create(['role' => User::ROLE_KASIR]);
+        Shift::create(['user_id' => $this->kasir->id, 'opened_at' => now(), 'opening_cash' => 100000]);
         $this->cash = Source::factory()->create(['name' => 'CASH']);
         $this->qris = Source::factory()->create(['name' => 'QRIS']);
         $this->ayam = Item::factory()->create(['name' => 'KO Ayam Bakar', 'price' => 19000, 'quantity' => 0]);
@@ -77,7 +79,9 @@ class KasirPosTest extends TestCase
                 'paid_amount' => 20000,
             ])
             ->assertRedirect(route('kasir.pos'))
-            ->assertSessionHasErrors('paid_amount');
+            ->assertSessionHasErrors([
+                'paid_amount' => 'Uang kurang Rp 18.000. Total belanja Rp 38.000, uang diterima Rp 20.000.',
+            ]);
 
         $this->assertSame(0, Income::count());
         $this->assertSame(0, $this->ayam->fresh()->quantity);

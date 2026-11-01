@@ -18,6 +18,22 @@
             </svg>
             <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
         </div>
+        @if (auth()->user()->isOwner())
+            {{-- Menu khusus owner di atas menu keuangan, supaya owner bisa pindah ke mana saja dari satu sidebar --}}
+            <div class="mb-4 rounded-lg bg-[#DEF2F1] p-2 text-sm">
+                <p class="px-2 pb-1 text-xs font-semibold uppercase text-[#2B7A78]">Menu Owner</p>
+                @foreach ([
+                    ['owner-beranda', 'Ringkasan Usaha'],
+                    ['laporan-owner', 'Laporan Untung Rugi'],
+                    ['saran.index', 'Saran Usaha'],
+                    ['pegawai.index', 'Atur Pegawai'],
+                    ['kasir.pos', 'Buka Kasir'],
+                ] as [$ownerRoute, $ownerLabel])
+                    <a href="{{ route($ownerRoute) }}"
+                        class="block rounded px-2 py-1.5 {{ request()->routeIs($ownerRoute) ? 'bg-white font-semibold text-[#2B7A78]' : 'hover:bg-white' }}">{{ $ownerLabel }}</a>
+                @endforeach
+            </div>
+        @endif
         <!-- Sidebar Menu Links -->
         <li>
             <a href="{{ url('/keuangan/dashboard') }}"
@@ -34,7 +50,7 @@
                         d="M2.44743 11.1055C1.95345 10.8586 1.35278 11.0588 1.10579 11.5528C0.858803 12.0467 1.05903 12.6474 1.55301 12.8944L11.553 17.8944C11.8345 18.0352 12.1659 18.0352 12.4474 17.8944L22.4474 12.8944C22.9414 12.6474 23.1416 12.0467 22.8946 11.5528C22.6477 11.0588 22.047 10.8586 21.553 11.1055L12.0002 15.8819L2.44743 11.1055Z">
                     </path>
                 </svg>
-                Dashboard
+                Ringkasan
             </a>
         </li>
         <li class="relative">
@@ -44,18 +60,18 @@
                     <path d="M0,42.92h24.83V87.1H0V42.92L0,42.92z M85.36,20.49c9.01,0,16.32,7.3,16.32,16.32 c0,9.01-7.3,16.32-16.32,16.32c-9.01,0-16.32-7.3-16.32-16.32C69.04,27.8,76.34,20.49,85.36,20.49z M56.72,0C64.49,0,70.8,6.3,70.8,14.08c0,7.77-6.3,14.08-14.08,14.08c-7.77,0-14.08-6.3-14.08-14.08 C42.64,6.31,48.94,0,56.72,0z M29.83,83.39V46.47h16.61c7.04,1.26,14.08,5.08,21.12,9.51h12.9c5.84,0.35,8.9,6.27,3.22,10.16 c-4.52,3.32-10.49,3.13-16.61,2.58c-4.22-0.21-4.4,5.46,0,5.48c1.53,0.12,3.19-0.24,4.64-0.24 c7.64-0.01,13.92-1.47,17.77-7.5l1.93-4.51l19.19-9.51c9.6-3.16,16.42,6.88,9.35,13.87 c-13.9,10.11-28.15,18.43-42.73,25.15c-10.59,6.44-21.18,6.22-31.76,0z" />
                 </svg>
                 <span
-                    class="{{ request()->is('keuangan/pembayaran*') || request()->is('keuangan/uang-masuk*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Pemasukkan</span>
+                    class="{{ request()->is('keuangan/pembayaran*') || request()->is('keuangan/uang-masuk*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Pemasukan</span>
             </button>
             <ul id="dropdownPemasukkanMenu"
                 class="{{ request()->is('keuangan/pembayaran*') || request()->is('keuangan/uang-masuk*') ? 'block' : 'hidden' }} bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/pembayaran') }}"
-                        class="block px-4 py-2 {{ request()->is('keuangan/pembayaran*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">Pembayaran</a>
+                        class="block px-4 py-2 {{ request()->is('keuangan/pembayaran*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">Penjualan</a>
                 </li>
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/uang-masuk') }}"
                         class="block px-4 py-2 {{ request()->is('keuangan/uang-masuk*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">Uang
-                        Masuk</a>
+                        Masuk Lainnya</a>
                 </li>
             </ul>
         </li>
@@ -81,7 +97,7 @@
                         stroke="black" stroke-width="5" fill="white" />
                 </svg>
                 <span
-                    class="{{ request()->is('keuangan/menu*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Menu</span>
+                    class="{{ request()->is('keuangan/menu*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Menu &amp; Stok</span>
             </a>
         </li>
         <li class="relative">
@@ -93,7 +109,7 @@
                     <path d="M89.767,18.578c3.848,0,7.332,1.561,9.854,4.082c2.521,2.522,4.082,6.007,4.082,9.855s-1.561,7.332-4.082,9.854 c-2.522,2.522-6.007,4.082-9.854,4.082c-3.849,0-7.333-1.56-9.854-4.082c-2.522-2.522-4.082-6.006-4.082-9.854 s1.56-7.333,4.082-9.855C82.434,20.138,85.918,18.578,89.767,18.578L89.767,18.578z M122.04,56.704l-65.337,65.337 c-1.132,1.133-2.969,1.133-4.101,0L0.849,70.287c-1.132-1.131-1.132-2.967,0-4.1L66.186,0.85C66.752,0.284,67.494,0,68.236,0v0 h50.051c1.602,0,2.9,1.298,2.9,2.9c0,0.048-0.002,0.097-0.004,0.145l1.694,51.517c0.026,0.83-0.301,1.589-0.845,2.134 L122.04,56.704L122.04,56.704z M54.652,115.889l62.406-62.407L115.49,5.8H69.438L7.001,68.238L54.652,115.889L54.652,115.889z M96.244,26.037c-1.657-1.657-3.948-2.683-6.478-2.683c-2.53,0-4.82,1.025-6.478,2.683c-1.658,1.657-2.684,3.948-2.684,6.478 s1.025,4.82,2.684,6.478c1.657,1.658,3.947,2.683,6.478,2.683c2.529,0,4.82-1.025,6.478-2.683s2.683-3.948,2.683-6.478 S97.901,27.694,96.244,26.037L96.244,26.037z" />
                 </svg>
                 <!-- Teks -->
-                <span class="text-sm {{ request()->is('keuangan/kategori*') ? 'text-white' : '' }}">Kategori</span>
+                <span class="text-sm {{ request()->is('keuangan/kategori*') ? 'text-white' : '' }}">Jenis Catatan</span>
             </button>
             <!-- Dropdown Menu -->
             <ul id="dropdownKategoriMenu"
@@ -101,12 +117,12 @@
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/kategori/sumber-masuk') }}"
                         class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-masuk*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
-                        Masuk</a>
+                        Jenis Pemasukan</a>
                 </li>
                 <li class="px-0 py-0 cursor-pointer">
                     <a href="{{ url('/keuangan/kategori/sumber-keluar') }}"
                         class="block px-4 py-2 {{ request()->is('keuangan/kategori/sumber-keluar*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
-                        Keluar</a>
+                        Jenis Pengeluaran</a>
                 </li>
             </ul>
         </li>
@@ -119,7 +135,27 @@
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v4z" />
                 </svg>
                 <span
-                    class="{{ request()->is('keuangan/laporan*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Laporan</span>
+                    class="{{ request()->is('keuangan/laporan*') ? 'text-white' : 'group-hover:text-[#DEF2F1]' }} transition-colors duration-200">Laporan Keuangan</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('shift.index') }}"
+                class="{{ request()->routeIs('shift.index') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2 flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z" />
+                </svg>
+                <span>Shift Kasir</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('ai.asisten') }}"
+                class="{{ request()->routeIs('ai.asisten') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mb-4 block w-full px-4 py-2 flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                    class="w-5 h-5 {{ request()->routeIs('ai.asisten') ? 'text-white' : 'text-black group-hover:text-white' }}">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+                </svg>
+                <span>Tanya AI (Asisten)</span>
             </a>
         </li>
     </ul>

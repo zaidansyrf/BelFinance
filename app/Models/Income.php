@@ -16,6 +16,7 @@ class Income extends Model
 
     protected $fillable = [
         'source_id',
+        'shift_id',
         'name',
         'amount',
         'paid_amount',
@@ -48,6 +49,7 @@ class Income extends Model
         DB::transaction(function () {
             foreach ($this->incomeDetails()->with('item')->get() as $detail) {
                 $detail->item?->decrement('quantity', $detail->quantity);
+                $detail->item?->kembalikanStok($detail->quantity);
             }
 
             $this->delete();

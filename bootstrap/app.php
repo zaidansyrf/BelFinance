@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Di Docker aplikasi berada di belakang Caddy: percayai header agar URL memakai https dan IP pengguna benar
+        $middleware->trustProxies(at: '*');
+
         // Middleware cek role (app/Http/kernel.php tidak dipakai di Laravel 11)
         $middleware->alias([
             'role' => \App\Http\Middleware\AdminMiddleware::class,
