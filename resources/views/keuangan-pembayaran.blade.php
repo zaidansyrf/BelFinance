@@ -41,9 +41,6 @@
                                                     <td class="py-2 px-4 border-b text-gray-800">{{ $loop->iteration }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
-                                                        {{ $pembayaran->date ? $pembayaran->date->format('d-m-Y') : '-' }}
-                                                    </td>
-                                                    <td class="py-2 px-4 border-b text-gray-800">
                                                         {{ $pembayaran->name }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
@@ -51,6 +48,9 @@
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         Rp {{ number_format($pembayaran->amount, 0, ',', '.') }}
+                                                    </td>
+                                                    <td class="py-2 px-4 border-b text-gray-800">
+                                                        {{ $pembayaran->date ? $pembayaran->date->format('d-m-Y') : '-' }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         <a href="{{ url('/keuangan/pembayaran/' . $pembayaran->id) }}"
