@@ -18,8 +18,10 @@ class PenjualanService
      * Hitung subtotal dan total dari daftar item. Harga selalu diambil dari database,
      * bukan dari input, supaya tidak bisa dimanipulasi dari browser.
      *
-     * @param  array<int, array{item_id: int|string, quantity: int|string}>  $items
-     * @return array{total: int, details: array<int, array{item: Item, quantity: int, subtotal: int}>}
+     * Mendukung diskon per-item (item_discount_type & item_discount_value opsional).
+     *
+     * @param  array<int, array{item_id: int|string, quantity: int|string, item_discount_type?: string|null, item_discount_value?: float|null}>  $items
+     * @return array{total: int, details: array<int, array{item: Item, quantity: int, raw_total: int, subtotal: int, item_discount_type: string|null, item_discount_value: float|null}>}
      */
     public function hitung(array $items): array
     {
@@ -33,55 +35,123 @@ class PenjualanService
                 continue;
             }
 
-            $quantity = (int) $row['quantity'];
-            $subtotal = $item->price * $quantity;
-            $total += $subtotal;
+            $quantity  = (int) $row['quantity'];
+            $rawTotal  = $item->price * $quantity;
 
-            $details[] = ['item' => $item, 'quantity' => $quantity, 'subtotal' => $subtotal];
+            // --- Hitung diskon item ---
+            $discType  = $row['item_discount_type']  ?? null;
+            $discValue = isset($row['item_discount_value']) && $row['item_discount_value'] !== ''
+                ? (float) $row['item_discount_value']
+                : null;
+
+            $diskonNominal = 0;
+            if ($discType && $discValue) {
+                if ($discType === 'percent') {
+                    $diskonNominal = (int) round(($discValue / 100) * $item->price);
+                } else {
+                    $diskonNominal = (int) $discValue;
+                }
+            }
+
+            $subtotal = $rawTotal - ($diskonNominal * $quantity);
+            $subtotal = max(0, $subtotal); // tidak boleh negatif
+            $total   += $subtotal;
+
+            $details[] = [
+                'item'               => $item,
+                'quantity'           => $quantity,
+                'raw_total'          => $rawTotal,
+                'item_discount_type' => $discType,
+                'item_discount_value'=> $discValue,
+                'subtotal'           => $subtotal,
+            ];
         }
 
         return ['total' => $total, 'details' => $details];
     }
 
     /**
-     * @param  array{name: string, source_id: int|string, shift_id?: int|null, items: array, paid_amount?: int|string|null, description?: string|null, date?: string|null}  $data
+     * @param  array{
+     *   name: string,
+     *   source_id: int|string,
+     *   shift_id?: int|null,
+     *   items: array,
+     *   paid_amount?: int|string|null,
+     *   description?: string|null,
+     *   date?: string|null,
+     *   order_source?: string|null,
+     *   app_discount_type?: string|null,
+     *   app_discount_value?: float|null,
+     *   is_app_subsidy?: bool|null,
+     * }  $data
      *
      * @throws ValidationException jika uang diterima kurang dari total
      */
     public function simpan(array $data): Income
     {
-        ['total' => $total, 'details' => $details] = $this->hitung($data['items']);
+        ['total' => $grossTotal, 'details' => $details] = $this->hitung($data['items']);
+
+        // --- Hitung promo aplikasi ---
+        $appDiscType  = $data['app_discount_type']  ?? null;
+        $appDiscValue = isset($data['app_discount_value']) && $data['app_discount_value'] !== ''
+            ? (float) $data['app_discount_value']
+            : null;
+        $isSubsidy    = ! empty($data['is_app_subsidy']);
+
+        $appDiscNominal = 0;
+        if ($appDiscType && $appDiscValue) {
+            if ($appDiscType === 'percent') {
+                $appDiscNominal = (int) round(($appDiscValue / 100) * $grossTotal);
+            } else {
+                $appDiscNominal = (int) $appDiscValue;
+            }
+        }
+
+        $netTotal = max(0, $grossTotal - $appDiscNominal);
+
+        // --- amount = omset yang diakui ---
+        // Skenario A (subsidi aplikasi): omset diakui penuh = gross_total
+        // Skenario B (merchant tanggung): omset = net_total
+        $amount = $isSubsidy ? $grossTotal : $netTotal;
 
         $paid = isset($data['paid_amount']) && $data['paid_amount'] !== '' ? (int) $data['paid_amount'] : null;
-        if ($paid !== null && $paid < $total) {
+        if ($paid !== null && $paid < $netTotal) {
             $rp = fn (int $nilai) => 'Rp '.number_format($nilai, 0, ',', '.');
 
             throw ValidationException::withMessages([
-                'paid_amount' => "Uang kurang {$rp($total - $paid)}. Total belanja {$rp($total)}, uang diterima {$rp($paid)}.",
+                'paid_amount' => "Uang kurang {$rp($netTotal - $paid)}. Total tagihan {$rp($netTotal)}, uang diterima {$rp($paid)}.",
             ]);
         }
 
-        return DB::transaction(function () use ($data, $total, $details, $paid) {
+        return DB::transaction(function () use ($data, $amount, $grossTotal, $netTotal, $appDiscType, $appDiscValue, $isSubsidy, $details, $paid) {
             $this->kurangiStok($details);
 
             $income = Income::create([
-                'shift_id' => $data['shift_id'] ?? null,
-                'name' => $data['name'],
-                'amount' => $total,
-                'paid_amount' => $paid,
-                'change_amount' => $paid !== null ? $paid - $total : null,
-                'date' => ! empty($data['date']) ? $data['date'] : now(),
-                'description' => $data['description'] ?? 'Pesanan baru',
-                'source_id' => $data['source_id'],
-                'type' => 'payment',
+                'shift_id'          => $data['shift_id'] ?? null,
+                'name'              => $data['name'],
+                'order_source'      => $data['order_source'] ?? null,
+                'amount'            => $amount,
+                'gross_total'       => $grossTotal,
+                'app_discount_type' => $appDiscType,
+                'app_discount_value'=> $appDiscValue,
+                'is_app_subsidy'    => $isSubsidy,
+                'net_total'         => $netTotal,
+                'paid_amount'       => $paid,
+                'change_amount'     => $paid !== null ? $paid - $netTotal : null,
+                'date'              => ! empty($data['date']) ? $data['date'] : now(),
+                'description'       => $data['description'] ?? 'Pesanan baru',
+                'source_id'         => $data['source_id'],
+                'type'              => 'payment',
             ]);
 
             foreach ($details as $detail) {
                 IncomeDetail::create([
-                    'income_id' => $income->id,
-                    'item_id' => $detail['item']->id,
-                    'quantity' => $detail['quantity'],
-                    'subtotal' => $detail['subtotal'],
+                    'income_id'          => $income->id,
+                    'item_id'            => $detail['item']->id,
+                    'quantity'           => $detail['quantity'],
+                    'item_discount_type' => $detail['item_discount_type'],
+                    'item_discount_value'=> $detail['item_discount_value'],
+                    'subtotal'           => $detail['subtotal'],
                 ]);
 
                 // Tambahkan jumlah terjual menu

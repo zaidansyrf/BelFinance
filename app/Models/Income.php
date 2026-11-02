@@ -18,7 +18,13 @@ class Income extends Model
         'source_id',
         'shift_id',
         'name',
+        'order_source',
         'amount',
+        'gross_total',
+        'app_discount_type',
+        'app_discount_value',
+        'is_app_subsidy',
+        'net_total',
         'paid_amount',
         'change_amount',
         'date',
@@ -27,8 +33,45 @@ class Income extends Model
     ];
 
     protected $casts = [
-        'date' => 'datetime',
+        'date'          => 'datetime',
+        'is_app_subsidy' => 'boolean',
+        'gross_total'   => 'integer',
+        'net_total'     => 'integer',
+        'app_discount_value' => 'float',
     ];
+
+    // --- Helper Promo ---
+
+    /** Nominal potongan dari aplikasi pihak ketiga */
+    public function appDiscountAmount(): int
+    {
+        if (! $this->app_discount_type || ! $this->app_discount_value) {
+            return 0;
+        }
+        $gross = $this->gross_total ?? $this->amount;
+        if ($this->app_discount_type === 'percent') {
+            return (int) round(($this->app_discount_value / 100) * $gross);
+        }
+        return (int) $this->app_discount_value;
+    }
+
+    /** Skenario A: selisih gross-net = piutang ke aplikasi */
+    public function piutangAplikasi(): int
+    {
+        if (! $this->is_app_subsidy) {
+            return 0;
+        }
+        return $this->appDiscountAmount();
+    }
+
+    /** Skenario B: selisih gross-net = beban promosi merchant */
+    public function bebanPromosi(): int
+    {
+        if ($this->is_app_subsidy) {
+            return 0;
+        }
+        return $this->appDiscountAmount();
+    }
 
     public function source()
     {
