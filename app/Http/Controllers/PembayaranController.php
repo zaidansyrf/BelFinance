@@ -35,6 +35,8 @@ class PembayaranController extends Controller
         // Ambil data income bertipe 'payment' (kolom type ada di tabel incomes)
         $pembayarans = Income::with('source')
             ->where('type', 'payment')
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('keuangan-pembayaran', compact('pembayarans'));
@@ -44,6 +46,7 @@ class PembayaranController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'date' => 'nullable|date',
             'source_id' => 'required|exists:sources,id',
             'items' => 'required|array',
             'items.*.item_id' => 'required|exists:items,id',

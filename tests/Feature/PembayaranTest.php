@@ -48,6 +48,26 @@ class PembayaranTest extends TestCase
         $this->assertSame(4, $teh->fresh()->quantity);
     }
 
+    public function test_store_saves_payment_with_custom_date(): void
+    {
+        $source = Source::factory()->create();
+        $item = Item::factory()->create(['price' => 15000, 'quantity' => 0]);
+
+        $this->actingAs($this->keuangan)
+            ->post(route('pembayaran.store'), [
+                'name' => 'Pesanan Offline',
+                'date' => '2026-10-25',
+                'source_id' => $source->id,
+                'items' => [
+                    ['item_id' => $item->id, 'quantity' => 1],
+                ],
+            ])
+            ->assertRedirect(route('pembayaran.index'));
+
+        $income = Income::sole();
+        $this->assertSame('2026-10-25', $income->date->format('Y-m-d'));
+    }
+
     public function test_index_lists_only_payments(): void
     {
         Income::factory()->payment()->create(['name' => 'Pesanan Online']);
