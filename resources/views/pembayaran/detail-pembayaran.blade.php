@@ -59,6 +59,12 @@
                                                 <p class="text-sm text-gray-600">Sumber:</p>
                                                 <p class="font-medium text-black">{{ $pembayaran->source->name }}</p>
                                             </div>
+                                            @if ($pembayaran->order_source)
+                                                <div class="mt-2">
+                                                    <p class="text-sm text-gray-600">Platform Pesanan:</p>
+                                                    <p class="font-medium text-black">{{ $pembayaran->order_source }}</p>
+                                                </div>
+                                            @endif
                                             @if ($pembayaran->paid_amount !== null)
                                                 <div class="mt-2">
                                                     <p class="text-sm text-gray-600">Uang diterima / kembalian:</p>
@@ -68,6 +74,44 @@
                                                     </p>
                                                 </div>
                                             @endif
+
+                                            {{-- Ringkasan Promo --}}
+                                            @if ($pembayaran->gross_total && $pembayaran->gross_total != $pembayaran->net_total)
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                                    <p class="text-sm font-semibold text-blue-800 mb-2">🏷️ Rincian Promo Aplikasi</p>
+                                                    <div class="flex justify-between text-sm text-gray-700">
+                                                        <span>Gross Total:</span>
+                                                        <span>Rp {{ number_format($pembayaran->gross_total, 0, ',', '.') }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between text-sm text-red-500 mt-1">
+                                                        <span>
+                                                            Promo Aplikasi
+                                                            @if ($pembayaran->app_discount_type === 'percent')
+                                                                ({{ $pembayaran->app_discount_value }}%):
+                                                            @else
+                                                                (Nominal):
+                                                            @endif
+                                                        </span>
+                                                        <span>- Rp {{ number_format($pembayaran->appDiscountAmount(), 0, ',', '.') }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between font-semibold text-gray-800 border-t mt-2 pt-2">
+                                                        <span>Net Total (tagihan):</span>
+                                                        <span>Rp {{ number_format($pembayaran->net_total, 0, ',', '.') }}</span>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        @if ($pembayaran->is_app_subsidy)
+                                                            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
+                                                                ✅ Subsidi Aplikasi — Piutang Rp {{ number_format($pembayaran->piutangAplikasi(), 0, ',', '.') }}
+                                                            </span>
+                                                        @else
+                                                            <span class="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded">
+                                                                ⚠️ Beban Merchant — Rp {{ number_format($pembayaran->bebanPromosi(), 0, ',', '.') }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                             <div class="mt-4">
                                                 <a href="{{ route('kasir.struk', $pembayaran) }}" target="_blank"
                                                     class="inline-block bg-[#468585] text-white text-sm font-semibold py-2 px-4 rounded-lg hover:bg-[#376e6e]">
@@ -88,6 +132,7 @@
                                                     <th class="py-2 px-4 text-left">Nama Item</th>
                                                     <th class="py-2 px-4 text-right">Harga Satuan</th>
                                                     <th class="py-2 px-4 text-right">Jumlah</th>
+                                                    <th class="py-2 px-4 text-right">Diskon Item</th>
                                                     <th class="py-2 px-4 text-right">Subtotal</th>
                                                 </tr>
                                             </thead>
@@ -99,10 +144,23 @@
                                                         {{-- Harga saat transaksi (dari subtotal tersimpan), bukan harga menu sekarang --}}
                                                         <td class="py-3 px-4 text-right text-black">
                                                             Rp
-                                                            {{ number_format($detail->subtotal / max($detail->quantity, 1), 0, ',', '.') }}
+                                                            {{ number_format($detail->item->price ?? 0, 0, ',', '.') }}
                                                         </td>
                                                         <td class="py-3 px-4 text-right text-black">
                                                             {{ $detail->quantity ?? 0 }}</td>
+                                                        <td class="py-3 px-4 text-right text-sm">
+                                                            @if ($detail->item_discount_type)
+                                                                <span class="text-red-500">
+                                                                    @if ($detail->item_discount_type === 'percent')
+                                                                        {{ $detail->item_discount_value }}%
+                                                                    @else
+                                                                        Rp {{ number_format($detail->item_discount_value, 0, ',', '.') }}
+                                                                    @endif
+                                                                </span>
+                                                            @else
+                                                                <span class="text-gray-400">-</span>
+                                                            @endif
+                                                        </td>
                                                         <td class="py-3 px-4 text-right text-black">
                                                             Rp
                                                             {{ number_format($detail->subtotal, 0, ',', '.') }}
@@ -113,13 +171,29 @@
                                             <tfoot class="bg-gray-50">
                                                 <tr>
                                                     <td class="py-3 px-4 font-semibold text-right text-black"
-                                                        colspan="3">Total:
+                                                        colspan="4">
+                                                        @if ($pembayaran->gross_total && $pembayaran->gross_total != $pembayaran->net_total)
+                                                            Gross Total:
+                                                        @else
+                                                            Total:
+                                                        @endif
                                                     </td>
                                                     <td class="py-3 px-4 text-right text-black">
                                                         Rp
-                                                        {{ number_format($pembayaran->amount, 0, ',', '.') }}
+                                                        {{ number_format($pembayaran->gross_total ?? $pembayaran->amount, 0, ',', '.') }}
                                                     </td>
                                                 </tr>
+                                                @if ($pembayaran->net_total && $pembayaran->net_total != $pembayaran->gross_total)
+                                                    <tr>
+                                                        <td class="py-3 px-4 font-semibold text-right text-green-700"
+                                                            colspan="4">Net Total (Tagihan):
+                                                        </td>
+                                                        <td class="py-3 px-4 text-right font-semibold text-green-700">
+                                                            Rp
+                                                            {{ number_format($pembayaran->net_total, 0, ',', '.') }}
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             </tfoot>
                                         </table>
                                     </div>

@@ -29,6 +29,7 @@
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Nama</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Platform</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Total</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
                                                 <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
@@ -45,9 +46,23 @@
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         {{ $pembayaran->source_id ? $pembayaran->source->name : 'Tidak Diketahui' }}
+                                                        @if ($pembayaran->order_source)
+                                                            <span class="text-xs text-blue-600 block">{{ $pembayaran->order_source }}</span>
+                                                        @endif
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
-                                                        Rp {{ number_format($pembayaran->amount, 0, ',', '.') }}
+                                                        @if ($pembayaran->net_total && $pembayaran->net_total != $pembayaran->gross_total)
+                                                            {{-- Ada promo aplikasi --}}
+                                                            <span class="text-xs text-gray-400 line-through block">Rp {{ number_format($pembayaran->gross_total, 0, ',', '.') }}</span>
+                                                            <span class="font-medium">Rp {{ number_format($pembayaran->net_total, 0, ',', '.') }}</span>
+                                                            @if ($pembayaran->is_app_subsidy)
+                                                                <span class="text-xs text-green-600 block">Subsidi Aplikasi</span>
+                                                            @else
+                                                                <span class="text-xs text-orange-500 block">Beban Merchant</span>
+                                                            @endif
+                                                        @else
+                                                            Rp {{ number_format($pembayaran->amount, 0, ',', '.') }}
+                                                        @endif
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         {{ $pembayaran->date ? $pembayaran->date->format('d-m-Y') : '-' }}
@@ -73,7 +88,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="6" class="py-4 text-center text-gray-500">
+                                                    <td colspan="7" class="py-4 text-center text-gray-500">
                                                         Belum ada data pembayaran.
                                                     </td>
                                                 </tr>

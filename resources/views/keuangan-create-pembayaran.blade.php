@@ -74,16 +74,60 @@
                                                     @endif
                                                 </select>
                                             </div>
+
+                                            <!-- Sumber Pesanan (GoFood, GrabFood, dll) -->
+                                            <div class="mb-3 mt-3">
+                                                <label for="order_source"
+                                                    class="block text-sm font-medium text-black form-label">
+                                                    Platform Pesanan
+                                                    <span class="text-gray-400 text-xs">(opsional, mis: GoFood, GrabFood, Manual)</span>
+                                                </label>
+                                                <input type="text" name="order_source" id="order_source"
+                                                    placeholder="GoFood / GrabFood / Manual / ..."
+                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+                                            </div>
+
+                                            <!-- Promo Aplikasi -->
+                                            <div class="mb-3 mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                <h3 class="text-sm font-semibold text-blue-800 mb-3">🏷️ Promo Aplikasi (Opsional)</h3>
+                                                <div class="flex gap-3 items-end">
+                                                    <div class="w-28">
+                                                        <label class="block text-sm font-medium text-black mb-1">Jenis</label>
+                                                        <select name="app_discount_type" id="app_discount_type"
+                                                            class="text-gray-500 w-full p-2 border border-gray-300 rounded-md">
+                                                            <option value="">Tanpa Promo</option>
+                                                            <option value="percent">Persentase (%)</option>
+                                                            <option value="nominal">Nominal (Rp)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <label class="block text-sm font-medium text-black mb-1">Nilai Promo</label>
+                                                        <input type="number" name="app_discount_value" id="app_discount_value"
+                                                            min="0" placeholder="0"
+                                                            class="text-gray-500 w-full p-2 border border-gray-300 rounded-md">
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3 flex items-center gap-2">
+                                                    <input type="hidden" name="is_app_subsidy" value="0">
+                                                    <input type="checkbox" name="is_app_subsidy" id="is_app_subsidy"
+                                                        value="1"
+                                                        class="w-4 h-4 text-blue-600 rounded">
+                                                    <label for="is_app_subsidy" class="text-sm text-gray-700">
+                                                        <strong>Subsidi Penuh Aplikasi</strong>
+                                                        <span class="text-gray-400">(diskon ditanggung aplikasi, bukan merchant)</span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="mb-4" id="items-container">
                                             <!-- Pilih Item -->
-                                            <div class="item-row mb-3" id="item-row-0">
+                                            <div class="item-row mb-3 border border-gray-200 rounded-lg p-3" id="item-row-0">
                                                 <label for="item_0"
                                                     class="block text-sm font-medium text-black form-label">Pilih
                                                     Item</label>
                                                 <select name="items[0][item_id]" id="item_0"
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
+                                                    class="item-select text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
                                                     required>
                                                     <option class="text-black" value="" selected disabled>Pilih
                                                         Item</option>
@@ -97,21 +141,48 @@
                                                     @endforeach
                                                 </select>
 
-                                                <label for="quantity_0"
-                                                    class="block text-sm font-medium text-black form-label mt-2">Jumlah</label>
-                                                <input type="number" name="items[0][quantity]" min="1"
-                                                    id="quantity_0" required
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
-
-                                                <!-- Tombol Hapus -->
-                                                <!-- <button type="button" class="remove-item-btn bg-red-500 text-white font-semibold py-1 px-4 rounded-lg hover:bg-red-700 mt-2" data-index="0">Hapus</button> -->
+                                                <div class="flex gap-2 mt-2">
+                                                    <div class="flex-1">
+                                                        <label for="quantity_0"
+                                                            class="block text-sm font-medium text-black form-label">Jumlah</label>
+                                                        <input type="number" name="items[0][quantity]" min="1"
+                                                            id="quantity_0" required
+                                                            class="qty-input text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+                                                    </div>
+                                                    {{-- Diskon per item (opsional) --}}
+                                                    <div class="w-28">
+                                                        <label class="block text-sm font-medium text-black">Jenis Diskon</label>
+                                                        <select name="items[0][item_discount_type]"
+                                                            class="disc-type text-gray-500 w-full p-2 border border-gray-300 rounded-md">
+                                                            <option value="">Tanpa</option>
+                                                            <option value="percent">%</option>
+                                                            <option value="nominal">Rp</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="w-32">
+                                                        <label class="block text-sm font-medium text-black">Nilai Diskon</label>
+                                                        <input type="number" name="items[0][item_discount_value]" min="0"
+                                                            class="disc-value text-gray-500 w-full p-2 border border-gray-300 rounded-md" placeholder="0">
+                                                    </div>
+                                                </div>
+                                                <!-- Tombol Hapus (disembunyikan jika hanya 1 item) -->
                                             </div>
                                         </div>
 
                                         <!-- Menampilkan Total -->
-                                        <div class="mt-4">
-                                            <p class="text-black font-medium">Total: <span id="total">Rp
-                                                    0</span></p>
+                                        <div class="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                            <div class="flex justify-between text-sm text-gray-700 mb-1">
+                                                <span>Subtotal (sebelum promo app):</span>
+                                                <span id="gross-total-display">Rp 0</span>
+                                            </div>
+                                            <div id="app-discount-row" class="flex justify-between text-sm text-red-500 mb-1 hidden">
+                                                <span>Promo Aplikasi:</span>
+                                                <span id="app-discount-display">- Rp 0</span>
+                                            </div>
+                                            <div class="flex justify-between font-semibold text-black border-t pt-2 mt-1">
+                                                <span>Total Tagihan (Net):</span>
+                                                <span id="total">Rp 0</span>
+                                            </div>
                                         </div>
 
                                         <!-- Buttons -->
@@ -145,55 +216,81 @@
             const addItemButton = document.getElementById('add-item');
             const itemsContainer = document.getElementById('items-container');
             const totalElement = document.getElementById('total');
+            const grossDisplay = document.getElementById('gross-total-display');
+            const appDiscountRow = document.getElementById('app-discount-row');
+            const appDiscountDisplay = document.getElementById('app-discount-display');
+            const appDiscountType = document.getElementById('app_discount_type');
+            const appDiscountValue = document.getElementById('app_discount_value');
             let itemCount = 1;
 
-            // Menghitung total harga
+            const formatRp = (val) => `Rp ${Math.round(val).toLocaleString('id-ID')}`;
+
+            // Menghitung total harga (dengan diskon item + promo aplikasi)
             const calculateTotal = () => {
                 const itemRows = document.querySelectorAll('.item-row');
-                let total = 0;
+                let grossTotal = 0;
 
                 itemRows.forEach(itemRow => {
-                    const selectElement = itemRow.querySelector('select');
-                    const quantityElement = itemRow.querySelector('input[type="number"]');
+                    const selectElement = itemRow.querySelector('.item-select');
+                    const quantityElement = itemRow.querySelector('.qty-input');
+                    const discTypeEl = itemRow.querySelector('.disc-type');
+                    const discValueEl = itemRow.querySelector('.disc-value');
 
-                    if (selectElement && selectElement.value && quantityElement && quantityElement
-                        .value) {
+                    if (selectElement && selectElement.value && quantityElement && quantityElement.value) {
                         const selectedOption = selectElement.selectedOptions[0];
                         const price = parseFloat(selectedOption.dataset.price || 0);
                         const quantity = parseInt(quantityElement.value || 0, 10);
 
                         if (!isNaN(price) && !isNaN(quantity)) {
-                            total += price * quantity;
-                        } else {
-                            console.error('Invalid price or quantity:', {
-                                price,
-                                quantity
-                            });
+                            const rawTotal = price * quantity;
+
+                            // Hitung diskon item
+                            let diskonNominal = 0;
+                            const discType = discTypeEl ? discTypeEl.value : '';
+                            const discVal = discValueEl ? parseFloat(discValueEl.value || 0) : 0;
+                            if (discType === 'percent' && discVal > 0) {
+                                diskonNominal = (discVal / 100) * price * quantity;
+                            } else if (discType === 'nominal' && discVal > 0) {
+                                diskonNominal = discVal * quantity;
+                            }
+
+                            grossTotal += Math.max(0, rawTotal - diskonNominal);
                         }
-                    } else {
-                        console.warn('Incomplete row data:', {
-                            selectElement,
-                            quantityElement
-                        });
                     }
                 });
 
-                totalElement.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+                // Promo aplikasi
+                const appType = appDiscountType ? appDiscountType.value : '';
+                const appVal = appDiscountValue ? parseFloat(appDiscountValue.value || 0) : 0;
+                let appDiscount = 0;
+                if (appType === 'percent' && appVal > 0) {
+                    appDiscount = (appVal / 100) * grossTotal;
+                } else if (appType === 'nominal' && appVal > 0) {
+                    appDiscount = appVal;
+                }
+                const netTotal = Math.max(0, grossTotal - appDiscount);
+
+                // Tampilkan
+                if (grossDisplay) grossDisplay.innerText = formatRp(grossTotal);
+                if (appDiscountRow && appDiscountDisplay) {
+                    if (appDiscount > 0) {
+                        appDiscountRow.classList.remove('hidden');
+                        appDiscountDisplay.innerText = `- ${formatRp(appDiscount)}`;
+                    } else {
+                        appDiscountRow.classList.add('hidden');
+                    }
+                }
+                if (totalElement) totalElement.innerText = formatRp(netTotal);
             };
 
             // Menambah event listener pada elemen input dan tombol hapus
             const addEventListeners = (row) => {
-                const selectElement = row.querySelector('select');
-                const quantityElement = row.querySelector('input[type="number"]');
+                row.querySelectorAll('select, input[type="number"]').forEach(el => {
+                    el.addEventListener('change', calculateTotal);
+                    el.addEventListener('input', calculateTotal);
+                });
+
                 const removeButton = row.querySelector('.remove-item-btn');
-
-                if (selectElement) {
-                    selectElement.addEventListener('change', calculateTotal);
-                }
-                if (quantityElement) {
-                    quantityElement.addEventListener('input', calculateTotal);
-                }
-
                 // Menambahkan event listener untuk tombol hapus
                 if (removeButton) {
                     removeButton.addEventListener('click', function() {
@@ -204,15 +301,19 @@
                 }
             };
 
+            // Listener promo aplikasi
+            if (appDiscountType) appDiscountType.addEventListener('change', calculateTotal);
+            if (appDiscountValue) appDiscountValue.addEventListener('input', calculateTotal);
+
             // Menambah item baru ke form
             addItemButton.addEventListener('click', function() {
                 const newItemRow = document.createElement('div');
-                newItemRow.classList.add('item-row', 'mb-3');
+                newItemRow.classList.add('item-row', 'mb-3', 'border', 'border-gray-200', 'rounded-lg', 'p-3');
                 newItemRow.id = `item-row-${itemCount}`;
 
                 newItemRow.innerHTML = `
             <label for="item_${itemCount}" class="block text-sm font-medium text-black form-label">Pilih Item</label>
-            <select name="items[${itemCount}][item_id]" id="item_${itemCount}" class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
+            <select name="items[${itemCount}][item_id]" id="item_${itemCount}" class="item-select text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
                 <option class="text-black" value="" selected disabled>Pilih Item</option>
                 @foreach ($allItems as $item)
                     @if ($item->price != 0)
@@ -221,8 +322,24 @@
                 @endforeach
             </select>
 
-            <label for="quantity_${itemCount}" class="block text-sm font-medium text-black form-label mt-2">Jumlah</label>
-            <input type="number" name="items[${itemCount}][quantity]" min="1" id="quantity_${itemCount}" required class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+            <div class="flex gap-2 mt-2">
+                <div class="flex-1">
+                    <label for="quantity_${itemCount}" class="block text-sm font-medium text-black form-label">Jumlah</label>
+                    <input type="number" name="items[${itemCount}][quantity]" min="1" id="quantity_${itemCount}" required class="qty-input text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+                </div>
+                <div class="w-28">
+                    <label class="block text-sm font-medium text-black">Jenis Diskon</label>
+                    <select name="items[${itemCount}][item_discount_type]" class="disc-type text-gray-500 w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">Tanpa</option>
+                        <option value="percent">%</option>
+                        <option value="nominal">Rp</option>
+                    </select>
+                </div>
+                <div class="w-32">
+                    <label class="block text-sm font-medium text-black">Nilai Diskon</label>
+                    <input type="number" name="items[${itemCount}][item_discount_value]" min="0" class="disc-value text-gray-500 w-full p-2 border border-gray-300 rounded-md" placeholder="0">
+                </div>
+            </div>
 
             <button type="button" class="remove-item-btn bg-red-500 text-white font-semibold py-1 px-4 rounded-lg hover:bg-red-700 mt-2" data-index="${itemCount}">Hapus</button>
         `;

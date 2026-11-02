@@ -45,12 +45,18 @@ class PembayaranController extends Controller
     public function store(Request $request, PenjualanService $penjualan)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'date' => 'nullable|date',
-            'source_id' => 'required|exists:sources,id',
-            'items' => 'required|array',
-            'items.*.item_id' => 'required|exists:items,id',
-            'items.*.quantity' => 'required|integer|min:1',
+            'name'                       => 'required|string|max:255',
+            'date'                       => 'nullable|date',
+            'source_id'                  => 'required|exists:sources,id',
+            'order_source'               => 'nullable|string|max:100',
+            'app_discount_type'          => 'nullable|in:percent,nominal',
+            'app_discount_value'         => 'nullable|numeric|min:0',
+            'is_app_subsidy'             => 'nullable|boolean',
+            'items'                      => 'required|array',
+            'items.*.item_id'            => 'required|exists:items,id',
+            'items.*.quantity'           => 'required|integer|min:1',
+            'items.*.item_discount_type' => 'nullable|in:percent,nominal',
+            'items.*.item_discount_value'=> 'nullable|numeric|min:0',
         ]);
 
         try {
