@@ -27,7 +27,7 @@
                                 <div class="card-body">
                                     <form action="{{ route('pembayaran.store') }}" method="POST">
                                         @csrf
-                                        <div class="mb-4" id="items-container">
+                                        <div class="mb-4">
                                             <!-- Nama Pesanan -->
                                             <div>
                                                 <label for="name"
@@ -43,10 +43,21 @@
                                                 </select>
                                             </div>
 
+                                            <!-- Tanggal Transaksi -->
+                                            <div class="mt-3">
+                                                <label for="date"
+                                                    class="block text-sm font-medium text-black form-label">Tanggal
+                                                    Transaksi</label>
+                                                <input type="date" name="date" id="date"
+                                                    value="{{ old('date', date('Y-m-d')) }}"
+                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control"
+                                                    required>
+                                            </div>
+
                                             <!-- Pilih Sumber -->
-                                            <div class="item-row mb-3">
+                                            <div class="mb-3 mt-3">
                                                 <label for="source"
-                                                    class="block text-sm font-medium text-black form-label mt-2">Dari
+                                                    class="block text-sm font-medium text-black form-label">Dari
                                                     Sumber</label>
                                                 <select name="source_id" id="source"
                                                     class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
@@ -63,7 +74,9 @@
                                                     @endif
                                                 </select>
                                             </div>
+                                        </div>
 
+                                        <div class="mb-4" id="items-container">
                                             <!-- Pilih Item -->
                                             <div class="item-row mb-3" id="item-row-0">
                                                 <label for="item_0"
@@ -227,12 +240,14 @@
                 const itemRows = document.querySelectorAll('.item-row');
                 itemRows.forEach((row, index) => {
                     const removeButton = row.querySelector('.remove-item-btn');
-                    if (itemRows.length === 1) {
-                        removeButton.style.display =
-                            'none'; // Sembunyikan tombol hapus jika hanya satu item
-                    } else {
-                        removeButton.style.display =
-                            'inline-block'; // Tampilkan tombol hapus jika ada lebih dari satu item
+                    if (removeButton) {
+                        if (itemRows.length === 1) {
+                            removeButton.style.display =
+                                'none'; // Sembunyikan tombol hapus jika hanya satu item
+                        } else {
+                            removeButton.style.display =
+                                'inline-block'; // Tampilkan tombol hapus jika ada lebih dari satu item
+                        }
                     }
                 });
             };

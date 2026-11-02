@@ -44,7 +44,7 @@ class PenjualanService
     }
 
     /**
-     * @param  array{name: string, source_id: int|string, shift_id?: int|null, items: array, paid_amount?: int|string|null, description?: string|null}  $data
+     * @param  array{name: string, source_id: int|string, shift_id?: int|null, items: array, paid_amount?: int|string|null, description?: string|null, date?: string|null}  $data
      *
      * @throws ValidationException jika uang diterima kurang dari total
      */
@@ -70,7 +70,7 @@ class PenjualanService
                 'amount' => $total,
                 'paid_amount' => $paid,
                 'change_amount' => $paid !== null ? $paid - $total : null,
-                'date' => now(),
+                'date' => ! empty($data['date']) ? $data['date'] : now(),
                 'description' => $data['description'] ?? 'Pesanan baru',
                 'source_id' => $data['source_id'],
                 'type' => 'payment',

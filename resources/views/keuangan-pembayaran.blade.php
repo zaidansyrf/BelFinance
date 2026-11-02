@@ -26,18 +26,22 @@
                                     <table class="table w-full table-auto">
                                         <thead>
                                             <tr>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">No</th>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">Nama</th>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">Sumber</th>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">Total</th>
-                                                <th class="py-2 px4 border-b text-left text-gray-800">Aksi</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">No</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Nama</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Sumber</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Total</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Tanggal</th>
+                                                <th class="py-2 px-4 border-b text-left text-gray-800">Aksi</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($pembayarans as $pembayaran)
+                                            @forelse ($pembayarans as $pembayaran)
                                                 <tr>
                                                     <td class="py-2 px-4 border-b text-gray-800">{{ $loop->iteration }}
+                                                    </td>
+                                                    <td class="py-2 px-4 border-b text-gray-800">
+                                                        {{ $pembayaran->date ? $pembayaran->date->format('d-m-Y') : '-' }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         {{ $pembayaran->name }}
@@ -46,7 +50,7 @@
                                                         {{ $pembayaran->source_id ? $pembayaran->source->name : 'Tidak Diketahui' }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
-                                                        {{ number_format($pembayaran->amount, 0, ',', '.') }}
+                                                        Rp {{ number_format($pembayaran->amount, 0, ',', '.') }}
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-gray-800">
                                                         <a href="{{ url('/keuangan/pembayaran/' . $pembayaran->id) }}"
@@ -67,7 +71,13 @@
                                                         </form>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="py-4 text-center text-gray-500">
+                                                        Belum ada data pembayaran.
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>

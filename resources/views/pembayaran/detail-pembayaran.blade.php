@@ -33,9 +33,9 @@
                                                 <p class="font-medium text-black">{{ $pembayaran->id }}</p>
                                             </div>
                                             <div class="mt-2">
-                                                <p class="text-sm text-gray-600">Tanggal:</p>
+                                                <p class="text-sm text-gray-600">Tanggal Transaksi:</p>
                                                 <p class="font-medium text-black">
-                                                    {{ $pembayaran->created_at->format('d F Y H:i') }}
+                                                    {{ $pembayaran->date ? $pembayaran->date->format('d F Y') : $pembayaran->created_at->format('d F Y H:i') }}
                                                 </p>
                                             </div>
                                             <div class="mt-2">
