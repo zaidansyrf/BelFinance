@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Income;
 use App\Models\Item;
+use App\Models\ItemPromo;
 use App\Models\Shift;
 use App\Models\Source;
 use App\Models\User;
@@ -212,5 +213,67 @@ class KasirPosTest extends TestCase
             ->assertViewHas('totalSaya', 38000)
             ->assertViewHas('tunaiSaya', 38000)
             ->assertViewHas('menuTerlaris', fn ($m) => $m->first()->name === 'KO Ayam Bakar' && (int) $m->first()->jumlah === 2);
+    }
+
+    public function test_pos_page_displays_active_promo_information(): void
+    {
+        $promo = ItemPromo::create([
+            'name' => 'Promo Diskon Merdeka',
+            'discount_type' => 'percent',
+            'discount_value' => 20,
+            'channel_scope' => 'all',
+            'is_active' => true,
+        ]);
+        $this->ayam->update(['item_promo_id' => $promo->id]);
+
+        $this->actingAs($this->kasir)
+            ->get(route('kasir.pos'))
+            ->assertOk()
+            ->assertSee('Promo Diskon Merdeka')
+            ->assertSee('20%')
+            ->assertSee('Promo Menu Sedang Aktif');
+    }
+
+    public function test_pos_checkout_with_active_promo_applies_discount_and_updates_financial_snapshot(): void
+    {
+        $promo = ItemPromo::create([
+            'name' => 'Promo Potongan Gede',
+            'discount_type' => 'nominal',
+            'discount_value' => 5000,
+            'channel_scope' => 'offline_only',
+            'is_active' => true,
+        ]);
+        $this->ayam->update(['item_promo_id' => $promo->id]);
+
+        // Harga asli 19.000, diskon 5.000 -> harga final 14.000 per porsi
+        // Beli 2 porsi -> total 28.000. Uang bayar 30.000 -> kembalian 2.000
+        $response = $this->actingAs($this->kasir)->post(route('kasir.checkout'), [
+            'name' => 'Pesanan Offline',
+            'source_id' => $this->cash->id,
+            'items' => [['item_id' => $this->ayam->id, 'quantity' => 2]],
+            'paid_amount' => 30000,
+        ]);
+
+        $income = Income::sole();
+        $response->assertRedirect(route('kasir.struk', $income));
+
+        $this->assertSame(28000, $income->amount);
+        $this->assertSame(38000, $income->gross_amount);
+        $this->assertSame(10000, $income->item_discount_total);
+        $this->assertSame(30000, $income->paid_amount);
+        $this->assertSame(2000, $income->change_amount);
+
+        // Cek detail snapshot
+        $detail = $income->incomeDetails->first();
+        $this->assertSame(19000, $detail->original_price);
+        $this->assertSame(5000, $detail->discount_amount);
+        $this->assertSame(14000, $detail->final_price);
+        $this->assertSame(28000, $detail->subtotal);
+
+        // Struk menampilkan potongan promo
+        $this->actingAs($this->kasir)->get(route('kasir.struk', $income))
+            ->assertOk()
+            ->assertSee('Diskon Menu')
+            ->assertSee('-10.000');
     }
 }

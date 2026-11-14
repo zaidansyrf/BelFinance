@@ -3,159 +3,217 @@
 namespace App\Services;
 
 use App\Models\Income;
-use App\Models\IncomeDetail;
 use App\Models\Item;
+use App\Models\PlatformPromo;
+use App\Models\Source;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Menyimpan penjualan (pembayaran pesanan). Dipakai oleh form Pembayaran
- * admin keuangan dan halaman POS kasir.
+ * Menyimpan penjualan (pembayaran pesanan).
+ * Menghitung snapshot finansial promo menu merchant, promo platform, komisi, dan net payout.
+ * Dipakai oleh form Pembayaran admin keuangan dan halaman POS kasir.
  */
 class PenjualanService
 {
     /**
-     * Hitung subtotal dan total dari daftar item. Harga selalu diambil dari database,
-     * bukan dari input, supaya tidak bisa dimanipulasi dari browser.
+     * Hitung rincian finansial pesanan dari daftar item, sumber pesanan, dan preset promo platform.
      *
-     * Mendukung diskon per-item (item_discount_type & item_discount_value opsional).
-     *
-     * @param  array<int, array{item_id: int|string, quantity: int|string, item_discount_type?: string|null, item_discount_value?: float|null}>  $items
-     * @return array{total: int, details: array<int, array{item: Item, quantity: int, raw_total: int, subtotal: int, item_discount_type: string|null, item_discount_value: float|null}>}
+     * @param  array<int, array{item_id: int|string, quantity: int|string, apply_item_promo?: bool|null}>  $itemsData
+     * @return array{
+     *   gross_amount: int,
+     *   item_discount_total: int,
+     *   subtotal_after_item_promo: int,
+     *   platform_promo_total: int,
+     *   platform_merchant_share: int,
+     *   platform_app_subsidy: int,
+     *   commission_percent: float,
+     *   commission_amount: int,
+     *   customer_paid_amount: int,
+     *   net_payout: int,
+     *   details: array<int, array{
+     *     item: Item,
+     *     item_promo_id: int|null,
+     *     quantity: int,
+     *     original_price: int,
+     *     discount_amount: int,
+     *     final_price: int,
+     *     subtotal: int
+     *   }>
+     * }
      */
-    public function hitung(array $items): array
+    public function hitung(array $itemsData, ?Source $source = null, ?PlatformPromo $platformPromo = null): array
     {
-        $itemMap = Item::whereIn('id', collect($items)->pluck('item_id'))->get()->keyBy('id');
+        $itemIds = collect($itemsData)->pluck('item_id')->filter()->unique()->all();
+        $itemsMap = Item::with('promo')->whereIn('id', $itemIds)->get()->keyBy('id');
 
+        $grossAmount = 0;
+        $itemDiscountTotal = 0;
         $details = [];
-        $total = 0;
-        foreach ($items as $row) {
-            $item = $itemMap->get($row['item_id']);
+
+        foreach ($itemsData as $row) {
+            /** @var Item|null $item */
+            $item = $itemsMap->get($row['item_id']);
             if (! $item) {
                 continue;
             }
 
-            $quantity  = (int) $row['quantity'];
-            $rawTotal  = $item->price * $quantity;
+            $quantity = max(1, (int) $row['quantity']);
+            $originalPrice = (int) $item->price;
 
-            // --- Hitung diskon item ---
-            $discType  = $row['item_discount_type']  ?? null;
-            $discValue = isset($row['item_discount_value']) && $row['item_discount_value'] !== ''
-                ? (float) $row['item_discount_value']
-                : null;
+            // Default true: promo menu otomatis terpasang kecuali dilepas manual (override)
+            $applyPromo = array_key_exists('apply_item_promo', $row)
+                ? (bool) $row['apply_item_promo']
+                : true;
 
-            $diskonNominal = 0;
-            if ($discType && $discValue) {
-                if ($discType === 'percent') {
-                    $diskonNominal = (int) round(($discValue / 100) * $item->price);
-                } else {
-                    $diskonNominal = (int) $discValue;
+            $unitDiscount = 0;
+            $appliedPromoId = null;
+
+            if ($applyPromo && $item->promo) {
+                $isEligible = $source ? $item->promo->isEligibleForSource($source) : $item->promo->is_active;
+                if ($isEligible) {
+                    $appliedPromoId = $item->promo->id;
+                    $unitDiscount = $item->promo->calculateUnitDiscount($originalPrice);
                 }
             }
 
-            $subtotal = $rawTotal - ($diskonNominal * $quantity);
-            $subtotal = max(0, $subtotal); // tidak boleh negatif
-            $total   += $subtotal;
+            $finalPrice = max(0, $originalPrice - $unitDiscount);
+            $subtotal = $finalPrice * $quantity;
+
+            $grossAmount += ($originalPrice * $quantity);
+            $itemDiscountTotal += ($unitDiscount * $quantity);
 
             $details[] = [
-                'item'               => $item,
-                'quantity'           => $quantity,
-                'raw_total'          => $rawTotal,
-                'item_discount_type' => $discType,
-                'item_discount_value'=> $discValue,
-                'subtotal'           => $subtotal,
+                'item'            => $item,
+                'item_promo_id'   => $appliedPromoId,
+                'quantity'        => $quantity,
+                'original_price'  => $originalPrice,
+                'discount_amount' => $unitDiscount,
+                'final_price'     => $finalPrice,
+                'subtotal'        => $subtotal,
             ];
         }
 
-        return ['total' => $total, 'details' => $details];
+        // Subtotal setelah promo menu merchant
+        $subtotalAfterItemPromo = max(0, $grossAmount - $itemDiscountTotal);
+
+        // Breakdown promo platform
+        $platformBreakdown = $platformPromo
+            ? $platformPromo->calculateBreakdown($subtotalAfterItemPromo)
+            : ['total' => 0, 'merchant_share' => 0, 'app_subsidy' => 0];
+
+        // Komisi platform
+        $commissionPercent = $source ? (float) $source->default_commission_percent : 0.0;
+        $commissionAmount = (int) round($subtotalAfterItemPromo * ($commissionPercent / 100));
+
+        $customerPaidAmount = max(0, $subtotalAfterItemPromo - $platformBreakdown['total']);
+        $netPayout = max(0, $subtotalAfterItemPromo - $platformBreakdown['merchant_share'] - $commissionAmount);
+
+        return [
+            'gross_amount'              => $grossAmount,
+            'item_discount_total'       => $itemDiscountTotal,
+            'subtotal_after_item_promo' => $subtotalAfterItemPromo,
+            'platform_promo_total'      => $platformBreakdown['total'],
+            'platform_merchant_share'   => $platformBreakdown['merchant_share'],
+            'platform_app_subsidy'      => $platformBreakdown['app_subsidy'],
+            'commission_percent'        => $commissionPercent,
+            'commission_amount'         => $commissionAmount,
+            'customer_paid_amount'      => $customerPaidAmount,
+            'net_payout'                => $netPayout,
+            'details'                   => $details,
+        ];
     }
 
     /**
+     * Simpan transaksi penjualan ke database.
+     *
      * @param  array{
      *   name: string,
      *   source_id: int|string,
-     *   shift_id?: int|null,
      *   items: array,
+     *   shift_id?: int|null,
+     *   platform_promo_id?: int|string|null,
      *   paid_amount?: int|string|null,
-     *   description?: string|null,
+     *   change_amount?: int|string|null,
      *   date?: string|null,
-     *   order_source?: string|null,
-     *   app_discount_type?: string|null,
-     *   app_discount_value?: float|null,
-     *   is_app_subsidy?: bool|null,
+     *   description?: string|null,
      * }  $data
      *
-     * @throws ValidationException jika uang diterima kurang dari total
+     * @throws ValidationException
      */
     public function simpan(array $data): Income
     {
-        ['total' => $grossTotal, 'details' => $details] = $this->hitung($data['items']);
+        $source = Source::findOrFail($data['source_id']);
 
-        // --- Hitung promo aplikasi ---
-        $appDiscType  = $data['app_discount_type']  ?? null;
-        $appDiscValue = isset($data['app_discount_value']) && $data['app_discount_value'] !== ''
-            ? (float) $data['app_discount_value']
-            : null;
-        $isSubsidy    = ! empty($data['is_app_subsidy']);
+        $platformPromo = null;
+        if (! empty($data['platform_promo_id'])) {
+            $platformPromo = PlatformPromo::where('id', $data['platform_promo_id'])
+                ->where('source_id', $source->id)
+                ->where('is_active', true)
+                ->first();
 
-        $appDiscNominal = 0;
-        if ($appDiscType && $appDiscValue) {
-            if ($appDiscType === 'percent') {
-                $appDiscNominal = (int) round(($appDiscValue / 100) * $grossTotal);
-            } else {
-                $appDiscNominal = (int) $appDiscValue;
+            if (! $platformPromo) {
+                throw ValidationException::withMessages([
+                    'platform_promo_id' => 'Preset promo platform tidak valid atau sudah tidak aktif.',
+                ]);
             }
         }
 
-        $netTotal = max(0, $grossTotal - $appDiscNominal);
+        $calc = $this->hitung($data['items'], $source, $platformPromo);
 
-        // --- amount = omset yang diakui ---
-        // Skenario A (subsidi aplikasi): omset diakui penuh = gross_total
-        // Skenario B (merchant tanggung): omset = net_total
-        $amount = $isSubsidy ? $grossTotal : $netTotal;
-
+        $customerPaidAmount = $calc['customer_paid_amount'];
         $paid = isset($data['paid_amount']) && $data['paid_amount'] !== '' ? (int) $data['paid_amount'] : null;
-        if ($paid !== null && $paid < $netTotal) {
-            $rp = fn (int $nilai) => 'Rp '.number_format($nilai, 0, ',', '.');
 
+        // Validasi uang diterima jika diisi dan kurang dari tagihan pelanggan
+        if ($paid !== null && $paid < $customerPaidAmount) {
+            $rp = fn (int $v) => 'Rp ' . number_format($v, 0, ',', '.');
             throw ValidationException::withMessages([
-                'paid_amount' => "Uang kurang {$rp($netTotal - $paid)}. Total tagihan {$rp($netTotal)}, uang diterima {$rp($paid)}.",
+                'paid_amount' => "Uang kurang {$rp($customerPaidAmount - $paid)}. Total belanja {$rp($customerPaidAmount)}, uang diterima {$rp($paid)}.",
             ]);
         }
 
-        return DB::transaction(function () use ($data, $amount, $grossTotal, $netTotal, $appDiscType, $appDiscValue, $isSubsidy, $details, $paid) {
-            $this->kurangiStok($details);
+        $change = null;
+        if ($paid !== null) {
+            $change = isset($data['change_amount']) && $data['change_amount'] !== ''
+                ? (int) $data['change_amount']
+                : max(0, $paid - $customerPaidAmount);
+        }
+
+        return DB::transaction(function () use ($data, $source, $platformPromo, $calc, $paid, $change) {
+            // Kunci baris menu & update stok
+            $this->prosesStokDanPenjualan($calc['details']);
 
             $income = Income::create([
-                'shift_id'          => $data['shift_id'] ?? null,
-                'name'              => $data['name'],
-                'order_source'      => $data['order_source'] ?? null,
-                'amount'            => $amount,
-                'gross_total'       => $grossTotal,
-                'app_discount_type' => $appDiscType,
-                'app_discount_value'=> $appDiscValue,
-                'is_app_subsidy'    => $isSubsidy,
-                'net_total'         => $netTotal,
-                'paid_amount'       => $paid,
-                'change_amount'     => $paid !== null ? $paid - $netTotal : null,
-                'date'              => ! empty($data['date']) ? $data['date'] : now(),
-                'description'       => $data['description'] ?? 'Pesanan baru',
-                'source_id'         => $data['source_id'],
-                'type'              => 'payment',
+                'source_id'               => $source->id,
+                'shift_id'                => $data['shift_id'] ?? null,
+                'platform_promo_id'       => $platformPromo?->id,
+                'name'                    => $data['name'],
+                'gross_amount'            => $calc['gross_amount'],
+                'item_discount_total'     => $calc['item_discount_total'],
+                'platform_promo_total'    => $calc['platform_promo_total'],
+                'platform_merchant_share' => $calc['platform_merchant_share'],
+                'platform_app_subsidy'    => $calc['platform_app_subsidy'],
+                'commission_percent'      => $calc['commission_percent'],
+                'commission_amount'       => $calc['commission_amount'],
+                'amount'                  => $calc['net_payout'], // Net payout uang bersih masuk
+                'customer_paid_amount'    => $calc['customer_paid_amount'],
+                'paid_amount'             => $paid,
+                'change_amount'           => $change,
+                'date'                    => ! empty($data['date']) ? $data['date'] : now()->toDateString(),
+                'description'             => $data['description'] ?? 'Pesanan baru',
+                'type'                    => 'payment',
             ]);
 
-            foreach ($details as $detail) {
-                IncomeDetail::create([
-                    'income_id'          => $income->id,
-                    'item_id'            => $detail['item']->id,
-                    'quantity'           => $detail['quantity'],
-                    'item_discount_type' => $detail['item_discount_type'],
-                    'item_discount_value'=> $detail['item_discount_value'],
-                    'subtotal'           => $detail['subtotal'],
+            foreach ($calc['details'] as $d) {
+                $income->incomeDetails()->create([
+                    'item_id'         => $d['item']->id,
+                    'item_promo_id'   => $d['item_promo_id'],
+                    'quantity'        => $d['quantity'],
+                    'original_price'  => $d['original_price'],
+                    'discount_amount' => $d['discount_amount'],
+                    'final_price'     => $d['final_price'],
+                    'subtotal'        => $d['subtotal'],
                 ]);
-
-                // Tambahkan jumlah terjual menu
-                $detail['item']->increment('quantity', $detail['quantity']);
             }
 
             return $income;
@@ -163,33 +221,36 @@ class PenjualanService
     }
 
     /**
-     * Kurangi stok menu yang dilacak. Baris dikunci agar dua kasir tidak menjual stok yang sama.
+     * Kunci baris menu dan kurangi stok jika dilacak serta increment jumlah terjual.
      *
-     * @param  array<int, array{item: Item, quantity: int, subtotal: int}>  $details
-     *
-     * @throws ValidationException jika stok tidak cukup
+     * @param  array<int, array{item: Item, quantity: int}>  $details
+     * @throws ValidationException
      */
-    private function kurangiStok(array $details): void
+    private function prosesStokDanPenjualan(array $details): void
     {
         $kurang = [];
         foreach ($details as $detail) {
+            /** @var Item $item */
             $item = Item::lockForUpdate()->find($detail['item']->id);
-            if (! $item->lacakStok()) {
+            if (! $item) {
                 continue;
             }
 
-            if ($item->stock < $detail['quantity']) {
-                $kurang[] = "{$item->name} (sisa {$item->stock}, diminta {$detail['quantity']})";
-
-                continue;
+            if ($item->lacakStok()) {
+                if ($item->stock < $detail['quantity']) {
+                    $kurang[] = "{$item->name} (sisa {$item->stock}, diminta {$detail['quantity']})";
+                    continue;
+                }
+                $item->decrement('stock', $detail['quantity']);
             }
 
-            $item->decrement('stock', $detail['quantity']);
+            // Tambahkan kuantitas terjual menu
+            $item->increment('quantity', $detail['quantity']);
         }
 
         if ($kurang) {
             throw ValidationException::withMessages([
-                'items' => 'Stok tidak cukup: '.implode('; ', $kurang).'.',
+                'items' => 'Stok tidak cukup: ' . implode('; ', $kurang) . '.',
             ]);
         }
     }

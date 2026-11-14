@@ -50,7 +50,8 @@ class ExpenseController extends Controller
             })
             ->select('expenses.*')
             ->orderBy('expenses.date', 'asc')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends(['search' => $search]);
 
         return view('expenses.index', compact('expenses', 'search'));
     }

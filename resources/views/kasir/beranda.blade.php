@@ -11,21 +11,41 @@
 
             {{-- Ringkasan seluruh kasir --}}
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-[#2B7A78] text-white rounded-xl p-5">
+                <div class="bg-[#2B7A78] text-white rounded-xl p-5 shadow-sm">
                     <p class="text-sm opacity-90">Total penjualan</p>
                     <p class="text-2xl font-bold mt-1">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</p>
                 </div>
-                <div class="bg-[#3AAFA9] text-white rounded-xl p-5">
+                <div class="bg-[#3AAFA9] text-white rounded-xl p-5 shadow-sm">
                     <p class="text-sm opacity-90">Jumlah transaksi</p>
                     <p class="text-2xl font-bold mt-1">{{ $jumlahTransaksi }}</p>
                 </div>
-                <div class="bg-white rounded-xl p-5">
+                <div class="bg-white rounded-xl p-5 shadow-sm">
                     <p class="text-sm text-gray-600">Rata-rata per transaksi</p>
                     <p class="text-2xl font-bold mt-1 text-gray-800">
                         Rp {{ number_format($jumlahTransaksi ? intdiv($totalPenjualan, $jumlahTransaksi) : 0, 0, ',', '.') }}
                     </p>
                 </div>
             </div>
+
+            @if (($totalDiskonHariIni ?? 0) > 0)
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🏷️</span>
+                        <div>
+                            <p class="text-sm font-bold text-emerald-900">Total Potongan Promo Diberikan Hari Ini</p>
+                            <p class="text-xs text-emerald-700">
+                                Diskon menu: Rp {{ number_format($totalDiskonMenuHariIni ?? 0, 0, ',', '.') }}
+                                @if (($totalDiskonVoucherHariIni ?? 0) > 0)
+                                    • Voucher platform: Rp {{ number_format($totalDiskonVoucherHariIni ?? 0, 0, ',', '.') }}
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                    <span class="text-lg font-extrabold text-emerald-800">
+                        -Rp {{ number_format($totalDiskonHariIni, 0, ',', '.') }}
+                    </span>
+                </div>
+            @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white rounded-xl p-5">
@@ -95,7 +115,14 @@
                                 <tr class="border-t">
                                     <td class="py-2">{{ ($trx->created_at ?? $trx->date)->format('H:i') }}</td>
                                     <td class="py-2">#{{ str_pad($trx->id, 6, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="py-2">{{ $trx->name }}</td>
+                                    <td class="py-2">
+                                        {{ $trx->name }}
+                                        @if (($trx->item_discount_total ?? 0) > 0 || ($trx->platform_promo_total ?? 0) > 0)
+                                            <span class="block text-[10px] font-semibold text-emerald-700">
+                                                🏷️ Diskon Rp {{ number_format(($trx->item_discount_total ?? 0) + ($trx->platform_promo_total ?? 0), 0, ',', '.') }}
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td class="py-2">{{ $trx->source->name ?? '-' }}</td>
                                     <td class="py-2 text-right font-medium">Rp {{ number_format($trx->amount, 0, ',', '.') }}</td>
                                     <td class="py-2 text-right">

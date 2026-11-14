@@ -103,6 +103,29 @@
             </a>
         </li>
         <li class="relative">
+            <!-- Dropdown Promo -->
+            <button id="dropdownPromoButton" onclick="dropdownPromo()"
+                class="{{ request()->is('keuangan/promo*') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mt-2 mb-2 w-full px-4 py-2 text-left flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <span class="text-sm {{ request()->is('keuangan/promo*') ? 'text-white' : '' }}">Manajemen Promo</span>
+            </button>
+            <ul id="dropdownPromoMenu"
+                class="{{ request()->is('keuangan/promo*') ? 'block' : 'hidden' }} bg-[#116A71] rounded text-white shadow-lg left-0 m-0 pl-0">
+                <li class="px-0 py-0 cursor-pointer">
+                    <a href="{{ route('promo.item.index') }}"
+                        class="block px-4 py-2 {{ request()->is('keuangan/promo/item*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
+                        Promo Menu Merchant</a>
+                </li>
+                <li class="px-0 py-0 cursor-pointer">
+                    <a href="{{ route('promo.platform.index') }}"
+                        class="block px-4 py-2 {{ request()->is('keuangan/promo/platform*') ? 'bg-[#3A9B98]' : 'hover:bg-[#3A9B98] hover:rounded-none' }}">
+                        Promo Platform Online</a>
+                </li>
+            </ul>
+        </li>
+        <li class="relative">
             <!-- Dropdown Kategori -->
             <button id="dropdownKategoriButton" onclick="dropdownKategori()"
                 class="{{ request()->is('keuangan/kategori*') ? 'bg-[#116A71] text-white' : 'text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1]' }} mt-2 mb-2 w-full px-4 py-2 text-left flex items-center gap-2">
@@ -166,6 +189,10 @@
 <script>
     function dropdownPemasukkan() {
         document.getElementById('dropdownPemasukkanMenu').classList.toggle('hidden');
+    }
+
+    function dropdownPromo() {
+        document.getElementById('dropdownPromoMenu').classList.toggle('hidden');
     }
 
     function dropdownKategori() {

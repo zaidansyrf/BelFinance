@@ -1,4 +1,4 @@
-@section('title', 'Pembayaran | Tambah')
+@section('title', 'Pembayaran | Tambah Transaksi')
 <x-app-layout>
     <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
         <!-- sidebar -->
@@ -9,423 +9,578 @@
             <div class="drawer-content flex flex-col h-screen">
                 <!-- navbar -->
                 @include('layouts.navbar')
+
                 <!-- main content -->
                 <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-                    <div class="sticky justify-between items-center mt-12 px-8">
+                    <div class="mt-8 px-6 pb-12">
                         <div class="mb-4">
-                            <!-- Tombol Kembali -->
                             <button type="button"
-                                class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D]"
-                                onclick="window.location.href='{{ url('/keuangan/pembayaran') }}'">
+                                class="bg-[#2B7A78] hover:bg-[#205C5D] text-white font-semibold py-2 px-6 rounded-lg transition"
+                                onclick="window.location.href='{{ route('pembayaran.index') }}'">
                                 &larr; Kembali
                             </button>
-
                         </div>
-                        <div class="container">
-                            <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Transaksi Baru</h1>
-                            <div class="card text-primary-content bg-white mt-4 w-full">
-                                <div class="card-body">
-                                    <form action="{{ route('pembayaran.store') }}" method="POST">
-                                        @csrf
-                                        <div class="mb-4">
-                                            <!-- Nama Pesanan -->
-                                            <div>
-                                                <label for="name"
-                                                    class="block text-sm font-medium text-black form-label">Jenis
-                                                    Pesanan</label>
-                                                <select name="name" id="name"
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
-                                                    required>
-                                                    <option class="text-black" value="" selected disabled>Pilih
-                                                        Jenis Pesanan</option>
-                                                    <option value="Pesanan Offline">Pesanan Offline</option>
-                                                    <option value="Pesanan Online">Pesanan Online</option>
-                                                </select>
-                                            </div>
 
-                                            <!-- Tanggal Transaksi -->
-                                            <div class="mt-3">
-                                                <label for="date"
-                                                    class="block text-sm font-medium text-black form-label">Tanggal
-                                                    Transaksi</label>
-                                                <input type="date" name="date" id="date"
-                                                    value="{{ old('date', date('Y-m-d')) }}"
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control"
-                                                    required>
-                                            </div>
+                        <div class="container mx-auto">
+                            <h1 class="text-2xl font-bold text-[#2B7A78] mb-4">Input Transaksi Penjualan</h1>
 
-                                            <!-- Pilih Sumber -->
-                                            <div class="mb-3 mt-3">
-                                                <label for="source"
-                                                    class="block text-sm font-medium text-black form-label">Dari
-                                                    Sumber</label>
-                                                <select name="source_id" id="source"
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
-                                                    required>
-                                                    <option class="text-black" value="" selected disabled>Pilih
-                                                        Sumber</option>
-                                                    @if ($allSources->count())
-                                                        @foreach ($allSources as $source)
-                                                            <option value="{{ $source->id }}">{{ $source->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    @else
-                                                        <option disabled>Data sumber tidak tersedia</option>
-                                                    @endif
-                                                </select>
-                                            </div>
+                            <form action="{{ route('pembayaran.store') }}" method="POST" id="transactionForm">
+                                @csrf
 
-                                            <!-- Sumber Pesanan (GoFood, GrabFood, dll) -->
-                                            <div class="mb-3 mt-3">
-                                                <label for="order_source"
-                                                    class="block text-sm font-medium text-black form-label">
-                                                    Platform Pesanan
-                                                    <span class="text-gray-400 text-xs">(opsional, mis: GoFood, GrabFood, Manual)</span>
-                                                </label>
-                                                <input type="text" name="order_source" id="order_source"
-                                                    placeholder="GoFood / GrabFood / Manual / ..."
-                                                    class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
-                                            </div>
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {{-- Kolom Kiri: Detail Pesanan & Keranjang Item (2 Col) --}}
+                                    <div class="lg:col-span-2 space-y-6">
+                                        {{-- Card 1: Informasi Header Transaksi --}}
+                                        <div class="bg-white rounded-xl shadow-md p-6">
+                                            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">1. Data Transaksi</h2>
 
-                                            <!-- Promo Aplikasi -->
-                                            <div class="mb-3 mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                                <h3 class="text-sm font-semibold text-blue-800 mb-3">🏷️ Promo Aplikasi (Opsional)</h3>
-                                                <div class="flex gap-3 items-end">
-                                                    <div class="w-28">
-                                                        <label class="block text-sm font-medium text-black mb-1">Jenis</label>
-                                                        <select name="app_discount_type" id="app_discount_type"
-                                                            class="text-gray-500 w-full p-2 border border-gray-300 rounded-md">
-                                                            <option value="">Tanpa Promo</option>
-                                                            <option value="percent">Persentase (%)</option>
-                                                            <option value="nominal">Nominal (Rp)</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="flex-1">
-                                                        <label class="block text-sm font-medium text-black mb-1">Nilai Promo</label>
-                                                        <input type="number" name="app_discount_value" id="app_discount_value"
-                                                            min="0" placeholder="0"
-                                                            class="text-gray-500 w-full p-2 border border-gray-300 rounded-md">
-                                                    </div>
-                                                </div>
-                                                <div class="mt-3 flex items-center gap-2">
-                                                    <input type="hidden" name="is_app_subsidy" value="0">
-                                                    <input type="checkbox" name="is_app_subsidy" id="is_app_subsidy"
-                                                        value="1"
-                                                        class="w-4 h-4 text-blue-600 rounded">
-                                                    <label for="is_app_subsidy" class="text-sm text-gray-700">
-                                                        <strong>Subsidi Penuh Aplikasi</strong>
-                                                        <span class="text-gray-400">(diskon ditanggung aplikasi, bukan merchant)</span>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-1">
+                                                        Jenis Pesanan *
                                                     </label>
+                                                    <select name="name" id="name" required onchange="onChannelChange()"
+                                                        class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                                                        <option value="Pesanan Offline" selected>Pesanan Offline</option>
+                                                        <option value="Pesanan Online">Pesanan Online</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">
+                                                        Tanggal Transaksi *
+                                                    </label>
+                                                    <input type="date" name="date" id="date"
+                                                        value="{{ old('date', date('Y-m-d')) }}" required
+                                                        class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                                                </div>
+
+                                                <div>
+                                                    <label for="source_id" class="block text-sm font-semibold text-gray-700 mb-1">
+                                                        Sumber / Platform Pembayaran *
+                                                    </label>
+                                                    <select name="source_id" id="source_id" required onchange="onSourceChange()"
+                                                        class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                                                        <option value="" disabled selected>-- Pilih Sumber Pembayaran --</option>
+                                                    </select>
+                                                </div>
+
+                                                {{-- Dropdown Preset Promo Platform (Otomatis muncul saat Pesanan Online) --}}
+                                                <div id="platformPromoContainer" class="hidden">
+                                                    <label for="platform_promo_id" class="block text-sm font-semibold text-gray-700 mb-1">
+                                                        Voucher Aplikasi Platform
+                                                    </label>
+                                                    <select name="platform_promo_id" id="platform_promo_id" onchange="calculateFinancials()"
+                                                        class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                                                        <option value="">Tanpa Promo Platform</option>
+                                                    </select>
+                                                    <div id="platformPromoInfo" class="mt-1 text-xs text-blue-700 hidden"></div>
+                                                </div>
+
+                                                <div class="md:col-span-2">
+                                                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-1">
+                                                        Catatan Pesanan (Opsional)
+                                                    </label>
+                                                    <input type="text" name="description" id="description" placeholder="contoh : No. Pesanan GF-10294"
+                                                        class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="mb-4" id="items-container">
-                                            <!-- Pilih Item -->
-                                            <div class="item-row mb-3 border border-gray-200 rounded-lg p-3" id="item-row-0">
-                                                <label for="item_0"
-                                                    class="block text-sm font-medium text-black form-label">Pilih
-                                                    Item</label>
-                                                <select name="items[0][item_id]" id="item_0"
-                                                    class="item-select text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select"
-                                                    required>
-                                                    <option class="text-black" value="" selected disabled>Pilih
-                                                        Item</option>
-                                                    @foreach ($allItems as $item)
-                                                        @if ($item->price != 0)
-                                                            <option class="text-black" value="{{ $item->id }}"
-                                                                data-price="{{ $item->price }}">{{ $item->name }}
-                                                                ({{ number_format($item->price, 0, ',', '.') }})
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
+                                        {{-- Card 2: Keranjang Item Pesanan --}}
+                                        <div class="bg-white rounded-xl shadow-md p-6">
+                                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                                <div>
+                                                    <h2 class="text-lg font-bold text-gray-800">2. Keranjang Item Pesanan</h2>
+                                                    <p class="text-xs text-gray-500">
+                                                        Diskon menu otomatis diterapkan jika menu memiliki promo aktif yang sesuai.
+                                                    </p>
+                                                </div>
+                                                <button type="button" onclick="addItemRow()"
+                                                    class="bg-[#2B7A78] hover:bg-[#205C5D] text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center gap-1 transition">
+                                                    + Tambah Menu
+                                                </button>
+                                            </div>
 
-                                                <div class="flex gap-2 mt-2">
-                                                    <div class="flex-1">
-                                                        <label for="quantity_0"
-                                                            class="block text-sm font-medium text-black form-label">Jumlah</label>
-                                                        <input type="number" name="items[0][quantity]" min="1"
-                                                            id="quantity_0" required
-                                                            class="qty-input text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
+                                            <div id="itemsContainer" class="space-y-3">
+                                                {{-- Baris item akan dimasukkan via JavaScript --}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Kolom Kanan: Ringkasan Finansial & Pembayaran (1 Col) --}}
+                                    <div class="space-y-6">
+                                        <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                                            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">3. Rekap Finansial Transaksi</h2>
+
+                                            <div class="space-y-2.5 text-sm">
+                                                <div class="flex justify-between text-gray-600">
+                                                    <span>Total Kotor Normal:</span>
+                                                    <span id="dispGross" class="font-semibold text-gray-900">Rp 0</span>
+                                                </div>
+
+                                                <div class="flex justify-between text-amber-700">
+                                                    <span>Potongan Diskon Menu:</span>
+                                                    <span id="dispItemDiscount" class="font-semibold">Rp 0</span>
+                                                </div>
+
+                                                <div class="flex justify-between text-gray-800 font-medium border-t pt-2">
+                                                    <span>Subtotal Menu:</span>
+                                                    <span id="dispSubtotalAfterItemPromo">Rp 0</span>
+                                                </div>
+
+                                                <div id="rowPlatformVoucher" class="space-y-1.5 border-t pt-2 hidden">
+                                                    <div class="flex justify-between text-blue-700 font-semibold">
+                                                        <span>Voucher Aplikasi:</span>
+                                                        <span id="dispPlatformVoucher">Rp 0</span>
                                                     </div>
-                                                    {{-- Diskon per item (opsional) --}}
-                                                    <div class="w-28">
-                                                        <label class="block text-sm font-medium text-black">Jenis Diskon</label>
-                                                        <select name="items[0][item_discount_type]"
-                                                            class="disc-type text-gray-500 w-full p-2 border border-gray-300 rounded-md">
-                                                            <option value="">Tanpa</option>
-                                                            <option value="percent">%</option>
-                                                            <option value="nominal">Rp</option>
-                                                        </select>
+                                                    <div class="flex justify-between text-xs text-orange-700 pl-3">
+                                                        <span>Beban Merchant:</span>
+                                                        <span id="dispMerchantShare">Rp 0</span>
                                                     </div>
-                                                    <div class="w-32">
-                                                        <label class="block text-sm font-medium text-black">Nilai Diskon</label>
-                                                        <input type="number" name="items[0][item_discount_value]" min="0"
-                                                            class="disc-value text-gray-500 w-full p-2 border border-gray-300 rounded-md" placeholder="0">
+                                                    <div class="flex justify-between text-xs text-green-700 pl-3">
+                                                        <span>Subsidi Aplikasi:</span>
+                                                        <span id="dispAppSubsidy">Rp 0</span>
                                                     </div>
                                                 </div>
-                                                <!-- Tombol Hapus (disembunyikan jika hanya 1 item) -->
+
+                                                <div id="rowCustomerPaid" class="flex justify-between text-purple-800 font-medium border-t pt-2 hidden">
+                                                    <span>Dibayar Pembeli di App:</span>
+                                                    <span id="dispCustomerPaid" class="font-bold">Rp 0</span>
+                                                </div>
+
+                                                <div id="rowCommission" class="flex justify-between text-red-700 border-t pt-2 hidden">
+                                                    <span id="labelCommission">Komisi Platform (0%):</span>
+                                                    <span id="dispCommission" class="font-semibold">Rp 0</span>
+                                                </div>
+
+                                                <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 mt-4">
+                                                    <div class="text-xs text-teal-800 font-medium uppercase tracking-wider">
+                                                        Uang Bersih Diterima (Net Payout)
+                                                    </div>
+                                                    <div id="dispNetPayout" class="text-2xl font-black text-[#2B7A78] mt-1">
+                                                        Rp 0
+                                                    </div>
+                                                    <p class="text-[11px] text-teal-700 mt-1 leading-relaxed">
+                                                        Dana riil yang masuk ke kas/rekening setelah dipotong beban promo &amp; komisi.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {{-- Field Uang Diterima & Kembalian (Opsional) --}}
+                                            <div class="mt-6 border-t pt-4 space-y-3">
+                                                <div>
+                                                    <label for="paid_amount" class="block text-xs font-semibold text-gray-700 mb-1">
+                                                        Uang Diterima dari Pelanggan (Rp):
+                                                    </label>
+                                                    <input type="number" name="paid_amount" id="paid_amount" min="0" oninput="calculateChange()"
+                                                        placeholder="Opsional (kosongkan jika pas / online)"
+                                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                                                </div>
+                                                <div id="changeContainer" class="hidden flex justify-between items-center text-sm bg-gray-50 p-2.5 rounded-lg border">
+                                                    <span class="text-gray-600 font-medium">Uang Kembalian:</span>
+                                                    <span id="dispChange" class="font-bold text-gray-900">Rp 0</span>
+                                                    <input type="hidden" name="change_amount" id="change_amount" value="0">
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-6 flex flex-col gap-2">
+                                                <button type="submit"
+                                                    class="w-full bg-[#2B7A78] hover:bg-[#205C5D] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition">
+                                                    Simpan Transaksi Penjualan
+                                                </button>
+                                                <button type="reset" onclick="resetFormState()"
+                                                    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-lg text-sm transition text-center">
+                                                    Reset Input
+                                                </button>
                                             </div>
                                         </div>
-
-                                        <!-- Menampilkan Total -->
-                                        <div class="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                            <div class="flex justify-between text-sm text-gray-700 mb-1">
-                                                <span>Subtotal (sebelum promo app):</span>
-                                                <span id="gross-total-display">Rp 0</span>
-                                            </div>
-                                            <div id="app-discount-row" class="flex justify-between text-sm text-red-500 mb-1 hidden">
-                                                <span>Promo Aplikasi:</span>
-                                                <span id="app-discount-display">- Rp 0</span>
-                                            </div>
-                                            <div class="flex justify-between font-semibold text-black border-t pt-2 mt-1">
-                                                <span>Total Tagihan (Net):</span>
-                                                <span id="total">Rp 0</span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Buttons -->
-                                        <div class="flex justify-end gap-4 mt-4">
-                                            <button type="reset"
-                                                class="bg-[#db5461] text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600">Reset</button>
-                                            <button type="button" id="add-item"
-                                                class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D] flex items-center justify-center">
-                                                <span class="sm:hidden ">+</span>
-
-                                                <span class="hidden sm:inline">Tambah Item</span>
-                                            </button>
-
-                                            <button type="submit"
-                                                class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">Simpan
-                                                <span class="hidden sm:inline">Pesanan</span></button>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- sidebar content -->
             @include('layouts.sidebar')
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addItemButton = document.getElementById('add-item');
-            const itemsContainer = document.getElementById('items-container');
-            const totalElement = document.getElementById('total');
-            const grossDisplay = document.getElementById('gross-total-display');
-            const appDiscountRow = document.getElementById('app-discount-row');
-            const appDiscountDisplay = document.getElementById('app-discount-display');
-            const appDiscountType = document.getElementById('app_discount_type');
-            const appDiscountValue = document.getElementById('app_discount_value');
-            let itemCount = 1;
+        @if (session('success'))
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: '{{ session('success') }}', timer: 2000, showConfirmButton: false });
+        @endif
+        @if (session('error'))
+            Swal.fire({ icon: 'error', title: 'Gagal!', text: '{{ session('error') }}' });
+        @endif
 
-            const formatRp = (val) => `Rp ${Math.round(val).toLocaleString('id-ID')}`;
+        // Master item & sumber masuk dari backend
+        const allItems = @json($allItems);
+        const allSources = @json($allSources);
+        let rowCounter = 0;
 
-            // Menghitung total harga (dengan diskon item + promo aplikasi)
-            const calculateTotal = () => {
-                const itemRows = document.querySelectorAll('.item-row');
-                let grossTotal = 0;
+        document.addEventListener('DOMContentLoaded', function () {
+            addItemRow();
+            onChannelChange();
+        });
 
-                itemRows.forEach(itemRow => {
-                    const selectElement = itemRow.querySelector('.item-select');
-                    const quantityElement = itemRow.querySelector('.qty-input');
-                    const discTypeEl = itemRow.querySelector('.disc-type');
-                    const discValueEl = itemRow.querySelector('.disc-value');
+        function formatRupiah(number) {
+            return 'Rp ' + Math.round(number || 0).toLocaleString('id-ID');
+        }
 
-                    if (selectElement && selectElement.value && quantityElement && quantityElement.value) {
-                        const selectedOption = selectElement.selectedOptions[0];
-                        const price = parseFloat(selectedOption.dataset.price || 0);
-                        const quantity = parseInt(quantityElement.value || 0, 10);
+        function onChannelChange() {
+            const jenisPesanan = document.getElementById('name').value.trim();
+            const isOnlineChannel = (jenisPesanan === 'Pesanan Online');
 
-                        if (!isNaN(price) && !isNaN(quantity)) {
-                            const rawTotal = price * quantity;
+            const sourceSelect = document.getElementById('source_id');
+            const platformPromoContainer = document.getElementById('platformPromoContainer');
 
-                            // Hitung diskon item
-                            let diskonNominal = 0;
-                            const discType = discTypeEl ? discTypeEl.value : '';
-                            const discVal = discValueEl ? parseFloat(discValueEl.value || 0) : 0;
-                            if (discType === 'percent' && discVal > 0) {
-                                diskonNominal = (discVal / 100) * price * quantity;
-                            } else if (discType === 'nominal' && discVal > 0) {
-                                diskonNominal = discVal * quantity;
-                            }
+            // Tampilkan/sembunyikan dropdown voucher platform sesuai jenis pesanan
+            if (isOnlineChannel) {
+                platformPromoContainer.classList.remove('hidden');
+            } else {
+                platformPromoContainer.classList.add('hidden');
+            }
 
-                            grossTotal += Math.max(0, rawTotal - diskonNominal);
-                        }
-                    }
-                });
+            // Filter sumber pembayaran berdasarkan kolom is_online dari master sources
+            const filteredSources = allSources.filter(src => Boolean(src.is_online) === isOnlineChannel);
 
-                // Promo aplikasi
-                const appType = appDiscountType ? appDiscountType.value : '';
-                const appVal = appDiscountValue ? parseFloat(appDiscountValue.value || 0) : 0;
-                let appDiscount = 0;
-                if (appType === 'percent' && appVal > 0) {
-                    appDiscount = (appVal / 100) * grossTotal;
-                } else if (appType === 'nominal' && appVal > 0) {
-                    appDiscount = appVal;
-                }
-                const netTotal = Math.max(0, grossTotal - appDiscount);
+            sourceSelect.innerHTML = '<option value="" disabled selected>-- Pilih Sumber Pembayaran --</option>';
+            filteredSources.forEach(src => {
+                const opt = document.createElement('option');
+                opt.value = src.id;
+                opt.dataset.isOnline = src.is_online ? '1' : '0';
+                opt.dataset.commission = src.default_commission_percent || 0;
+                opt.dataset.promos = JSON.stringify(src.platform_promos || src.platformPromos || []);
 
-                // Tampilkan
-                if (grossDisplay) grossDisplay.innerText = formatRp(grossTotal);
-                if (appDiscountRow && appDiscountDisplay) {
-                    if (appDiscount > 0) {
-                        appDiscountRow.classList.remove('hidden');
-                        appDiscountDisplay.innerText = `- ${formatRp(appDiscount)}`;
-                    } else {
-                        appDiscountRow.classList.add('hidden');
-                    }
-                }
-                if (totalElement) totalElement.innerText = formatRp(netTotal);
-            };
-
-            // Menambah event listener pada elemen input dan tombol hapus
-            const addEventListeners = (row) => {
-                row.querySelectorAll('select, input[type="number"]').forEach(el => {
-                    el.addEventListener('change', calculateTotal);
-                    el.addEventListener('input', calculateTotal);
-                });
-
-                const removeButton = row.querySelector('.remove-item-btn');
-                // Menambahkan event listener untuk tombol hapus
-                if (removeButton) {
-                    removeButton.addEventListener('click', function() {
-                        row.remove(); // Menghapus elemen item
-                        calculateTotal(); // Menghitung ulang total setelah penghapusan
-                        toggleRemoveButtonVisibility(); // Menyembunyikan/memperlihatkan tombol hapus
-                    });
-                }
-            };
-
-            // Listener promo aplikasi
-            if (appDiscountType) appDiscountType.addEventListener('change', calculateTotal);
-            if (appDiscountValue) appDiscountValue.addEventListener('input', calculateTotal);
-
-            // Menambah item baru ke form
-            addItemButton.addEventListener('click', function() {
-                const newItemRow = document.createElement('div');
-                newItemRow.classList.add('item-row', 'mb-3', 'border', 'border-gray-200', 'rounded-lg', 'p-3');
-                newItemRow.id = `item-row-${itemCount}`;
-
-                newItemRow.innerHTML = `
-            <label for="item_${itemCount}" class="block text-sm font-medium text-black form-label">Pilih Item</label>
-            <select name="items[${itemCount}][item_id]" id="item_${itemCount}" class="item-select text-gray-500 w-full p-2 border border-gray-300 rounded-md form-select" required>
-                <option class="text-black" value="" selected disabled>Pilih Item</option>
-                @foreach ($allItems as $item)
-                    @if ($item->price != 0)
-                        <option class="text-black" value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} ({{ number_format($item->price, 0, ',', '.') }})</option>
-                    @endif
-                @endforeach
-            </select>
-
-            <div class="flex gap-2 mt-2">
-                <div class="flex-1">
-                    <label for="quantity_${itemCount}" class="block text-sm font-medium text-black form-label">Jumlah</label>
-                    <input type="number" name="items[${itemCount}][quantity]" min="1" id="quantity_${itemCount}" required class="qty-input text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control">
-                </div>
-                <div class="w-28">
-                    <label class="block text-sm font-medium text-black">Jenis Diskon</label>
-                    <select name="items[${itemCount}][item_discount_type]" class="disc-type text-gray-500 w-full p-2 border border-gray-300 rounded-md">
-                        <option value="">Tanpa</option>
-                        <option value="percent">%</option>
-                        <option value="nominal">Rp</option>
-                    </select>
-                </div>
-                <div class="w-32">
-                    <label class="block text-sm font-medium text-black">Nilai Diskon</label>
-                    <input type="number" name="items[${itemCount}][item_discount_value]" min="0" class="disc-value text-gray-500 w-full p-2 border border-gray-300 rounded-md" placeholder="0">
-                </div>
-            </div>
-
-            <button type="button" class="remove-item-btn bg-red-500 text-white font-semibold py-1 px-4 rounded-lg hover:bg-red-700 mt-2" data-index="${itemCount}">Hapus</button>
-        `;
-
-                itemsContainer.appendChild(newItemRow);
-                addEventListeners(newItemRow);
-                itemCount++;
-
-                // Periksa dan sesuaikan tombol hapus setelah menambahkan item baru
-                toggleRemoveButtonVisibility();
+                const comm = parseFloat(src.default_commission_percent || 0);
+                const commLabel = comm > 0 ? ` - Komisi ${comm}%` : '';
+                opt.text = `${src.name}${commLabel}`;
+                sourceSelect.appendChild(opt);
             });
 
-            // Fungsi untuk menyembunyikan atau menampilkan tombol hapus
-            const toggleRemoveButtonVisibility = () => {
-                const itemRows = document.querySelectorAll('.item-row');
-                itemRows.forEach((row, index) => {
-                    const removeButton = row.querySelector('.remove-item-btn');
-                    if (removeButton) {
-                        if (itemRows.length === 1) {
-                            removeButton.style.display =
-                                'none'; // Sembunyikan tombol hapus jika hanya satu item
+            // Perbarui visibilitas banner promo menu pada tiap baris item
+            document.querySelectorAll('.item-row').forEach(row => {
+                const rowIndex = row.id.replace('item-row-', '');
+                updateItemPromoBanner(rowIndex);
+            });
+
+            onSourceChange();
+        }
+
+        function onSourceChange() {
+            const sourceSelect = document.getElementById('source_id');
+            const selectedOpt = sourceSelect.selectedOptions[0];
+            const promoSelect = document.getElementById('platform_promo_id');
+            const promoInfo = document.getElementById('platformPromoInfo');
+
+            promoSelect.innerHTML = '<option value="">Tanpa Promo Platform</option>';
+            promoInfo.classList.add('hidden');
+            promoInfo.innerText = '';
+
+            if (!selectedOpt || !selectedOpt.value) {
+                calculateFinancials();
+                return;
+            }
+
+            const isOnline = selectedOpt.dataset.isOnline === '1';
+            const promosData = JSON.parse(selectedOpt.dataset.promos || '[]');
+
+            if (isOnline && promosData.length > 0) {
+                promosData.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.dataset.type = p.discount_type;
+                    opt.dataset.val = p.discount_value;
+                    opt.dataset.max = p.max_discount || '';
+                    opt.dataset.share = p.merchant_share_percent;
+                    opt.dataset.name = p.name;
+
+                    let labelDiskon = p.discount_type === 'percent' ? p.discount_value + '%' : formatRupiah(p.discount_value);
+                    opt.text = `${p.name} (Diskon ${labelDiskon} | Tanggungan Merchant ${p.merchant_share_percent}%)`;
+                    promoSelect.appendChild(opt);
+                });
+            }
+
+            calculateFinancials();
+        }
+
+        function addItemRow() {
+            const container = document.getElementById('itemsContainer');
+            const rowIndex = rowCounter++;
+
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'item-row bg-gray-50 border border-gray-200 rounded-xl p-4 transition hover:border-[#2B7A78]';
+            rowDiv.id = `item-row-${rowIndex}`;
+
+            let menuOptionsHtml = '<option value="" disabled selected>-- Pilih Menu --</option>';
+            allItems.forEach(item => {
+                let promoBadge = '';
+                if (item.promo && item.promo.is_active) {
+                    promoBadge = ` [Promo: ${item.promo.name}]`;
+                }
+                menuOptionsHtml += `<option value="${item.id}" data-price="${item.price}" data-promo='${JSON.stringify(item.promo || null)}'>${item.name} (${formatRupiah(item.price)})${promoBadge}</option>`;
+            });
+
+            rowDiv.innerHTML = `
+                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+                    <div class="flex-1 w-full">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Pilih Menu *</label>
+                        <select name="items[${rowIndex}][item_id]" required onchange="onItemSelect(${rowIndex})"
+                            class="item-select w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                            ${menuOptionsHtml}
+                        </select>
+                    </div>
+
+                    <div class="w-24">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Qty *</label>
+                        <input type="number" name="items[${rowIndex}][quantity]" value="1" min="1" required oninput="calculateFinancials()"
+                            class="item-qty w-full border border-gray-300 rounded-lg p-2 text-sm text-center focus:ring-[#2B7A78] focus:border-[#2B7A78]">
+                    </div>
+
+                    <div class="w-32 text-right">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Subtotal</label>
+                        <span class="row-subtotal font-bold text-gray-900 text-sm block py-2">Rp 0</span>
+                    </div>
+
+                    <div class="pt-4 sm:pt-0">
+                        <button type="button" onclick="removeItemRow(${rowIndex})"
+                            class="text-red-500 hover:text-red-700 font-bold text-lg p-1.5 rounded-lg hover:bg-red-50 transition"
+                            title="Hapus baris">&times;</button>
+                    </div>
+                </div>
+
+                {{-- Banner Promo Menu Otomatis & Checkbox Override --}}
+                <div id="promo-banner-${rowIndex}" class="mt-2.5 pt-2.5 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs hidden">
+                    <div class="flex items-center gap-1.5 text-green-700 font-medium">
+                        <span>🏷️</span>
+                        <span id="promo-name-${rowIndex}">Promo Otomatis: -</span>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer mt-1 sm:mt-0">
+                        <input type="hidden" name="items[${rowIndex}][apply_item_promo]" value="0">
+                        <input type="checkbox" name="items[${rowIndex}][apply_item_promo]" id="apply-promo-${rowIndex}" value="1" checked onchange="calculateFinancials()"
+                            class="rounded border-gray-300 text-[#2B7A78] focus:ring-[#2B7A78]">
+                        <span class="text-gray-600 font-medium">Terapkan Diskon Menu</span>
+                    </label>
+                </div>
+            `;
+
+            container.appendChild(rowDiv);
+            calculateFinancials();
+        }
+
+        function removeItemRow(index) {
+            const rows = document.querySelectorAll('.item-row');
+            if (rows.length <= 1) {
+                Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Minimal harus ada 1 menu dalam pesanan.' });
+                return;
+            }
+            const targetRow = document.getElementById(`item-row-${index}`);
+            if (targetRow) {
+                targetRow.remove();
+                calculateFinancials();
+            }
+        }
+
+        function updateItemPromoBanner(rowIndex) {
+            const rowDiv = document.getElementById(`item-row-${rowIndex}`);
+            if (!rowDiv) return;
+
+            const selectEl = rowDiv.querySelector('.item-select');
+            const opt = selectEl.selectedOptions[0];
+            const banner = document.getElementById(`promo-banner-${rowIndex}`);
+            const promoNameSpan = document.getElementById(`promo-name-${rowIndex}`);
+
+            if (!opt || !opt.value) {
+                banner.classList.add('hidden');
+                return;
+            }
+
+            const promoData = JSON.parse(opt.dataset.promo || 'null');
+            const isOnlineChannel = (document.getElementById('name').value.trim() === 'Pesanan Online');
+
+            if (promoData && promoData.is_active) {
+                let eligible = true;
+                if (promoData.channel_scope === 'online_only' && !isOnlineChannel) eligible = false;
+                if (promoData.channel_scope === 'offline_only' && isOnlineChannel) eligible = false;
+
+                if (eligible) {
+                    let discText = promoData.discount_type === 'percent'
+                        ? `${promoData.discount_value}%`
+                        : formatRupiah(promoData.discount_value);
+                    promoNameSpan.innerText = `${promoData.name} (Diskon ${discText} / porsi)`;
+                    banner.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            banner.classList.add('hidden');
+        }
+
+        function onItemSelect(rowIndex) {
+            updateItemPromoBanner(rowIndex);
+            calculateFinancials();
+        }
+
+        function calculateFinancials() {
+            const jenisPesanan = document.getElementById('name').value.trim();
+            const isOnlineChannel = (jenisPesanan === 'Pesanan Online');
+
+            const sourceSelect = document.getElementById('source_id');
+            const sourceOpt = sourceSelect.selectedOptions[0];
+            const commissionPercent = (sourceOpt && sourceOpt.value) ? parseFloat(sourceOpt.dataset.commission || '0') : 0;
+
+            let grossAmount = 0;
+            let itemDiscountTotal = 0;
+
+            const rows = document.querySelectorAll('.item-row');
+            rows.forEach(row => {
+                const selectEl = row.querySelector('.item-select');
+                const qtyInput = row.querySelector('.item-qty');
+                const subtotalSpan = row.querySelector('.row-subtotal');
+                const applyPromoCheckbox = row.querySelector('input[type="checkbox"]');
+
+                if (!selectEl || !selectEl.value) {
+                    subtotalSpan.innerText = 'Rp 0';
+                    return;
+                }
+
+                const opt = selectEl.selectedOptions[0];
+                const originalPrice = parseInt(opt.dataset.price || '0');
+                const quantity = Math.max(1, parseInt(qtyInput.value || '1'));
+                const promo = JSON.parse(opt.dataset.promo || 'null');
+
+                let unitDiscount = 0;
+
+                if (promo && promo.is_active && (!applyPromoCheckbox || applyPromoCheckbox.checked)) {
+                    let eligible = true;
+                    if (promo.channel_scope === 'online_only' && !isOnlineChannel) eligible = false;
+                    if (promo.channel_scope === 'offline_only' && isOnlineChannel) eligible = false;
+
+                    if (eligible) {
+                        if (promo.discount_type === 'nominal') {
+                            unitDiscount = Math.min(parseInt(promo.discount_value), originalPrice);
                         } else {
-                            removeButton.style.display =
-                                'inline-block'; // Tampilkan tombol hapus jika ada lebih dari satu item
+                            let raw = Math.round(originalPrice * (parseFloat(promo.discount_value) / 100));
+                            if (promo.max_discount) {
+                                raw = Math.min(raw, parseInt(promo.max_discount));
+                            }
+                            unitDiscount = Math.min(raw, originalPrice);
                         }
                     }
-                });
-            };
+                }
 
-            // Menambahkan event listeners untuk item yang sudah ada
-            document.querySelectorAll('.item-row').forEach(addEventListeners);
+                const finalPrice = Math.max(0, originalPrice - unitDiscount);
+                const subtotal = finalPrice * quantity;
 
-            // Periksa tombol hapus ketika pertama kali dimuat
-            toggleRemoveButtonVisibility();
+                grossAmount += (originalPrice * quantity);
+                itemDiscountTotal += (unitDiscount * quantity);
 
-            calculateTotal(); // Perhitungan total awal
-        });
+                subtotalSpan.innerText = formatRupiah(subtotal);
+            });
 
+            const subtotalAfterItemPromo = Math.max(0, grossAmount - itemDiscountTotal);
 
-        // Fungsi untuk toggle dropdown kategori
-        function dropdownKategori() {
-            const dropdownKategoriMenu = document.getElementById('dropdownKategoriMenu');
-            dropdownKategoriMenu.classList.toggle('hidden');
+            // Hitung Voucher Platform
+            const promoSelect = document.getElementById('platform_promo_id');
+            const promoOpt = promoSelect.selectedOptions[0];
+            let platformVoucherTotal = 0;
+            let platformMerchantShare = 0;
+            let platformAppSubsidy = 0;
+
+            if (promoOpt && promoOpt.value) {
+                const type = promoOpt.dataset.type;
+                const val = parseFloat(promoOpt.dataset.val || '0');
+                const max = promoOpt.dataset.max ? parseFloat(promoOpt.dataset.max) : null;
+                const sharePercent = parseFloat(promoOpt.dataset.share || '0');
+
+                if (type === 'nominal') {
+                    platformVoucherTotal = Math.min(val, subtotalAfterItemPromo);
+                } else {
+                    let raw = Math.round(subtotalAfterItemPromo * (val / 100));
+                    if (max) raw = Math.min(raw, max);
+                    platformVoucherTotal = Math.min(raw, subtotalAfterItemPromo);
+                }
+
+                platformMerchantShare = Math.round(platformVoucherTotal * (sharePercent / 100));
+                platformAppSubsidy = Math.max(0, platformVoucherTotal - platformMerchantShare);
+            }
+
+            // Komisi Platform & Net Payout
+            const commissionAmount = Math.round(subtotalAfterItemPromo * (commissionPercent / 100));
+            const customerPaidAmount = Math.max(0, subtotalAfterItemPromo - platformVoucherTotal);
+            const netPayout = Math.max(0, subtotalAfterItemPromo - platformMerchantShare - commissionAmount);
+
+            // Render ke tampilan
+            document.getElementById('dispGross').innerText = formatRupiah(grossAmount);
+            document.getElementById('dispItemDiscount').innerText = '- ' + formatRupiah(itemDiscountTotal);
+            document.getElementById('dispSubtotalAfterItemPromo').innerText = formatRupiah(subtotalAfterItemPromo);
+
+            const rowPlatformVoucher = document.getElementById('rowPlatformVoucher');
+            if (platformVoucherTotal > 0) {
+                rowPlatformVoucher.classList.remove('hidden');
+                document.getElementById('dispPlatformVoucher').innerText = '- ' + formatRupiah(platformVoucherTotal);
+                document.getElementById('dispMerchantShare').innerText = '- ' + formatRupiah(platformMerchantShare);
+                document.getElementById('dispAppSubsidy').innerText = formatRupiah(platformAppSubsidy);
+            } else {
+                rowPlatformVoucher.classList.add('hidden');
+            }
+
+            const rowCustomerPaid = document.getElementById('rowCustomerPaid');
+            if (isOnlineChannel) {
+                rowCustomerPaid.classList.remove('hidden');
+                document.getElementById('dispCustomerPaid').innerText = formatRupiah(customerPaidAmount);
+            } else {
+                rowCustomerPaid.classList.add('hidden');
+            }
+
+            const rowCommission = document.getElementById('rowCommission');
+            if (commissionPercent > 0) {
+                rowCommission.classList.remove('hidden');
+                document.getElementById('labelCommission').innerText = `Komisi Platform (${commissionPercent}%):`;
+                document.getElementById('dispCommission').innerText = '- ' + formatRupiah(commissionAmount);
+            } else {
+                rowCommission.classList.add('hidden');
+            }
+
+            document.getElementById('dispNetPayout').innerText = formatRupiah(netPayout);
+
+            calculateChange();
         }
 
-        // Menutup dropdown ketika klik di luar
-        document.addEventListener("click", function(event) {
-            const dropdownKategoriMenu = document.getElementById("dropdownKategoriMenu");
-            const dropdownKategoriButton = document.getElementById("dropdownKategoriButton");
+        function calculateChange() {
+            const paidInput = document.getElementById('paid_amount');
+            const changeDiv = document.getElementById('changeContainer');
+            const dispChange = document.getElementById('dispChange');
+            const hiddenChange = document.getElementById('change_amount');
 
-            if (!dropdownKategoriMenu.contains(event.target) && !dropdownKategoriButton.contains(event.target)) {
-                dropdownKategoriMenu.classList.add("hidden");
+            const jenisPesanan = document.getElementById('name').value.trim();
+            const targetAmount = (jenisPesanan === 'Pesanan Offline')
+                ? parseInt(document.getElementById('dispNetPayout').innerText.replace(/[^0-9]/g, '') || '0')
+                : parseInt(document.getElementById('dispCustomerPaid').innerText.replace(/[^0-9]/g, '') || '0');
+
+            const paidVal = parseInt(paidInput.value || '0');
+
+            if (paidInput.value && paidVal >= targetAmount) {
+                const change = paidVal - targetAmount;
+                dispChange.innerText = formatRupiah(change);
+                hiddenChange.value = change;
+                changeDiv.classList.remove('hidden');
+            } else {
+                dispChange.innerText = 'Rp 0';
+                hiddenChange.value = 0;
+                changeDiv.classList.add('hidden');
             }
-        });
-
-        // Fungsi untuk toggle dropdown pemasukkan
-        function dropdownPemasukkan() {
-            const dropdownPemasukkanMenu = document.getElementById('dropdownPemasukkanMenu');
-            dropdownPemasukkanMenu.classList.toggle('hidden');
         }
 
-        // Menutup dropdown ketika klik di luar
-        document.addEventListener("click", function(event) {
-            const dropdownPemasukkanMenu = document.getElementById("dropdownPemasukkanMenu");
-            const dropdownPemasukkanButton = document.getElementById("dropdownPemasukkanButton");
-
-            if (!dropdownPemasukkanMenu.contains(event.target) && !dropdownPemasukkanButton.contains(event
-                    .target)) {
-                dropdownPemasukkanMenu.classList.add("hidden");
-            }
-        });
-
-        // Fungsi untuk toggle dropdown laporan
-        function dropdownLaporan() {
-            const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');
-            dropdownLaporanMenu.classList.toggle('hidden');
+        function resetFormState() {
+            setTimeout(() => {
+                document.getElementById('itemsContainer').innerHTML = '';
+                rowCounter = 0;
+                addItemRow();
+                onChannelChange();
+            }, 50);
         }
-
-        // Menutup dropdown ketika klik di luar
-        document.addEventListener("click", function(event) {
-            const dropdownLaporanMenu = document.getElementById("dropdownLaporanMenu");
-            const dropdownLaporanButton = document.getElementById("dropdownLaporanButton");
-
-            if (!dropdownLaporanMenu.contains(event.target) && !dropdownLaporanButton.contains(event.target)) {
-                dropdownLaporanMenu.classList.add("hidden");
-            }
-        });
     </script>
 </x-app-layout>

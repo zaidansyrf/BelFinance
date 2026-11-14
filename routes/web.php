@@ -14,6 +14,8 @@ use App\Http\Controllers\OwnerInfoProfileController;
 use App\Http\Controllers\OwnerLaporanKeuanganController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PlatformPromoController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\SaranUsahaController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SourceController;
@@ -81,6 +83,24 @@ Route::middleware(['auth', 'role:keuangan'])->prefix('keuangan')->group(function
         ->only(['index', 'store', 'edit', 'update', 'destroy']);
     Route::resource('kategori/sumber-keluar', BillController::class)
         ->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+    // Manajemen Promo (Hybrid)
+    Route::prefix('promo')->name('promo.')->group(function () {
+        // Promo Menu Merchant
+        Route::get('/item', [PromoController::class, 'index'])->name('item.index');
+        Route::post('/item', [PromoController::class, 'store'])->name('item.store');
+        Route::put('/item/{promo}', [PromoController::class, 'update'])->name('item.update');
+        Route::patch('/item/{promo}/toggle', [PromoController::class, 'toggle'])->name('item.toggle');
+        Route::delete('/item/{promo}', [PromoController::class, 'destroy'])->name('item.destroy');
+
+        // Promo Platform & Preset Voucher
+        Route::get('/platform', [PlatformPromoController::class, 'index'])->name('platform.index');
+        Route::post('/platform', [PlatformPromoController::class, 'store'])->name('platform.store');
+        Route::put('/platform/{platformPromo}', [PlatformPromoController::class, 'update'])->name('platform.update');
+        Route::patch('/platform/{platformPromo}/toggle', [PlatformPromoController::class, 'toggle'])->name('platform.toggle');
+        Route::delete('/platform/{platformPromo}', [PlatformPromoController::class, 'destroy'])->name('platform.destroy');
+        Route::patch('/platform/source/{source}', [PlatformPromoController::class, 'updateSource'])->name('platform.source-update');
+    });
 });
 
 // ---------------------------------------------------------------------------

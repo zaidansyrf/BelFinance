@@ -38,7 +38,7 @@
                                                     <td class="py-2 px-4 border-b text-black">{{ $bill->name }}</td>
                                                     <td class="flex items-center">
                                                         <a href="{{ route('sumber-keluar.edit', $bill->id) }}"
-                                                            class="btn-primary bg-[#2B7A78] hover:bg-[#205C5D] px-3 py-1 rounded">Edit</a>
+                                                            class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded transition">Edit</a>
                                                         <form action="{{ route('sumber-keluar.destroy', $bill->id) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data {{ $bill->name }}?');"

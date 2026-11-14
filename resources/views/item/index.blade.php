@@ -14,9 +14,9 @@
                 <div class="flex-1 bg-[#D1DDD5] overflow-auto">
                     <div class="sticky justify-between items-center mt-12 px-8">
                         <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Menu</h1>
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-3">
                             <button onclick="openMenuForm()"
-                                class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
+                                class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D] transition">
                                 + <span class="hidden sm:inline">Tambah</span>
                             </button>
                             <form action="{{ route('menu.search') }}" method="GET" class="flex items-center max-w-md">
@@ -75,7 +75,13 @@
                                                     </td>
                                                     <td class="py-2 px-4 border-b text-black">{{ $menu->code }}</td>
                                                     <td class="py-2 px-4 border-b text-black">
-                                                        {{ $menu->name }}
+                                                        <span class="font-medium">{{ $menu->name }}</span>
+                                                        @if ($menu->promo && $menu->promo->is_active)
+                                                            <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded block mt-0.5 w-fit">
+                                                                🏷️ Promo: {{ $menu->promo->name }}
+                                                                ({{ $menu->promo->discount_type === 'percent' ? $menu->promo->discount_value . '%' : 'Rp ' . number_format($menu->promo->discount_value, 0, ',', '.') }})
+                                                            </span>
+                                                        @endif
                                                         @if ($menu->description)
                                                             <p class="text-xs text-gray-500 max-w-xs truncate">{{ $menu->description }}</p>
                                                         @endif
@@ -252,7 +258,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: '{{ session('success') }}',
+                text: @json(session('success')),
                 showConfirmButton: false,
                 timer: 2000
             });
@@ -262,7 +268,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal!',
-                text: '{{ session('error') }}',
+                text: @json(session('error')),
                 showConfirmButton: true
             });
         @endif

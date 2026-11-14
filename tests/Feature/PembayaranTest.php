@@ -113,4 +113,93 @@ class PembayaranTest extends TestCase
         $this->assertSame(0, Income::count());
         $this->assertSame(0, $item->fresh()->quantity);
     }
+
+    public function test_promo_pages_can_be_rendered(): void
+    {
+        $this->actingAs($this->keuangan)
+            ->get(route('promo.item.index'))
+            ->assertOk()
+            ->assertSee('Promo Menu Merchant');
+
+        $this->actingAs($this->keuangan)
+            ->get(route('promo.platform.index'))
+            ->assertOk()
+            ->assertSee('Promo Platform');
+    }
+
+    public function test_hybrid_promo_system_calculates_exact_financial_breakdown(): void
+    {
+        // 1. Setup GoFood: is_online = true, komisi 20%
+        $gofood = Source::factory()->create([
+            'name' => 'GoFood',
+            'is_online' => true,
+            'default_commission_percent' => 20.0,
+        ]);
+
+        // 2. Setup Voucher GoFood Hemat 15rb (Nominal 15.000, Merchant 40%, App 60%)
+        $voucher = \App\Models\PlatformPromo::create([
+            'source_id' => $gofood->id,
+            'name' => 'GoFood Hemat Rp 15.000',
+            'discount_type' => 'nominal',
+            'discount_value' => 15000,
+            'merchant_share_percent' => 40.0,
+            'is_active' => true,
+        ]);
+
+        // 3. Setup Promo Menu: Diskon Rp 5.000/porsi
+        $itemPromo = \App\Models\ItemPromo::create([
+            'name' => 'Harga Coret Menu Baru',
+            'discount_type' => 'nominal',
+            'discount_value' => 5000,
+            'channel_scope' => 'all',
+            'is_active' => true,
+        ]);
+
+        // 4. Setup Menu: Ayam Bakar @ Rp 30.000, terikat ke promo menu di atas
+        $ayamBakar = Item::factory()->create([
+            'name' => 'Ayam Bakar',
+            'price' => 30000,
+            'quantity' => 0,
+            'item_promo_id' => $itemPromo->id,
+        ]);
+
+        // 5. Transaksi: 2 porsi Ayam Bakar via GoFood dengan voucher
+        $this->actingAs($this->keuangan)
+            ->post(route('pembayaran.store'), [
+                'name' => 'Pesanan Online',
+                'source_id' => $gofood->id,
+                'platform_promo_id' => $voucher->id,
+                'items' => [
+                    [
+                        'item_id' => $ayamBakar->id,
+                        'quantity' => 2,
+                        'apply_item_promo' => true,
+                    ],
+                ],
+            ])
+            ->assertRedirect(route('pembayaran.index'));
+
+        $income = Income::sole();
+
+        // Verifikasi hasil sesuai Simulasi Kasus Nyata di Bagian 3 Spesifikasi
+        $this->assertSame(60000, $income->gross_amount, 'Gross amount = 2 x 30.000');
+        $this->assertSame(10000, $income->item_discount_total, 'Total diskon menu = 2 x 5.000');
+        $this->assertSame(50000, $income->subtotalAfterItemPromo(), 'Subtotal setelah diskon menu = 50.000');
+
+        $this->assertSame(15000, $income->platform_promo_total, 'Voucher platform total = 15.000');
+        $this->assertSame(6000, $income->platform_merchant_share, 'Beban voucher merchant 40% = 6.000');
+        $this->assertSame(9000, $income->platform_app_subsidy, 'Subsidi voucher app 60% = 9.000');
+
+        $this->assertSame(35000, $income->customer_paid_amount, 'Dibayar pembeli = 50.000 - 15.000');
+        $this->assertSame(10000, $income->commission_amount, 'Komisi GoFood 20% x 50.000 = 10.000');
+        $this->assertSame(34000, $income->amount, 'Net payout = 50.000 - 6.000 - 10.000');
+
+        // Verifikasi detail baris item
+        $detail = $income->incomeDetails->first();
+        $this->assertSame($itemPromo->id, $detail->item_promo_id);
+        $this->assertSame(30000, $detail->original_price);
+        $this->assertSame(5000, $detail->discount_amount);
+        $this->assertSame(25000, $detail->final_price);
+        $this->assertSame(50000, $detail->subtotal);
+    }
 }

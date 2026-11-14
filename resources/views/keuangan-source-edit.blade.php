@@ -28,6 +28,34 @@
                                                 class="text-black w-full p-2 border border-gray-300 rounded-md"
                                                 name="name" value="{{ $source->name }}" required>
                                         </div>
+
+                                        <!-- Tipe Sumber (Online / Offline) -->
+                                        <div class="mb-4">
+                                            <label for="sourceIsOnline" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Tipe Pesanan
+                                            </label>
+                                            <select id="sourceIsOnline" name="is_online" onchange="toggleCommissionField()"
+                                                class="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2B7A78]"
+                                                required>
+                                                <option value="0" {{ old('is_online', $source->is_online ? '1' : '0') == '0' ? 'selected' : '' }}>Offline</option>
+                                                <option value="1" {{ old('is_online', $source->is_online ? '1' : '0') == '1' ? 'selected' : '' }}>Online</option>
+                                            </select>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Menentukan promo menu &amp; voucher platform yang aktif saat input penjualan.
+                                            </p>
+                                        </div>
+
+                                        <!-- Komisi Platform (%) -->
+                                        <div id="commissionWrapper" class="mb-4 {{ old('is_online', $source->is_online ? '1' : '0') == '1' ? '' : 'hidden' }}">
+                                            <label for="sourceCommission" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Komisi Platform (%) <span class="text-xs text-gray-400">(Opsional)</span>
+                                            </label>
+                                            <input type="number" id="sourceCommission" name="default_commission_percent"
+                                                step="0.01" min="0" max="100"
+                                                value="{{ old('default_commission_percent', $source->default_commission_percent ?? 0) }}"
+                                                class="w-full p-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2B7A78]"
+                                                placeholder="cth. 20">
+                                        </div>
                                         <div class="flex justify-end mt-4">
                                             <a href="{{ route('sumber-masuk.index') }}"
                                                 class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</a>
@@ -47,6 +75,20 @@
         </div>
     </div>
     <script>
+        function toggleCommissionField() {
+            const select = document.getElementById('sourceIsOnline');
+            const wrapper = document.getElementById('commissionWrapper');
+            const commInput = document.getElementById('sourceCommission');
+            if (!select || !wrapper) return;
+
+            if (select.value === '1') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+                if (commInput) commInput.value = '0';
+            }
+        }
+
         // Open Sumber Form
         function openSourceForm() {
             const sourceOverlay = document.getElementById('sourceOverlay');

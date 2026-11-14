@@ -117,17 +117,43 @@
         <hr>
         <table>
             @foreach ($income->incomeDetails as $detail)
+                @php
+                    $finalPrice = $detail->final_price ?: ($detail->subtotal / max($detail->quantity, 1));
+                @endphp
                 <tr>
-                    <td colspan="2">{{ $detail->item->name ?? 'Menu dihapus' }}</td>
+                    <td colspan="2">
+                        {{ $detail->item->name ?? 'Menu dihapus' }}
+                        @if ($detail->discount_amount > 0)
+                            <span style="font-size: 11px; color: #555;">(Diskon -{{ number_format($detail->discount_amount, 0, ',', '.') }})</span>
+                        @endif
+                    </td>
                 </tr>
                 <tr>
-                    <td class="muted">{{ $detail->quantity }} x {{ number_format($detail->subtotal / max($detail->quantity, 1), 0, ',', '.') }}</td>
+                    <td class="muted">{{ $detail->quantity }} x {{ number_format($finalPrice, 0, ',', '.') }}</td>
                     <td class="right">{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </table>
         <hr>
         <table>
+            @if ($income->item_discount_total > 0 || $income->platform_promo_total > 0)
+                <tr>
+                    <td>Subtotal Kotor</td>
+                    <td class="right">{{ number_format($income->gross_amount ?: $income->amount, 0, ',', '.') }}</td>
+                </tr>
+            @endif
+            @if ($income->item_discount_total > 0)
+                <tr>
+                    <td>Diskon Menu</td>
+                    <td class="right">-{{ number_format($income->item_discount_total, 0, ',', '.') }}</td>
+                </tr>
+            @endif
+            @if ($income->platform_promo_total > 0)
+                <tr>
+                    <td>Voucher ({{ $income->platformPromo->name ?? 'App' }})</td>
+                    <td class="right">-{{ number_format($income->platform_promo_total, 0, ',', '.') }}</td>
+                </tr>
+            @endif
             <tr class="bold big">
                 <td>TOTAL</td>
                 <td class="right">Rp {{ number_format($income->amount, 0, ',', '.') }}</td>
@@ -136,7 +162,7 @@
                 <td>Bayar ({{ $income->source->name ?? '-' }})</td>
                 <td class="right">{{ number_format($income->paid_amount ?? $income->amount, 0, ',', '.') }}</td>
             </tr>
-            @if ($income->change_amount !== null)
+            @if ($income->change_amount !== null && $income->change_amount > 0)
                 <tr>
                     <td>Kembali</td>
                     <td class="right">{{ number_format($income->change_amount, 0, ',', '.') }}</td>

@@ -21,7 +21,7 @@ class ItemController extends Controller
     // method untuk menampilkan data
     public function index()
     {
-        $items = DB::table('items')->orderBy('code', 'asc')->paginate(10);
+        $items = DB::table('items')->orderBy('code', 'asc')->paginate(10)->appends(request()->query());
 
         // Pie chart data
         $topItems = Item::orderByDesc('quantity')->take(5)->get();
@@ -41,14 +41,15 @@ class ItemController extends Controller
     {
         $search = $request->input('search');
 
-        $items = Item::query()
+        $items = Item::with('promo')
             ->where(function ($query) use ($search) {
                 $query->where('code', 'LIKE', "%{$search}%")
                     ->orWhere('name', 'LIKE', "%{$search}%")
                     ->orWhere('price', 'LIKE', "%{$search}%");
             })
             ->orderBy('code', 'asc')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends(['search' => $search]);
 
         $topItems = Item::orderByDesc('quantity')->take(5)->get();
         $chartData = [

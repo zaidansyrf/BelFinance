@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Models\Item;
+use App\Models\ItemPromo;
+use App\Models\PlatformPromo;
 use App\Models\Shift;
 use App\Models\Source;
 use App\Services\PenjualanService;
@@ -25,12 +27,28 @@ class KasirController extends Controller
             return $this->redirectBukaShift();
         }
 
-        $items = Item::orderBy('name')->get();
-        $sources = Source::orderBy('id')->get();
+        $items = Item::with('promo')->orderBy('name')->get();
+        $sources = Source::with(['platformPromos' => function ($query) {
+            $query->where('is_active', true);
+        }])->orderBy('id')->get();
+
+        // Ambil daftar promo menu yang sedang aktif saat ini
+        $activeItemPromos = ItemPromo::where('is_active', true)
+            ->where(function ($q) {
+                $now = now();
+                $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
+            })
+            ->where(function ($q) {
+                $now = now();
+                $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
+            })
+            ->withCount('items')
+            ->get();
 
         return view('kasir.pos', [
             'items' => $items,
             'sources' => $sources,
+            'activeItemPromos' => $activeItemPromos,
             'jenisPesanan' => self::JENIS_PESANAN,
             'cashSourceIds' => $sources->filter(fn ($s) => $this->isCash($s))->pluck('id')->values(),
         ]);
@@ -45,6 +63,7 @@ class KasirController extends Controller
         $data = $request->validate([
             'name' => ['required', Rule::in(self::JENIS_PESANAN)],
             'source_id' => 'required|exists:sources,id',
+            'platform_promo_id' => 'nullable|exists:platform_promos,id',
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1|max:999',
@@ -94,9 +113,16 @@ class KasirController extends Controller
             ->limit(5)
             ->get(['items.name', DB::raw('SUM(income_details.quantity) as jumlah'), DB::raw('SUM(income_details.subtotal) as total')]);
 
+        $totalDiskonMenuHariIni = (int) $penjualanHariIni->sum('item_discount_total');
+        $totalDiskonVoucherHariIni = (int) $penjualanHariIni->sum('platform_promo_total');
+        $totalDiskonHariIni = $totalDiskonMenuHariIni + $totalDiskonVoucherHariIni;
+
         return view('kasir.beranda', [
             'totalPenjualan' => $penjualanHariIni->sum('amount'),
             'jumlahTransaksi' => $penjualanHariIni->count(),
+            'totalDiskonHariIni' => $totalDiskonHariIni,
+            'totalDiskonMenuHariIni' => $totalDiskonMenuHariIni,
+            'totalDiskonVoucherHariIni' => $totalDiskonVoucherHariIni,
             'perSumber' => $penjualanHariIni->groupBy(fn ($i) => $i->source->name ?? '-')
                 ->map(fn ($rows) => ['jumlah' => $rows->count(), 'total' => $rows->sum('amount')])
                 ->sortByDesc('total'),

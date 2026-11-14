@@ -4,45 +4,45 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IncomeDetail extends Model
 {
     use HasFactory;
+
     protected $table = 'income_details';
+
     protected $fillable = [
         'income_id',
         'item_id',
+        'item_promo_id',
         'quantity',
-        'item_discount_type',
-        'item_discount_value',
+        'original_price',
+        'discount_amount',
+        'final_price',
         'subtotal',
     ];
 
-    /** Nominal diskon per item (sudah × qty) */
-    public function discountAmount(): int
-    {
-        if (! $this->item_discount_type || ! $this->item_discount_value) {
-            return 0;
-        }
-        if ($this->item_discount_type === 'percent') {
-            $hargaSatuan = $this->item && $this->quantity
-                ? ($this->subtotal / $this->quantity)
-                : 0;
-            return (int) round(($this->item_discount_value / 100) * $hargaSatuan);
-        }
-        return (int) $this->item_discount_value;
-    }
+    protected $casts = [
+        'quantity'        => 'integer',
+        'original_price'  => 'integer',
+        'discount_amount' => 'integer',
+        'final_price'     => 'integer',
+        'subtotal'        => 'integer',
+    ];
 
-    public function income()
+    public function income(): BelongsTo
     {
         return $this->belongsTo(Income::class);
-
     }
 
-    public function item()
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
-
     }
 
+    public function promo(): BelongsTo
+    {
+        return $this->belongsTo(ItemPromo::class, 'item_promo_id');
+    }
 }

@@ -5,22 +5,55 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Item extends Model
 {
     use HasFactory;
 
-    // Specify the table name
     protected $table = 'items';
 
-    // Define the fillable columns
-    protected $fillable = ['name', 'description', 'price', 'quantity', 'stock', 'code', 'image'];
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'quantity',
+        'stock',
+        'code',
+        'image',
+        'item_promo_id',
+        'category_id',
+    ];
 
-    // Define the relationship with income details
-    public function incomeDetails()
+    protected $casts = [
+        'price'         => 'integer',
+        'quantity'      => 'integer',
+        'stock'         => 'integer',
+        'item_promo_id' => 'integer',
+    ];
+
+    public function incomeDetails(): HasMany
     {
         return $this->hasMany(IncomeDetail::class);
+    }
+
+    public function promo(): BelongsTo
+    {
+        return $this->belongsTo(ItemPromo::class, 'item_promo_id');
+    }
+
+    /**
+     * Ambil promo yang sedang aktif dan valid untuk menu ini.
+     */
+    public function activePromo(): ?ItemPromo
+    {
+        if ($this->promo && $this->promo->isCurrentlyActive()) {
+            return $this->promo;
+        }
+
+        return null;
     }
 
     // Stok di bawah atau sama dengan angka ini dianggap menipis
@@ -53,7 +86,6 @@ class Item extends Model
 
     /**
      * Inisial nama menu untuk placeholder gambar, mis. "Ayam Bakar" -> "AB".
-     * Awalan kategori berupa singkatan huruf kapital (mis. "KO", "ALC") dilewati.
      */
     protected function initials(): Attribute
     {
@@ -63,7 +95,6 @@ class Item extends Model
                 array_shift($words);
             }
 
-            // Satu kata: ambil dua huruf pertama ("Cumi" -> "CU")
             if (count($words) === 1) {
                 return mb_strtoupper(mb_substr($words[0], 0, 2));
             }
