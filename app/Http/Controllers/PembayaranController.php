@@ -56,7 +56,7 @@ class PembayaranController extends Controller
     {
         $data = $request->validate([
             'name'                     => 'required|string|max:255',
-            'date'                     => 'nullable|date',
+            'date'                     => 'nullable|date|before_or_equal:today',
             'description'              => 'nullable|string',
             'source_id'                => 'required|exists:sources,id',
             'shift_id'                 => 'nullable|exists:shifts,id',

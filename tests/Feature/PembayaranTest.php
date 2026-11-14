@@ -68,6 +68,27 @@ class PembayaranTest extends TestCase
         $this->assertSame('2026-10-25', $income->date->format('Y-m-d'));
     }
 
+    public function test_store_rejects_future_date(): void
+    {
+        $source = Source::factory()->create();
+        $item = Item::factory()->create(['price' => 15000, 'quantity' => 0]);
+
+        $futureDate = now()->addDays(2)->format('Y-m-d');
+
+        $this->actingAs($this->keuangan)
+            ->post(route('pembayaran.store'), [
+                'name' => 'Pesanan Offline',
+                'date' => $futureDate,
+                'source_id' => $source->id,
+                'items' => [
+                    ['item_id' => $item->id, 'quantity' => 1],
+                ],
+            ])
+            ->assertSessionHasErrors('date');
+
+        $this->assertSame(0, Income::count());
+    }
+
     public function test_index_lists_only_payments(): void
     {
         Income::factory()->payment()->create(['name' => 'Pesanan Online']);

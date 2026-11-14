@@ -71,7 +71,7 @@ class ExpenseController extends Controller
             'bill_id' => 'required|exists:bills,id',
             'amount' => 'required|numeric|min:1',
             'description' => 'nullable|string|max:255',
-            'date' => 'required|date',
+            'date' => 'required|date|before_or_equal:today',
         ]);
 
         try {
@@ -109,7 +109,7 @@ class ExpenseController extends Controller
             'bill_id' => 'required|exists:bills,id',
             'amount' => 'required|numeric|min:1',
             'description' => 'nullable|string|max:255',
-            'date' => 'required|date',
+            'date' => 'required|date|before_or_equal:today',
         ]);
 
         try {

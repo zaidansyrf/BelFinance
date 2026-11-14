@@ -23,7 +23,7 @@ class UangMasukController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'source_id' => 'required|exists:sources,id',
-            'date' => 'required|date',
+            'date' => 'required|date|before_or_equal:today',
             'amount' => 'required|integer',
             'description' => 'nullable|string',
         ]);

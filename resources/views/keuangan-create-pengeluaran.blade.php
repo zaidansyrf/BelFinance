@@ -76,6 +76,7 @@
                                                     class="block text-sm font-medium text-black form-label">Tanggal</label>
                                                 <input type="date" name="date" id="date"
                                                     class="text-gray-500 w-full p-2 border border-gray-300 rounded-md form-control"
+                                                    max="{{ date('Y-m-d') }}"
                                                     required>
                                             </div>
 

@@ -20,6 +20,7 @@ use Carbon\Carbon;
                                 <div class="relative">
                                     <input type="date" name="tanggal_awal" id="tanggal_awal"
                                         class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 bg-white"
+                                        max="{{ date('Y-m-d') }}"
                                         value="{{ request('tanggal_awal') }}">
                                 </div>
                             </div>
@@ -29,6 +30,7 @@ use Carbon\Carbon;
                                 <div class="relative">
                                     <input type="date" name="tanggal_akhir" id="tanggal_akhir"
                                         class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 bg-white"
+                                        max="{{ date('Y-m-d') }}"
                                         value="{{ request('tanggal_akhir') }}">
                                 </div>
                             </div>

@@ -298,7 +298,7 @@
                                                 <th class="py-3 px-4">Sumber / Metode</th>
                                                 <th class="py-3 px-4 text-right" id="th-income">Pemasukan</th>
                                                 <th class="py-3 px-4 text-right" id="th-expense">Pengeluaran</th>
-                                                <th class="py-3 px-4 text-center">Tanggal</th>
+                                                <th class="py-3 px-4 text-center">Waktu</th>
                                                 <th class="py-3 px-4">Keterangan</th>
                                             </tr>
                                         </thead>

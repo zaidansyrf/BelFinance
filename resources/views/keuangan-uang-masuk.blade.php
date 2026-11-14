@@ -134,7 +134,7 @@
                             <div class="mb-4">
                                 <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
                                 <input type="date" name="date" id="tanggal"
-                                    class="w-full p-2 border border-gray-300 rounded-md" required>
+                                    class="w-full p-2 border border-gray-300 rounded-md" max="{{ date('Y-m-d') }}" required>
                             </div>
                             <div class="mb-4">
                                 <label for="nominal" class="block text-sm font-medium text-gray-700">Nominal</label>
