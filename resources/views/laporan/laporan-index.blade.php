@@ -25,9 +25,9 @@
                 @include('layouts.navbar')
 
                 <!-- main content -->
-                <div class="flex-1 bg-[#D1DDD5] overflow-auto px-4 sm:px-8 py-6 space-y-6">
+                <div class="flex-1 bg-[#D1DDD5] overflow-auto px-4 sm:px-8 pt-6 pb-12 space-y-6">
 
-                    {{-- 1. Hero Header & Quick Actions --}}
+                    {{-- Hero Header & Quick Actions --}}
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <div class="flex items-center gap-2.5">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    {{-- 2. Card Filter Periode Transaksi --}}
+                    {{-- Card Filter Periode Transaksi --}}
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5 sm:p-6">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-4">
                             <div>
@@ -134,7 +134,7 @@
                         </form>
                     </div>
 
-                    {{-- 3. Tabel Rincian Laporan Keuangan --}}
+                    {{-- Tabel Rincian Laporan Keuangan --}}
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
                         {{-- Header Tabel & Status Periode --}}
                         <div class="p-5 sm:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -161,137 +161,138 @@
                                 Menampilkan <span class="font-semibold text-gray-800">{{ $laporan->firstItem() ?? 0 }}</span> - <span class="font-semibold text-gray-800">{{ $laporan->lastItem() ?? 0 }}</span> dari <span class="font-semibold text-gray-800">{{ $laporan->total() }}</span> transaksi
                             </div>
                         </div>
+                        <div class="card-body">
+                            {{-- Tabel Transaksi --}}
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-sm">
+                                        <thead>
+                                            <tr class="text-xs uppercase tracking-wider text-gray-500 bg-slate-50/80 border-b border-slate-100">
+                                                <th class="py-3.5 px-4 font-semibold w-14 text-center">No</th>
+                                                <th class="py-3.5 px-4 font-semibold">Nama Transaksi</th>
+                                                <th class="py-3.5 px-4 font-semibold">Sumber</th>
+                                                <th class="py-3.5 px-4 font-semibold text-right">Pemasukan</th>
+                                                <th class="py-3.5 px-4 font-semibold text-right">Pengeluaran</th>
+                                                <th class="py-3.5 px-4 font-semibold text-center">Tanggal</th>
+                                                <th class="py-3.5 px-4 font-semibold">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100 text-gray-800">
+                                            @forelse ($laporan as $index => $item)
+                                                <tr class="hover:bg-slate-50/70 transition">
+                                                    {{-- No --}}
+                                                    <td class="py-3.5 px-4 text-center text-xs font-medium text-gray-400">
+                                                        {{ $laporan->firstItem() + $index }}
+                                                    </td>
 
-                        {{-- Tabel Transaksi --}}
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead>
-                                    <tr class="text-xs uppercase tracking-wider text-gray-500 bg-slate-50/80 border-b border-slate-100">
-                                        <th class="py-3.5 px-4 font-semibold w-14 text-center">No</th>
-                                        <th class="py-3.5 px-4 font-semibold">Nama Transaksi</th>
-                                        <th class="py-3.5 px-4 font-semibold">Sumber</th>
-                                        <th class="py-3.5 px-4 font-semibold text-right">Pemasukan</th>
-                                        <th class="py-3.5 px-4 font-semibold text-right">Pengeluaran</th>
-                                        <th class="py-3.5 px-4 font-semibold text-center">Tanggal</th>
-                                        <th class="py-3.5 px-4 font-semibold">Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 text-gray-800">
-                                    @forelse ($laporan as $index => $item)
-                                        <tr class="hover:bg-slate-50/70 transition">
-                                            {{-- No --}}
-                                            <td class="py-3.5 px-4 text-center text-xs font-medium text-gray-400">
-                                                {{ $laporan->firstItem() + $index }}
-                                            </td>
-
-                                            {{-- Nama Transaksi & Jenis Badge --}}
-                                            <td class="py-3.5 px-4">
-                                                <div class="flex items-center gap-2.5">
-                                                    @if ($item->jenis == 'pemasukan')
-                                                        <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs shrink-0 font-bold">
-                                                            +
-                                                        </span>
-                                                        <div>
-                                                            <p class="font-semibold text-gray-900 leading-tight">
-                                                                {{ $item->nama ?: 'Pemasukan Kas' }}
-                                                            </p>
-                                                            <span class="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">
-                                                                Pemasukan
-                                                            </span>
+                                                    {{-- Nama Transaksi & Jenis Badge --}}
+                                                    <td class="py-3.5 px-4">
+                                                        <div class="flex items-center gap-2.5">
+                                                            @if ($item->jenis == 'pemasukan')
+                                                                <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs shrink-0 font-bold">
+                                                                    +
+                                                                </span>
+                                                                <div>
+                                                                    <p class="font-semibold text-gray-900 leading-tight">
+                                                                        {{ $item->nama ?: 'Pemasukan Kas' }}
+                                                                    </p>
+                                                                    <span class="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">
+                                                                        Pemasukan
+                                                                    </span>
+                                                                </div>
+                                                            @else
+                                                                <span class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xs shrink-0 font-bold">
+                                                                    -
+                                                                </span>
+                                                                <div>
+                                                                    <p class="font-semibold text-gray-900 leading-tight">
+                                                                        {{ $item->nama ?: 'Pengeluaran Kas' }}
+                                                                    </p>
+                                                                    <span class="text-[10px] text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded font-medium">
+                                                                        Pengeluaran
+                                                                    </span>
+                                                                </div>
+                                                            @endif
                                                         </div>
-                                                    @else
-                                                        <span class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xs shrink-0 font-bold">
-                                                            -
-                                                        </span>
-                                                        <div>
-                                                            <p class="font-semibold text-gray-900 leading-tight">
-                                                                {{ $item->nama ?: 'Pengeluaran Kas' }}
-                                                            </p>
-                                                            <span class="text-[10px] text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded font-medium">
-                                                                Pengeluaran
+                                                    </td>
+
+                                                    {{-- Sumber --}}
+                                                    <td class="py-3.5 px-4">
+                                                        <div class="flex items-center gap-1.5">
+                                                            <span class="font-medium text-gray-700">
+                                                                {{ $item->source->name ?? '-' }}
                                                             </span>
+                                                            @if (isset($item->source) && $item->source->is_online)
+                                                                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                                    Online
+                                                                </span>
+                                                            @endif
                                                         </div>
-                                                    @endif
-                                                </div>
-                                            </td>
+                                                    </td>
 
-                                            {{-- Sumber --}}
-                                            <td class="py-3.5 px-4">
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="font-medium text-gray-700">
-                                                        {{ $item->source->name ?? '-' }}
-                                                    </span>
-                                                    @if (isset($item->source) && $item->source->is_online)
-                                                        <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                            Online
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </td>
+                                                    {{-- Kolom Pemasukan --}}
+                                                    <td class="py-3.5 px-4 text-right">
+                                                        @if ($item->jenis == 'pemasukan')
+                                                            <span class="font-bold text-emerald-700">
+                                                                +Rp {{ number_format($item->jumlah, 0, ',', '.') }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-gray-300">-</span>
+                                                        @endif
+                                                    </td>
 
-                                            {{-- Kolom Pemasukan --}}
-                                            <td class="py-3.5 px-4 text-right">
-                                                @if ($item->jenis == 'pemasukan')
-                                                    <span class="font-bold text-emerald-700">
-                                                        +Rp {{ number_format($item->jumlah, 0, ',', '.') }}
-                                                    </span>
-                                                @else
-                                                    <span class="text-gray-300">-</span>
-                                                @endif
-                                            </td>
+                                                    {{-- Kolom Pengeluaran --}}
+                                                    <td class="py-3.5 px-4 text-right">
+                                                        @if ($item->jenis == 'pengeluaran')
+                                                            <span class="font-bold text-rose-600">
+                                                                -Rp {{ number_format($item->jumlah, 0, ',', '.') }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-gray-300">-</span>
+                                                        @endif
+                                                    </td>
 
-                                            {{-- Kolom Pengeluaran --}}
-                                            <td class="py-3.5 px-4 text-right">
-                                                @if ($item->jenis == 'pengeluaran')
-                                                    <span class="font-bold text-rose-600">
-                                                        -Rp {{ number_format($item->jumlah, 0, ',', '.') }}
-                                                    </span>
-                                                @else
-                                                    <span class="text-gray-300">-</span>
-                                                @endif
-                                            </td>
+                                                    {{-- Tanggal --}}
+                                                    <td class="py-3.5 px-4 text-center text-xs text-gray-500 whitespace-nowrap">
+                                                        {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d M Y') }}
+                                                    </td>
 
-                                            {{-- Tanggal --}}
-                                            <td class="py-3.5 px-4 text-center text-xs text-gray-500 whitespace-nowrap">
-                                                {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d M Y') }}
-                                            </td>
+                                                    {{-- Keterangan --}}
+                                                    <td class="py-3.5 px-4 text-xs text-gray-500 max-w-xs truncate">
+                                                        {{ $item->keterangan ?: '-' }}
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="7" class="py-12 text-center">
+                                                        <div class="flex flex-col items-center justify-center">
+                                                            <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl mb-3 text-gray-400">
+                                                                📄
+                                                            </div>
+                                                            <p class="text-base font-semibold text-gray-700">Tidak ada catatan transaksi</p>
+                                                            <p class="text-xs text-gray-400 mt-1">
+                                                                Tidak ditemukan transaksi pemasukan atau pengeluaran pada rentang tanggal yang dipilih.
+                                                            </p>
+                                                            @if(request('tanggal_awal') || request('tanggal_akhir'))
+                                                                <a href="{{ url()->current() }}"
+                                                                    class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                                                                    Reset Filter
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                            {{-- Keterangan --}}
-                                            <td class="py-3.5 px-4 text-xs text-gray-500 max-w-xs truncate">
-                                                {{ $item->keterangan ?: '-' }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7" class="py-12 text-center">
-                                                <div class="flex flex-col items-center justify-center">
-                                                    <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl mb-3 text-gray-400">
-                                                        📄
-                                                    </div>
-                                                    <p class="text-base font-semibold text-gray-700">Tidak ada catatan transaksi</p>
-                                                    <p class="text-xs text-gray-400 mt-1">
-                                                        Tidak ditemukan transaksi pemasukan atau pengeluaran pada rentang tanggal yang dipilih.
-                                                    </p>
-                                                    @if(request('tanggal_awal') || request('tanggal_akhir'))
-                                                        <a href="{{ url()->current() }}"
-                                                            class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                                                            Reset Filter
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                {{-- Pagination Bar --}}
+                                @if ($laporan->hasPages())
+                                    <div class="p-4 sm:p-5 border-t border-gray-100 bg-slate-50/50">
+                                        {{ $laporan->appends(request()->except('page'))->links() }}
+                                    </div>
+                                @endif
                         </div>
-
-                        {{-- Pagination Bar --}}
-                        @if ($laporan->hasPages())
-                            <div class="p-4 sm:p-5 border-t border-gray-100 bg-slate-50/50">
-                                {{ $laporan->appends(request()->except('page'))->links() }}
-                            </div>
-                        @endif
                     </div>
 
                 </div>

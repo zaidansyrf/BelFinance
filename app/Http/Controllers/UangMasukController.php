@@ -8,15 +8,9 @@ use Illuminate\Http\Request;
 
 class UangMasukController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $income = Income::with(['source'])
-                        ->orderBy('created_at', 'desc') //sorting berdasar data masuk
-                        ->paginate(10); // tampil 10 data
-
-        $sources = Source::all();
-
-        return view('keuangan-uang-masuk', compact('income', 'sources'));
+        return $this->search($request);
     }
     public function store(Request $request)
     {
@@ -49,8 +43,12 @@ class UangMasukController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
+        $sourceId = $request->input('source_id');
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $sort = $request->input('sort', 'desc');
 
-        $query = Income::with('source')->orderBy('created_at', 'desc');
+        $query = Income::with('source');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -64,7 +62,25 @@ class UangMasukController extends Controller
             });
         }
 
-        $income = $query->paginate(10)->appends(['search' => $search]);
+        if ($sourceId) {
+            $query->where('source_id', $sourceId);
+        }
+
+        if ($tanggalAwal) {
+            $query->whereDate('date', '>=', $tanggalAwal);
+        }
+
+        if ($tanggalAkhir) {
+            $query->whereDate('date', '<=', $tanggalAkhir);
+        }
+
+        if ($sort === 'asc' || $sort === 'terlama') {
+            $query->orderBy('date', 'asc')->orderBy('id', 'asc');
+        } else {
+            $query->orderBy('date', 'desc')->orderBy('id', 'desc');
+        }
+
+        $income = $query->paginate(10)->withQueryString();
         $sources = Source::all();
 
         return view('keuangan-uang-masuk', compact('income', 'sources', 'search'));

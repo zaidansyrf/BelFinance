@@ -30,15 +30,50 @@ class PembayaranController extends Controller
         return response()->json($months);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pembayarans = Income::with(['source', 'platformPromo'])
-            ->where('type', 'payment')
-            ->orderBy('date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+        $search = $request->input('search');
+        $sourceId = $request->input('source_id');
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $sort = $request->input('sort', 'desc');
 
-        return view('keuangan-pembayaran', compact('pembayarans'));
+        $query = Income::with(['source', 'platformPromo'])
+            ->where('type', 'payment');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('amount', 'like', "%{$search}%")
+                    ->orWhere('gross_amount', 'like', "%{$search}%")
+                    ->orWhere('date', 'like', "%{$search}%")
+                    ->orWhereHas('source', fn ($s) => $s->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('platformPromo', fn ($p) => $p->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($sourceId) {
+            $query->where('source_id', $sourceId);
+        }
+
+        if ($tanggalAwal) {
+            $query->whereDate('date', '>=', $tanggalAwal);
+        }
+
+        if ($tanggalAkhir) {
+            $query->whereDate('date', '<=', $tanggalAkhir);
+        }
+
+        if ($sort === 'asc' || $sort === 'terlama') {
+            $query->orderBy('date', 'asc')->orderBy('id', 'asc');
+        } else {
+            $query->orderBy('date', 'desc')->orderBy('id', 'desc');
+        }
+
+        $pembayarans = $query->paginate(10)->withQueryString();
+        $sources = Source::all();
+
+        return view('keuangan-pembayaran', compact('pembayarans', 'sources', 'search'));
     }
 
     public function create()
@@ -54,6 +89,10 @@ class PembayaranController extends Controller
 
     public function store(Request $request, PenjualanService $penjualan)
     {
+        if ($request->input('platform_promo_id') === 'null' || $request->input('platform_promo_id') === '0' || empty($request->input('platform_promo_id')) || $request->input('name') !== 'Pesanan Online') {
+            $request->merge(['platform_promo_id' => null]);
+        }
+
         $data = $request->validate([
             'name'                     => 'required|string|max:255',
             'date'                     => 'nullable|date|before_or_equal:today',

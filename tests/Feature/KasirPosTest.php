@@ -376,4 +376,20 @@ class KasirPosTest extends TestCase
         $this->assertSame(0, $income->item_discount_total);
         $this->assertNull($income->incomeDetails->first()->item_promo_id);
     }
+
+    public function test_checkout_handles_null_string_or_offline_platform_promo_id(): void
+    {
+        $response = $this->actingAs($this->kasir)->post(route('kasir.checkout'), [
+            'name' => 'Pesanan Offline',
+            'source_id' => $this->qris->id,
+            'platform_promo_id' => 'null',
+            'items' => [['item_id' => $this->ayam->id, 'quantity' => 1]],
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('incomes', [
+            'name' => 'Pesanan Offline',
+            'platform_promo_id' => null,
+        ]);
+    }
 }

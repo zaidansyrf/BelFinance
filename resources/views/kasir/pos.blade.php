@@ -410,8 +410,9 @@
                                 Voucher Platform Aplikasi
                             </label>
                             <select name="platform_promo_id" id="platform_promo_id" x-model.number="platformPromoId"
+                                :disabled="!isOnline"
                                 class="w-full text-xs rounded-lg border border-gray-300 bg-white p-2 focus:ring-[#468585] focus:border-[#468585]">
-                                <option :value="null">-- Tanpa Voucher Platform --</option>
+                                <option value="">-- Tanpa Voucher Platform --</option>
                                 <template x-for="p in availablePlatformPromos" :key="p.id">
                                     <option :value="p.id" x-text="`${p.name} (${p.discount_type === 'percent' ? p.discount_value + '%' : rupiah(p.discount_value)})`"></option>
                                 </template>

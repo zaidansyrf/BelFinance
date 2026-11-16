@@ -11,7 +11,7 @@
                 @include('layouts.navbar')
                 <!-- main content -->
                 <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-                    <div class="sticky justify-between items-center mt-12 px-8">
+                    <div class="justify-between items-center mt-8 px-4 sm:px-8 pb-12">
                         <div class="mb-4">
                             <!-- Tombol Kembali -->
                             <a href="{{ route('expenses.search') }}"
@@ -21,7 +21,7 @@
                         </div>
                         <div class="container">
                             <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit Pengeluaran</h1>
-                            <div class="card text-primary-content bg-white mt-4 w-full">
+                            <div class="card text-primary-content bg-white mt-4 mb-8 w-full shadow-sm rounded-2xl">
                                 <div class="card-body">
                                     <form action="{{ route('expenses.update', $expense->id) }}" method="POST">
                                         @csrf

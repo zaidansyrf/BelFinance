@@ -12,9 +12,9 @@
 
                 <!-- main content -->
                 <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-                    <div class="sticky justify-between items-center mt-12 px-8">
+                    <div class="justify-between items-center mt-8 px-4 sm:px-8 pb-12">
                         <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Edit Sumber Keluar</h1>
-                        <div class="card text-primary-content bg-white mt-4 w-full">
+                        <div class="card text-primary-content bg-white mt-4 mb-8 w-full shadow-sm rounded-2xl">
                             <div class="card-body">
                                 <div class="overflow-x-auto">
                                     <form action="{{ route('sumber-keluar.update', ['sumber_keluar' => $bills->id]) }}"

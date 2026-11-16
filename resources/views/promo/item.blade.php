@@ -11,7 +11,7 @@
                             <div>
                                 <h1 class="text-2xl font-bold text-[#2B7A78]"> Promo Menu Merchant</h1>
                                 <p class="text-sm text-gray-600 mt-1">
-                                    Atur diskon per porsi menu untuk seluruh saluran atau khusus online/offline.
+                                    Atur diskon per porsi menu untuk seluruh sumber transaksi online/offline.
                                 </p>
                             </div>
                             <button type="button" onclick="openPromoModal()"
@@ -42,7 +42,7 @@
                                         <tr>
                                             <th class="py-3 px-4">Nama Promo</th>
                                             <th class="py-3 px-4">Diskon / Porsi</th>
-                                            <th class="py-3 px-4">Saluran Berlaku</th>
+                                            <th class="py-3 px-4">Sumber Transaksi</th>
                                             <th class="py-3 px-4">Periode</th>
                                             <th class="py-3 px-4">Menu Terdaftar</th>
                                             <th class="py-3 px-4 text-center">Status</th>
@@ -197,11 +197,11 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Batasan Saluran Transaksi *</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Batasan Transaksi *</label>
                         <select name="channel_scope" id="channelScope" required
                             class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
                             <option value="" disabled selected> --- Tidak ada ---</option>
-                            <option value="online_only"> Khusus Saluran Online (GoFood, Grab, dll)</option>
+                            <option value="online_only"> Khusus Online (GoFood, Grab, dll)</option>
                             <option value="offline_only">Khusus Offline </option>
                         </select>
                     </div>

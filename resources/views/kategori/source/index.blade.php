@@ -12,13 +12,13 @@
 
                 <!-- main content -->
                 <div class="flex-1 bg-[#D1DDD5] overflow-auto">
-                    <div class="sticky justify-between items-center mt-12 px-8">
+                    <div class="justify-between items-center mt-8 px-4 sm:px-8 pb-12">
                         <h1 class="text-xl font-semibold text-[#2B7A78] mb-4">Sumber masuk</h1>
                         <button onclick="openSourceForm()"
                             class="bg-[#2B7A78] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#205C5D]">
                             + <span class="hidden sm:inline">Tambah</span>
                         </button>
-                        <div class="card text-primary-content bg-white mt-4 w-full">
+                        <div class="card text-primary-content bg-white mt-4 mb-8 w-full shadow-sm rounded-2xl">
                             <div class="card-body">
                                 <!-- <h2 class="card-title text-black">Tabel Sumber masuk</h2> -->
                                 <div class="overflow-x-auto">
@@ -39,7 +39,7 @@
                                                         <div class="flex flex-wrap items-center gap-2">
                                                             <span class="font-medium">{{ $source->name }}</span>
                                                             @if ($source->is_online)
-                                                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                                <span class="ml-1 px-1.5 py-0.5 text-[10px] font-semibold rounded bg-blue-50 text-blue-700 border border-blue-200">
                                                                     Online
                                                                 </span>
                                                                 @if ($source->default_commission_percent > 0)
@@ -48,7 +48,7 @@
                                                                     </span>
                                                                 @endif
                                                             @else
-                                                                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 border border-gray-300">
+                                                                <span class="px-2 py-0.5 text-[10px] font-semibold rounded bg-gray-100 text-gray-700 border border-gray-300">
                                                                     Offline
                                                                 </span>
                                                             @endif
@@ -56,7 +56,7 @@
                                                     </td>
                                                     <td class="flex items-center space-x-2">
                                                         <a href="{{ route('sumber-masuk.edit', $source->id) }}"
-                                                            class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded transition">Edit</a>
+                                                            class="text-white px-3 py-1 rounded bg-[#2B7A78] hover:bg-[#205C5D] ml-2">Edit</a>
                                                         <form action="{{ route('sumber-masuk.destroy', $source->id) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apa anda yakin menghapus sumber {{ $source->name }}?')"
@@ -82,58 +82,6 @@
                             </div>
                         </div>
                     </div>
-                    <div id="sourceOverlay"
-                        class="px-4 py-2 hidden fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
-                        <!-- Form Sumber -->
-                        <div id="sourceModal"
-                            class="hidden bg-white w-[400px] h-auto max-w-[400px] rounded-lg shadow-lg p-6">
-                            <h3 class="text-xl font-semibold mb-4">Tambah Sumber</h3>
-                            <form action="{{ route('sumber-masuk.store') }}" method="POST">
-                                @csrf
-                                <!-- Nama Sumber -->
-                                <div class="mb-4">
-                                    <label for="sourceName" class="block text-sm font-medium text-gray-700">Nama
-                                        Kategori</label>
-                                    <input type="text" id="sourceName" name="name"
-                                        class="mb-2 w-full p-2 border border-gray-300 rounded-md" placeholder="cth. GoFood"
-                                        required>
-                                    <!-- Tipe Sumber (Fixed Online / Offline) -->
-                                <div class="mb-3">
-                                    <label for="sourceIsOnline" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Tipe Pesanan
-                                    </label>
-                                    <select id="sourceIsOnline" name="is_online" onchange="toggleCommissionField()"
-                                        class="w-full p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#2B7A78]"
-                                        required>
-                                        <option value="" disabled selected>--Pilih tipe--</option>
-                                        <option value="0">Offline</option>
-                                        <option value="1">Online </option>
-                                    </select>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        Menentukan promo menu &amp; voucher platform yang aktif saat input penjualan.
-                                    </p>
-                                </div>
-
-                                <!-- Komisi Default Platform (Muncul otomatis jika Online) -->
-                                <div id="commissionWrapper" class="mb-4 hidden">
-                                    <label for="sourceCommission" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Komisi Platform (%) <span class="text-xs text-gray-400">(Opsional)</span>
-                                    </label>
-                                    <input type="number" id="sourceCommission" name="default_commission_percent"
-                                        step="0.01" min="0" max="100" value="0"
-                                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2B7A78]"
-                                        placeholder="cth. 20">
-                                </div>
-                                </div>
-                                <div class="flex justify-end mt-4">
-                                    <button type="button" onclick="closeSourceModal()"
-                                        class="bg-[#db5461] text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-600">Batal</button>
-                                    <button type="submit"
-                                        class="bg-[#2B7A78] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#205C5D] ml-4">Simpan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -141,7 +89,93 @@
             @include('layouts.sidebar')
         </div>
     </div>
+
+    <!-- Modal Form Sumber Masuk (Blur Backdrop & Fullscreen) -->
+    <div id="sourceOverlay"
+        class="hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-full bg-slate-900/60 backdrop-blur-sm z-[9999] flex justify-center items-center p-4 transition-opacity">
+        <div id="sourceModal"
+            class="hidden bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden transform transition-all">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-slate-50/50">
+                <h3 class="text-base font-bold text-gray-800">Tambah Sumber Masuk</h3>
+                <button type="button" onclick="closeSourceModal()"
+                    class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="{{ route('sumber-masuk.store') }}" method="POST" class="p-6 space-y-4">
+                @csrf
+                <div>
+                    <label for="sourceName" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Nama Kategori <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="sourceName" name="name"
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] text-gray-800"
+                        placeholder="cth. GoFood" required>
+                </div>
+                <div>
+                    <label for="sourceIsOnline" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Tipe Pesanan <span class="text-rose-500">*</span>
+                    </label>
+                    <select id="sourceIsOnline" name="is_online" onchange="toggleCommissionField()"
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#2B7A78] text-gray-800"
+                        required>
+                        <option value="" disabled selected>-- Pilih tipe --</option>
+                        <option value="0">Offline</option>
+                        <option value="1">Online</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Menentukan promo menu &amp; voucher platform yang aktif saat input penjualan.
+                    </p>
+                </div>
+
+                <div id="commissionWrapper" class="hidden">
+                    <label for="sourceCommission" class="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Komisi Platform (%) <span class="text-xs text-gray-400 font-normal">(Opsional)</span>
+                    </label>
+                    <input type="number" id="sourceCommission" name="default_commission_percent"
+                        step="0.01" min="0" max="100" value="0"
+                        class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] text-gray-800"
+                        placeholder="cth. 20">
+                </div>
+
+                <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-2.5">
+                    <button type="button" onclick="closeSourceModal()"
+                        class="px-4 py-2.5 rounded-xl border border-gray-300 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-[#2B7A78] hover:bg-[#205C5D] text-xs sm:text-sm font-semibold text-white shadow-sm transition">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: @json(session('success')),
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: @json(session('error')),
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#2B7A78'
+            });
+        @endif
+
         function toggleCommissionField() {
             const select = document.getElementById('sourceIsOnline');
             const wrapper = document.getElementById('commissionWrapper');
@@ -162,6 +196,7 @@
             const sourceModal = document.getElementById('sourceModal');
             sourceOverlay.classList.remove('hidden');
             sourceModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
             toggleCommissionField();
         }
 
@@ -171,7 +206,19 @@
             const sourceModal = document.getElementById('sourceModal');
             sourceOverlay.classList.add('hidden');
             sourceModal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
+
+        // Tutup saat klik overlay di luar modal
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('sourceOverlay');
+            const modal = document.getElementById('sourceModal');
+            if (overlay && modal && !overlay.classList.contains('hidden')) {
+                if (event.target === overlay) {
+                    closeSourceModal();
+                }
+            }
+        });
 
         function dropdownLaporan() {
             const dropdownLaporanMenu = document.getElementById('dropdownLaporanMenu');

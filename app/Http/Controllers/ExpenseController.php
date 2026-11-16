@@ -27,33 +27,59 @@ class ExpenseController extends Controller
 
     return response()->json($months);
     }
-    public function index()
+    public function index(Request $request)
     {
-        $expenses = Expense::with(['sources', 'bills'])
-        ->orderBy('date', 'desc')
-        ->paginate(10);
-        return view('expenses.index', compact('expenses'));
+        return $this->search($request);
     }
     public function search(Request $request)
     {
         $search = $request->input('search');
+        $sourceId = $request->input('source_id');
+        $billId = $request->input('bill_id');
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $sort = $request->input('sort', 'desc');
 
-        $expenses = Expense::query()
-            ->join('sources', 'expenses.source_id', '=', 'sources.id')
-            ->join('bills', 'expenses.bill_id', '=', 'bills.id') // JOIN ke tabel tagihan
-            ->where(function ($query) use ($search) {
-                $query->where('sources.name', 'LIKE', "%{$search}%")
-                    ->orWhere('bills.name', 'LIKE', "%{$search}%")
-                    ->orWhere('expenses.amount', 'LIKE', "%{$search}%")
-                    ->orWhere('expenses.description', 'LIKE', "%{$search}%")
-                    ->orWhere('expenses.date', 'LIKE', "%{$search}%");
-            })
-            ->select('expenses.*')
-            ->orderBy('expenses.date', 'asc')
-            ->paginate(10)
-            ->appends(['search' => $search]);
+        $query = Expense::with(['source', 'bill']);
 
-        return view('expenses.index', compact('expenses', 'search'));
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('amount', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhere('date', 'LIKE', "%{$search}%")
+                    ->orWhereHas('source', fn ($s) => $s->where('name', 'LIKE', "%{$search}%"))
+                    ->orWhereHas('bill', fn ($b) => $b->where('name', 'LIKE', "%{$search}%"));
+            });
+        }
+
+        if ($sourceId) {
+            $query->where('source_id', $sourceId);
+        }
+
+        if ($billId) {
+            $query->where('bill_id', $billId);
+        }
+
+        if ($tanggalAwal) {
+            $query->whereDate('date', '>=', $tanggalAwal);
+        }
+
+        if ($tanggalAkhir) {
+            $query->whereDate('date', '<=', $tanggalAkhir);
+        }
+
+        if ($sort === 'asc' || $sort === 'terlama') {
+            $query->orderBy('date', 'asc')->orderBy('id', 'asc');
+        } else {
+            $query->orderBy('date', 'desc')->orderBy('id', 'desc');
+        }
+
+        $expenses = $query->paginate(10)->withQueryString();
+
+        $sources = Source::orderBy('name')->get();
+        $bills = Bill::orderBy('name')->get();
+
+        return view('expenses.index', compact('expenses', 'search', 'sources', 'bills'));
     }
 
     public function create()

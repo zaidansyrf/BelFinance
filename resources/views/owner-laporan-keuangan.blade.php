@@ -16,7 +16,7 @@
 @endphp
 <x-app-layout>
 <x-panel plain>
-    <div class="min-h-full bg-[#D1DDD5] px-4 sm:px-8 py-6 space-y-6">
+    <div class="min-h-full bg-[#D1DDD5] px-4 sm:px-8 pt-6 pb-12 space-y-6">
 
         {{-- 1. Hero Header & Quick Actions --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

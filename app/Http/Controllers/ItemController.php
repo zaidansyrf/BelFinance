@@ -19,21 +19,9 @@ class ItemController extends Controller
     ];
 
     // method untuk menampilkan data
-    public function index()
+    public function index(Request $request)
     {
-        $items = DB::table('items')->orderBy('code', 'asc')->paginate(10)->appends(request()->query());
-
-        // Pie chart data
-        $topItems = Item::orderByDesc('quantity')->take(5)->get();
-        $chartData = [
-            'labels' => $topItems->pluck('name'),
-            'quantities' => $topItems->pluck('quantity'),
-        ];
-
-        $totalSold = Item::sum('quantity');
-        $topSellingMenu = Item::orderByDesc('quantity')->first();
-
-        return view('menu.search', compact('items', 'chartData', 'totalSold', 'topSellingMenu'));
+        return $this->search($request);
     }
 
     // method pencarian
@@ -49,7 +37,7 @@ class ItemController extends Controller
             })
             ->orderBy('code', 'asc')
             ->paginate(10)
-            ->appends(['search' => $search]);
+            ->withQueryString();
 
         $topItems = Item::orderByDesc('quantity')->take(5)->get();
         $chartData = [

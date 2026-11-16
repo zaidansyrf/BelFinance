@@ -70,9 +70,9 @@
                                                     <span class="text-gray-500 block text-xs">Sumber Pembayaran / Saluran:</span>
                                                     <span class="font-semibold text-gray-900">{{ $pembayaran->source->name ?? 'Tidak Diketahui' }}</span>
                                                     @if ($pembayaran->source && $pembayaran->source->is_online)
-                                                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Online</span>
+                                                        <span class="ml-1 px-1.5 py-0.5 text-[10px] font-semibold rounded bg-blue-50 text-blue-700 border border-blue-200">Online</span>
                                                     @else
-                                                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 border border-gray-300">Offline</span>
+                                                        <span class="px-2.5 py-0.5 text-[10px] font-semibold rounded bg-gray-100 text-gray-700 border border-gray-300">Offline</span>
                                                     @endif
                                                 </div>
                                                 @if ($pembayaran->paid_amount !== null)
@@ -185,8 +185,12 @@
                                                     <tr class="hover:bg-gray-50 transition">
                                                         <td class="py-3 px-4 font-semibold text-gray-900">
                                                             {{ $detail->item->name ?? '-' }}
-                                                            @if ($detail->promo)
-                                                                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded block mt-0.5 w-fit font-normal">
+                                                            @if ($detail->promo && $detail->promo->channel_scope === 'online_only')
+                                                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded block mt-0.5 w-fit font-normal">
+                                                                    Promo: {{ $detail->promo->name }}
+                                                                </span>
+                                                            @elseif ($detail->promo && $detail->promo->channel_scope === 'offline_only')
+                                                                <span class="text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded block mt-0.5 w-fit font-normal">
                                                                     Promo: {{ $detail->promo->name }}
                                                                 </span>
                                                             @endif

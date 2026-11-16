@@ -60,6 +60,10 @@ class KasirController extends Controller
             return $this->redirectBukaShift();
         }
 
+        if ($request->input('platform_promo_id') === 'null' || $request->input('platform_promo_id') === '0' || empty($request->input('platform_promo_id')) || $request->input('name') !== 'Pesanan Online') {
+            $request->merge(['platform_promo_id' => null]);
+        }
+
         $data = $request->validate([
             'name' => ['required', Rule::in(self::JENIS_PESANAN)],
             'source_id' => 'required|exists:sources,id',
