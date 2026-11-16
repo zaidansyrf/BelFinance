@@ -9,7 +9,7 @@
                     <div class="mt-8 px-6 pb-12">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
-                                <h1 class="text-2xl font-bold text-[#2B7A78]">📱 Promo Platform & Komisi Saluran</h1>
+                                <h1 class="text-2xl font-bold text-[#2B7A78]"> Promo Platform & Komisi Saluran</h1>
                                 <p class="text-sm text-gray-600 mt-1">
                                     Atur preset voucher aplikasi (GoFood, Grab, dll) dengan skema patungan beban (co-funding) serta tarif komisi standar.
                                 </p>

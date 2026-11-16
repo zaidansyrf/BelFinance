@@ -1,4 +1,12 @@
 <div class="header-wrapper bg-[#D1DDD5]  pt-2 px-2 pb-0 lg:pt-3 lg:px-6 ">
+    @php
+        $roleBadge = match(Auth::user()->role ?? '') {
+            'owner' => 'Owner',
+            'keuangan' => 'Keuangan',
+            'kasir' => 'Kasir',
+            default => (Auth::user() && Auth::user()->role) ? ucfirst(Auth::user()->role) : null,
+        };
+    @endphp
     <!-- header -->
     <div
         class="header-box bg-white border border-gray-300 rounded-lg flex justify-between items-center py-3 px-6 lg:px-12">
@@ -12,10 +20,10 @@
                     </path>
                 </svg>
             </label>
-            <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if (Auth::user()->isOwner()) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">Owner</span>@endif</span>
+            <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if ($roleBadge) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">{{ $roleBadge }}</span>@endif</span>
         </div>
         <div class="bg-transparent hidden lg:flex items-center w-full justify-between">
-            <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if (Auth::user()->isOwner()) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">Owner</span>@endif</span>
+            <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, {{ Auth::user()->name }}@if ($roleBadge) <span class="ml-1 text-xs font-semibold uppercase text-white bg-[#468585] px-2 py-0.5 rounded align-middle">{{ $roleBadge }}</span>@endif</span>
             <!-- dropdown menu profile -->
             <div class="dropdown dropdown-end mr-4">
                 <div tabindex="0" role="button">

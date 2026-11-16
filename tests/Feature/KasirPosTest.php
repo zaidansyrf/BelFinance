@@ -276,4 +276,104 @@ class KasirPosTest extends TestCase
             ->assertSee('Diskon Menu')
             ->assertSee('-10.000');
     }
+
+    public function test_pos_checkout_with_two_active_promos_applies_online_promo_for_online_order(): void
+    {
+        $onlinePromo = ItemPromo::create([
+            'name' => 'Promo Online Diskon 10%',
+            'discount_type' => 'percent',
+            'discount_value' => 10,
+            'channel_scope' => 'online_only',
+            'is_active' => true,
+        ]);
+        $offlinePromo = ItemPromo::create([
+            'name' => 'Promo Offline Potongan 5000',
+            'discount_type' => 'nominal',
+            'discount_value' => 5000,
+            'channel_scope' => 'offline_only',
+            'is_active' => true,
+        ]);
+
+        $this->ayam->promos()->sync([$onlinePromo->id, $offlinePromo->id]);
+
+        $onlineSource = Source::factory()->create(['name' => 'GoFood', 'is_online' => true]);
+
+        // Pesanan Online: promo online (10% dari 19.000 = 1.900) dipakai -> harga final 17.100
+        $response = $this->actingAs($this->kasir)->post(route('kasir.checkout'), [
+            'name' => 'Pesanan Online',
+            'source_id' => $onlineSource->id,
+            'items' => [['item_id' => $this->ayam->id, 'quantity' => 1, 'apply_item_promo' => 1]],
+        ]);
+
+        $income = Income::sole();
+        $response->assertRedirect(route('kasir.struk', $income));
+
+        $this->assertSame(17100, $income->amount);
+        $this->assertSame(1900, $income->item_discount_total);
+        $this->assertSame($onlinePromo->id, $income->incomeDetails->first()->item_promo_id);
+    }
+
+    public function test_pos_checkout_with_two_active_promos_applies_offline_promo_for_offline_order(): void
+    {
+        $onlinePromo = ItemPromo::create([
+            'name' => 'Promo Online Diskon 10%',
+            'discount_type' => 'percent',
+            'discount_value' => 10,
+            'channel_scope' => 'online_only',
+            'is_active' => true,
+        ]);
+        $offlinePromo = ItemPromo::create([
+            'name' => 'Promo Offline Potongan 5000',
+            'discount_type' => 'nominal',
+            'discount_value' => 5000,
+            'channel_scope' => 'offline_only',
+            'is_active' => true,
+        ]);
+
+        $this->ayam->promos()->sync([$onlinePromo->id, $offlinePromo->id]);
+
+        // Pesanan Offline: promo offline (potongan 5.000) dipakai -> harga final 14.000 * 2 = 28.000
+        $response = $this->actingAs($this->kasir)->post(route('kasir.checkout'), [
+            'name' => 'Pesanan Offline',
+            'source_id' => $this->cash->id,
+            'items' => [['item_id' => $this->ayam->id, 'quantity' => 2, 'apply_item_promo' => 1]],
+            'paid_amount' => 30000,
+        ]);
+
+        $income = Income::sole();
+        $response->assertRedirect(route('kasir.struk', $income));
+
+        $this->assertSame(28000, $income->amount);
+        $this->assertSame(10000, $income->item_discount_total);
+        $this->assertSame($offlinePromo->id, $income->incomeDetails->first()->item_promo_id);
+    }
+
+    public function test_pos_checkout_can_toggle_off_promo_per_item(): void
+    {
+        $promo = ItemPromo::create([
+            'name' => 'Promo Offline Potongan 5000',
+            'discount_type' => 'nominal',
+            'discount_value' => 5000,
+            'channel_scope' => 'offline_only',
+            'is_active' => true,
+        ]);
+        $this->ayam->update(['item_promo_id' => $promo->id]);
+        $this->ayam->promos()->sync([$promo->id]);
+
+        // Kasir sengaja menonaktifkan promo untuk item ini (apply_item_promo = 0)
+        $response = $this->actingAs($this->kasir)->post(route('kasir.checkout'), [
+            'name' => 'Pesanan Offline',
+            'source_id' => $this->cash->id,
+            'items' => [['item_id' => $this->ayam->id, 'quantity' => 1, 'apply_item_promo' => 0]],
+            'paid_amount' => 20000,
+        ]);
+
+        $income = Income::sole();
+        $response->assertRedirect(route('kasir.struk', $income));
+
+        // Karena dinonaktifkan, harga normal 19.000 berlaku tanpa diskon
+        $this->assertSame(19000, $income->amount);
+        $this->assertSame(0, $income->item_discount_total);
+        $this->assertNull($income->incomeDetails->first()->item_promo_id);
+    }
 }

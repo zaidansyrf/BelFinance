@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ItemPromo extends Model
@@ -26,7 +27,12 @@ class ItemPromo extends Model
         'is_active' => 'boolean',
     ];
 
-    public function items(): HasMany
+    public function items(): BelongsToMany
+    {
+        return $this->belongsToMany(Item::class, 'item_promo_item')->withTimestamps();
+    }
+
+    public function itemsDirect(): HasMany
     {
         return $this->hasMany(Item::class, 'item_promo_id');
     }

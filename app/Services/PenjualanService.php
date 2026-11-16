@@ -45,7 +45,7 @@ class PenjualanService
     public function hitung(array $itemsData, ?Source $source = null, ?PlatformPromo $platformPromo = null): array
     {
         $itemIds = collect($itemsData)->pluck('item_id')->filter()->unique()->all();
-        $itemsMap = Item::with('promo')->whereIn('id', $itemIds)->get()->keyBy('id');
+        $itemsMap = Item::with(['promo', 'promos'])->whereIn('id', $itemIds)->get()->keyBy('id');
 
         $grossAmount = 0;
         $itemDiscountTotal = 0;
@@ -69,11 +69,15 @@ class PenjualanService
             $unitDiscount = 0;
             $appliedPromoId = null;
 
-            if ($applyPromo && $item->promo) {
-                $isEligible = $source ? $item->promo->isEligibleForSource($source) : $item->promo->is_active;
-                if ($isEligible) {
-                    $appliedPromoId = $item->promo->id;
-                    $unitDiscount = $item->promo->calculateUnitDiscount($originalPrice);
+            if ($applyPromo) {
+                $isOnline = $source ? (bool) $source->is_online : false;
+                $promo = $item->activePromoFor($isOnline);
+                if (! $promo && $item->promo && $item->promo->isEligibleForSource($source)) {
+                    $promo = $item->promo;
+                }
+                if ($promo) {
+                    $appliedPromoId = $promo->id;
+                    $unitDiscount = $promo->calculateUnitDiscount($originalPrice);
                 }
             }
 

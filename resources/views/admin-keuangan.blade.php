@@ -20,9 +20,6 @@
                                 <h1 class="text-2xl font-bold text-gray-800">
                                     Halo, {{ auth()->user()->name }} 👋
                                 </h1>
-                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-[#2B7A78] border border-emerald-200">
-                                    {{ ucfirst(auth()->user()->role) }}
-                                </span>
                             </div>
                             <p class="text-sm text-gray-500 mt-1">
                                 Overview aktivitas dan performa keuangan Belindo Kitchen per 
@@ -36,7 +33,6 @@
                     <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/60">
                         <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
                             <div class="flex items-center gap-2">
-                                <span class="text-base">📅</span>
                                 <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-500">
                                     Akumulasi Keuangan Tahun {{ $currentYear }}
                                 </h3>
@@ -71,7 +67,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                                <span>⚡</span> Ringkasan Hari Ini
+                                Ringkasan Hari Ini
                             </h2>
                             <span class="text-xs font-medium text-gray-400">Pembaruan otomatis dari kasir &amp; pembayaran</span>
                         </div>
@@ -178,7 +174,6 @@
                             <div>
                                 <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                                     <div class="flex items-center gap-2">
-                                        <span class="text-base">💳</span>
                                         <h3 class="font-bold text-gray-800 text-sm">Pemasukan per Saluran</h3>
                                     </div>
                                     <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600">
@@ -240,7 +235,6 @@
                             <div>
                                 <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                                     <div class="flex items-center gap-2">
-                                        <span class="text-base">📈</span>
                                         <h3 class="font-bold text-gray-800 text-sm">Tren Keuangan Bulanan</h3>
                                     </div>
                                     <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-700">
@@ -262,7 +256,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 mb-4">
                             <div>
                                 <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
-                                    <span>🕒</span> Transaksi Keuangan Hari Ini
+                                    Transaksi Keuangan Hari Ini
                                 </h3>
                                 <p class="text-xs text-gray-500 mt-0.5">
                                     Daftar transaksi kasir dan pengeluaran pada tanggal {{ now()->format('d/m/Y') }}

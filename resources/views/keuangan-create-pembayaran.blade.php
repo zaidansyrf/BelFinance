@@ -209,8 +209,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        @if (session('success'))
-            Swal.fire({ icon: 'success', title: 'Berhasil!', text: '{{ session('success') }}', timer: 2000, showConfirmButton: false });
+       @if (session('success'))
+    Swal.fire({ icon: 'success', title: 'Berhasil!', text: '{{ session('success') }}', timer: 2000, showConfirmButton: false });
         @endif
         @if (session('error'))
             Swal.fire({ icon: 'error', title: 'Gagal!', text: '{{ session('error') }}' });
@@ -230,10 +230,81 @@
             return 'Rp ' + Math.round(number || 0).toLocaleString('id-ID');
         }
 
-        function onChannelChange() {
-            const jenisPesanan = document.getElementById('name').value.trim();
-            const isOnlineChannel = (jenisPesanan === 'Pesanan Online');
+        function isOnlineSelected() {
+            return document.getElementById('name').value.trim() === 'Pesanan Online';
+        }
 
+        /**
+         * Ambil daftar promo aktif pada item (mendukung relasi 'promos' many-to-many maupun 'promo' tunggal)
+         */
+        function getItemActivePromos(item) {
+            const rawPromos = Array.isArray(item.promos)
+                ? item.promos
+                : (item.promo ? [item.promo] : []);
+
+            return rawPromos.filter(p => Boolean(p && p.is_active));
+        }
+
+        /**
+         * Menentukan 1 promo yang berlaku sesuai saluran pesanan:
+         * Prioritas 1: Semua Saluran ('all')
+         * Prioritas 2: Spesifik saluran ('online_only' atau 'offline_only')
+         */
+        function resolveItemPromo(promos, isOnlineChannel) {
+            const activePromos = Array.isArray(promos) ? promos.filter(p => Boolean(p && p.is_active)) : [];
+            if (activePromos.length === 0) return null;
+
+            const allPromo = activePromos.find(p => p.channel_scope === 'all');
+            if (allPromo) return allPromo;
+
+            const targetScope = isOnlineChannel ? 'online_only' : 'offline_only';
+            return activePromos.find(p => p.channel_scope === targetScope) || null;
+        }
+
+        /**
+         * Membangun daftar <option> menu sesuai jenis pesanan:
+         * - Item netral (tanpa promo aktif) -> selalu muncul tanpa label promo
+         * - Item berpromo sesuai saluran (termasuk yang punya 2 promo online & offline) -> muncul dengan label promo saluran aktif saja
+         * - Item yang hanya punya promo saluran lain -> disembunyikan
+         */
+        function buildMenuOptionsHtml(selectedItemId = '') {
+            const isOnlineChannel = isOnlineSelected();
+            let html = `<option value="" disabled ${!selectedItemId ? 'selected' : ''}>-- Pilih Menu --</option>`;
+
+            allItems.forEach(item => {
+                const activePromos = getItemActivePromos(item);
+                const matchedPromo = resolveItemPromo(activePromos, isOnlineChannel);
+
+                const promoBadge = matchedPromo ? ` [Promo: ${matchedPromo.name}]` : '';
+                const isSelected = String(item.id) === String(selectedItemId) ? 'selected' : '';
+
+                html += `<option value="${item.id}" ${isSelected}
+                    data-price="${item.price}"
+                    data-promos='${JSON.stringify(activePromos)}'>
+                    ${item.name} (${formatRupiah(item.price)})${promoBadge}
+                </option>`;
+            });
+
+            return html;
+        }
+
+        /**
+         * Perbarui label promo pada dropdown menu yang sudah ada ketika Jenis Pesanan berubah
+         * tanpa menghapus menu yang sudah dipilih.
+         */
+        function refreshAllItemDropdowns() {
+            document.querySelectorAll('.item-row').forEach(row => {
+                const rowIndex = row.id.replace('item-row-', '');
+                const selectEl = row.querySelector('.item-select');
+                const previousVal = selectEl.value;
+
+                selectEl.innerHTML = buildMenuOptionsHtml(previousVal);
+                updateItemPromoBanner(rowIndex);
+            });
+        }
+
+        function onChannelChange() {
+            const isOnlineChannel = isOnlineSelected();
             const sourceSelect = document.getElementById('source_id');
             const platformPromoContainer = document.getElementById('platformPromoContainer');
 
@@ -261,12 +332,8 @@
                 sourceSelect.appendChild(opt);
             });
 
-            // Perbarui visibilitas banner promo menu pada tiap baris item
-            document.querySelectorAll('.item-row').forEach(row => {
-                const rowIndex = row.id.replace('item-row-', '');
-                updateItemPromoBanner(rowIndex);
-            });
-
+            // Perbarui pilihan menu & banner promo pada seluruh baris keranjang
+            refreshAllItemDropdowns();
             onSourceChange();
         }
 
@@ -315,22 +382,13 @@
             rowDiv.className = 'item-row bg-gray-50 border border-gray-200 rounded-xl p-4 transition hover:border-[#2B7A78]';
             rowDiv.id = `item-row-${rowIndex}`;
 
-            let menuOptionsHtml = '<option value="" disabled selected>-- Pilih Menu --</option>';
-            allItems.forEach(item => {
-                let promoBadge = '';
-                if (item.promo && item.promo.is_active) {
-                    promoBadge = ` [Promo: ${item.promo.name}]`;
-                }
-                menuOptionsHtml += `<option value="${item.id}" data-price="${item.price}" data-promo='${JSON.stringify(item.promo || null)}'>${item.name} (${formatRupiah(item.price)})${promoBadge}</option>`;
-            });
-
             rowDiv.innerHTML = `
                 <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
                     <div class="flex-1 w-full">
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Pilih Menu *</label>
                         <select name="items[${rowIndex}][item_id]" required onchange="onItemSelect(${rowIndex})"
                             class="item-select w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
-                            ${menuOptionsHtml}
+                            ${buildMenuOptionsHtml()}
                         </select>
                     </div>
 
@@ -398,25 +456,18 @@
                 return;
             }
 
-            const promoData = JSON.parse(opt.dataset.promo || 'null');
-            const isOnlineChannel = (document.getElementById('name').value.trim() === 'Pesanan Online');
+            const promosData = JSON.parse(opt.dataset.promos || '[]');
+            const activePromo = resolveItemPromo(promosData, isOnlineSelected());
 
-            if (promoData && promoData.is_active) {
-                let eligible = true;
-                if (promoData.channel_scope === 'online_only' && !isOnlineChannel) eligible = false;
-                if (promoData.channel_scope === 'offline_only' && isOnlineChannel) eligible = false;
-
-                if (eligible) {
-                    let discText = promoData.discount_type === 'percent'
-                        ? `${promoData.discount_value}%`
-                        : formatRupiah(promoData.discount_value);
-                    promoNameSpan.innerText = `${promoData.name} (Diskon ${discText} / porsi)`;
-                    banner.classList.remove('hidden');
-                    return;
-                }
+            if (activePromo) {
+                const discText = activePromo.discount_type === 'percent'
+                    ? `${activePromo.discount_value}%`
+                    : formatRupiah(activePromo.discount_value);
+                promoNameSpan.innerText = `${activePromo.name} (Diskon ${discText} / porsi)`;
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
             }
-
-            banner.classList.add('hidden');
         }
 
         function onItemSelect(rowIndex) {
@@ -425,8 +476,7 @@
         }
 
         function calculateFinancials() {
-            const jenisPesanan = document.getElementById('name').value.trim();
-            const isOnlineChannel = (jenisPesanan === 'Pesanan Online');
+            const isOnlineChannel = isOnlineSelected();
 
             const sourceSelect = document.getElementById('source_id');
             const sourceOpt = sourceSelect.selectedOptions[0];
@@ -450,25 +500,22 @@
                 const opt = selectEl.selectedOptions[0];
                 const originalPrice = parseInt(opt.dataset.price || '0');
                 const quantity = Math.max(1, parseInt(qtyInput.value || '1'));
-                const promo = JSON.parse(opt.dataset.promo || 'null');
+                const promos = JSON.parse(opt.dataset.promos || '[]');
+                const activePromo = (!applyPromoCheckbox || applyPromoCheckbox.checked)
+                    ? resolveItemPromo(promos, isOnlineChannel)
+                    : null;
 
                 let unitDiscount = 0;
 
-                if (promo && promo.is_active && (!applyPromoCheckbox || applyPromoCheckbox.checked)) {
-                    let eligible = true;
-                    if (promo.channel_scope === 'online_only' && !isOnlineChannel) eligible = false;
-                    if (promo.channel_scope === 'offline_only' && isOnlineChannel) eligible = false;
-
-                    if (eligible) {
-                        if (promo.discount_type === 'nominal') {
-                            unitDiscount = Math.min(parseInt(promo.discount_value), originalPrice);
-                        } else {
-                            let raw = Math.round(originalPrice * (parseFloat(promo.discount_value) / 100));
-                            if (promo.max_discount) {
-                                raw = Math.min(raw, parseInt(promo.max_discount));
-                            }
-                            unitDiscount = Math.min(raw, originalPrice);
+                if (activePromo) {
+                    if (activePromo.discount_type === 'nominal') {
+                        unitDiscount = Math.min(parseInt(activePromo.discount_value), originalPrice);
+                    } else {
+                        let raw = Math.round(originalPrice * (parseFloat(activePromo.discount_value) / 100));
+                        if (activePromo.max_discount) {
+                            raw = Math.min(raw, parseInt(activePromo.max_discount));
                         }
+                        unitDiscount = Math.min(raw, originalPrice);
                     }
                 }
 
@@ -556,8 +603,7 @@
             const dispChange = document.getElementById('dispChange');
             const hiddenChange = document.getElementById('change_amount');
 
-            const jenisPesanan = document.getElementById('name').value.trim();
-            const targetAmount = (jenisPesanan === 'Pesanan Offline')
+            const targetAmount = !isOnlineSelected()
                 ? parseInt(document.getElementById('dispNetPayout').innerText.replace(/[^0-9]/g, '') || '0')
                 : parseInt(document.getElementById('dispCustomerPaid').innerText.replace(/[^0-9]/g, '') || '0');
 

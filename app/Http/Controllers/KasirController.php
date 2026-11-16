@@ -27,7 +27,7 @@ class KasirController extends Controller
             return $this->redirectBukaShift();
         }
 
-        $items = Item::with('promo')->orderBy('name')->get();
+        $items = Item::with(['promo', 'promos'])->orderBy('name')->get();
         $sources = Source::with(['platformPromos' => function ($query) {
             $query->where('is_active', true);
         }])->orderBy('id')->get();
@@ -67,6 +67,7 @@ class KasirController extends Controller
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1|max:999',
+            'items.*.apply_item_promo' => 'nullable|boolean',
             'paid_amount' => 'nullable|integer|min:0',
         ], [
             'items.required' => 'Keranjang masih kosong.',

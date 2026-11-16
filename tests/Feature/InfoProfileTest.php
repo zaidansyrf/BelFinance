@@ -58,4 +58,22 @@ class InfoProfileTest extends TestCase
 
         $this->assertSame('owner-baru', $user->fresh()->name);
     }
+
+    public function test_owner_info_profile_page_renders_successfully(): void
+    {
+        $owner = User::factory()->owner()->create();
+
+        $response = $this->actingAs($owner)->get(route('owner-info-profile'));
+
+        $response->assertOk()
+            ->assertSee('Profile Settings')
+            ->assertSee('Profile Information')
+            ->assertSee('Security')
+            ->assertSee('Save changes')
+            ->assertSee('Update password')
+            ->assertSee('Aktif')
+            ->assertSee('Mempunyai akses ke semua role')
+            ->assertSee($owner->name)
+            ->assertSee($owner->email);
+    }
 }

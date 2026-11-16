@@ -9,14 +9,14 @@
                     <div class="mt-8 px-6 pb-12">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
-                                <h1 class="text-2xl font-bold text-[#2B7A78]">🏷️ Promo Menu Merchant</h1>
+                                <h1 class="text-2xl font-bold text-[#2B7A78]"> Promo Menu Merchant</h1>
                                 <p class="text-sm text-gray-600 mt-1">
                                     Atur diskon per porsi menu untuk seluruh saluran atau khusus online/offline.
                                 </p>
                             </div>
                             <button type="button" onclick="openPromoModal()"
                                 class="bg-[#2B7A78] hover:bg-[#205C5D] text-white font-semibold py-2 px-4 rounded-lg shadow flex items-center gap-2">
-                                <span>+ Buat Kampanye Promo</span>
+                                <span>+ Buat Promo</span>
                             </button>
                         </div>
 
@@ -74,15 +74,15 @@
                                                 <td class="py-3 px-4">
                                                     @if ($promo->channel_scope === 'online_only')
                                                         <span class="text-xs bg-purple-100 text-purple-700 font-medium px-2 py-1 rounded">
-                                                            📱 Khusus Online
+                                                            Khusus Online
                                                         </span>
                                                     @elseif ($promo->channel_scope === 'offline_only')
                                                         <span class="text-xs bg-orange-100 text-orange-700 font-medium px-2 py-1 rounded">
-                                                            🏪 Khusus Offline / Kasir
+                                                            Khusus Offline
                                                         </span>
                                                     @else
                                                         <span class="text-xs bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded">
-                                                            🌐 Semua Saluran
+                                                            Semua (online/offline)
                                                         </span>
                                                     @endif
                                                 </td>
@@ -138,7 +138,7 @@
                                         @empty
                                             <tr>
                                                 <td colspan="7" class="py-8 text-center text-gray-400">
-                                                    Belum ada kampanye promo menu. Klik tombol <strong>+ Buat Kampanye Promo</strong> untuk membuat promo baru.
+                                                    Belum ada promo menu. Klik tombol <strong>+ Buat Promo</strong> untuk membuat promo baru.
                                                 </td>
                                             </tr>
                                         @endforelse
@@ -155,10 +155,10 @@
     </div>
 
     {{-- Modal Tambah / Edit Promo Menu --}}
-    <div id="promoModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div id="promoModal" class="hidden fixed inset-0 z-50 items-start overflow-y-auto py-6 px-4 bg-black bg-opacity-50 p-3 sm:p-6 flex justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden my-8">
             <div class="bg-[#2B7A78] text-white px-6 py-4 flex justify-between items-center">
-                <h3 id="modalTitle" class="text-lg font-bold">Buat Kampanye Promo Menu</h3>
+                <h3 id="modalTitle" class="text-lg font-bold">Buat Promo Menu Baru</h3>
                 <button type="button" onclick="closePromoModal()" class="text-white hover:text-gray-200 text-xl font-bold">&times;</button>
             </div>
 
@@ -168,7 +168,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Kampanye Promo *</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Promo *</label>
                         <input type="text" name="name" id="promoName" required placeholder="Contoh: Promo Spesial Gajian"
                             class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
                     </div>
@@ -200,9 +200,9 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Batasan Saluran Transaksi *</label>
                         <select name="channel_scope" id="channelScope" required
                             class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">
-                            <option value="all">🌐 Semua Saluran (Online & Offline)</option>
-                            <option value="online_only">📱 Khusus Saluran Online (GoFood, Grab, dll)</option>
-                            <option value="offline_only">🏪 Khusus Offline / POS Kasir</option>
+                            <option value="" disabled selected> --- Tidak ada ---</option>
+                            <option value="online_only"> Khusus Saluran Online (GoFood, Grab, dll)</option>
+                            <option value="offline_only">Khusus Offline </option>
                         </select>
                     </div>
 
@@ -226,36 +226,51 @@
                             Pilih Menu Yang Diikutsertakan:
                         </label>
                         <div class="text-xs text-gray-500">
-                            1 menu hanya boleh 1 promo aktif
+                            Menu dapat memiliki promo online dan offline terpisah
                         </div>
                     </div>
-
-                    <div class="border border-gray-200 rounded-lg max-h-60 overflow-y-auto divide-y divide-gray-100 p-2 bg-gray-50">
-                        @foreach ($items as $item)
-                            <label class="flex items-center justify-between p-2 hover:bg-white rounded cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <input type="checkbox" name="item_ids[]" value="{{ $item->id }}"
-                                        data-promo-id="{{ $item->item_promo_id ?? '' }}"
-                                        class="item-checkbox rounded border-gray-300 text-[#2B7A78] focus:ring-[#2B7A78]">
-                                    <div>
-                                        <span class="font-medium text-gray-900 text-sm">{{ $item->name }}</span>
-                                        <span class="text-xs text-gray-500 block">
-                                            Rp {{ number_format($item->price, 0, ',', '.') }}
-                                        </span>
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            {{-- Header Pilih Semua (Tetap di atas, tidak ikut ter-scroll) --}}
+                            <div class="bg-gray-100 px-3 py-2.5 border-b border-gray-200 flex items-center justify-between">
+                                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" id="selectAllItems" onchange="toggleSelectAllItems(this)"
+                                        class="rounded border-gray-300 text-[#2B7A78] focus:ring-[#2B7A78]">
+                                    <span class="text-xs sm:text-sm font-semibold text-gray-700">Pilih Semua Menu</span>
+                                </label>
+                                <span id="selectedItemsCount" class="text-xs font-semibold text-[#2B7A78]">
+                                    0 / {{ $items->count() }} menu dipilih
+                                </span>
+                            </div>
+                        <div class="border border-gray-200 rounded-lg max-h-60 overflow-y-auto divide-y divide-gray-100 p-2 bg-gray-50">
+                            @foreach ($items as $item)
+                                @php
+                                    $attachedPromos = $item->promos->isNotEmpty() ? $item->promos : ($item->promo ? collect([$item->promo]) : collect());
+                                @endphp
+                                <label class="flex items-center justify-between p-2 hover:bg-white rounded cursor-pointer transition">
+                                    <div class="flex items-center gap-3">
+                                        <input type="checkbox" name="item_ids[]" value="{{ $item->id }}"
+                                            data-promo-ids="{{ $attachedPromos->pluck('id')->implode(',') }}"
+                                            class="item-checkbox rounded border-gray-300 text-[#2B7A78] focus:ring-[#2B7A78]">
+                                        <div>
+                                            <span class="font-medium text-gray-900 text-sm">{{ $item->name }}</span>
+                                            <span class="text-xs text-gray-500 block">
+                                                Rp {{ number_format($item->price, 0, ',', '.') }}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-right">
-                                    @if ($item->promo)
-                                        <span id="promo-badge-{{ $item->id }}"
-                                            class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">
-                                            Terikat: {{ $item->promo->name }}
-                                        </span>
-                                    @else
-                                        <span class="text-xs text-gray-400">Belum ada promo</span>
-                                    @endif
-                                </div>
-                            </label>
-                        @endforeach
+                                    <div class="text-right">
+                                        @if ($attachedPromos->isNotEmpty())
+                                            <span id="promo-badge-{{ $item->id }}"
+                                                class="text-xs bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-medium">
+                                                Terikat: {{ $attachedPromos->pluck('name')->implode(', ') }}
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-400">Belum ada promo</span>
+                                        @endif
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
@@ -307,7 +322,7 @@
         }
 
         function openPromoModal() {
-            document.getElementById('modalTitle').innerText = 'Buat Kampanye Promo Menu';
+            document.getElementById('modalTitle').innerText = 'Buat Promo Menu Baru';
             document.getElementById('promoForm').action = "{{ route('promo.item.store') }}";
             document.getElementById('methodContainer').innerHTML = '';
             document.getElementById('promoForm').reset();
@@ -367,5 +382,38 @@
                 closePromoModal();
             }
         };
+        function toggleSelectAllItems(selectAllCheckbox) {
+            // Hanya mencentang checkbox yang tidak dalam kondisi disabled
+            const checkboxes = document.querySelectorAll('.item-checkbox:not(:disabled)');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAllCheckbox.checked;
+            });
+            syncSelectAllState();
+        }
+
+        function syncSelectAllState() {
+            const selectAllCheckbox = document.getElementById('selectAllItems');
+            const countBadge = document.getElementById('selectedItemsCount');
+            const enabledCheckboxes = Array.from(document.querySelectorAll('.item-checkbox:not(:disabled)'));
+            const checkedCount = enabledCheckboxes.filter(cb => cb.checked).length;
+
+            if (countBadge) {
+                countBadge.innerText = `${checkedCount} / ${enabledCheckboxes.length} menu dipilih`;
+            }
+
+            if (!selectAllCheckbox) return;
+
+            if (enabledCheckboxes.length === 0 || checkedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === enabledCheckboxes.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                // Tanda strip (-) jika hanya sebagian menu yang dicentang manual
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
     </script>
 </x-app-layout>

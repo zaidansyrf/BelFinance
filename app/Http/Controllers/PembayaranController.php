@@ -44,7 +44,7 @@ class PembayaranController extends Controller
     public function create()
     {
         // Eager load promo aktif pada menu dan preset promo pada masing-masing platform
-        $allItems = Item::with('promo')->get();
+        $allItems = Item::with('promos')->get();
         $allSources = Source::with(['platformPromos' => function ($query) {
             $query->where('is_active', true);
         }])->get();

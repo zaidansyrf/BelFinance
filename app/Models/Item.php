@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class Item extends Model
@@ -44,16 +46,63 @@ class Item extends Model
         return $this->belongsTo(ItemPromo::class, 'item_promo_id');
     }
 
+    public function promos(): BelongsToMany
+    {
+        return $this->belongsToMany(ItemPromo::class, 'item_promo_item')->withTimestamps();
+    }
+
     /**
      * Ambil promo yang sedang aktif dan valid untuk menu ini.
+     * Jika menu memiliki lebih dari 1 promo aktif (misal online & offline),
+     * dapat dicari spesifik dengan activePromoFor().
      */
     public function activePromo(): ?ItemPromo
     {
+        if ($this->relationLoaded('promos') && $this->promos->isNotEmpty()) {
+            $active = $this->promos->first(fn ($p) => $p->isCurrentlyActive());
+            if ($active) {
+                return $active;
+            }
+        }
+
         if ($this->promo && $this->promo->isCurrentlyActive()) {
             return $this->promo;
         }
 
         return null;
+    }
+
+    /**
+     * Ambil promo aktif yang spesifik untuk saluran pesanan (online vs offline).
+     */
+    public function activePromoFor(bool $isOnline): ?ItemPromo
+    {
+        $allActive = $this->activePromos();
+
+        return $allActive->first(fn ($p) => $p->isEligibleForScope($isOnline));
+    }
+
+    /**
+     * Kumpulan semua promo yang sedang aktif untuk menu ini (bisa 1 atau 2: online & offline).
+     */
+    public function activePromos(): Collection
+    {
+        $activeFromPivot = collect();
+        if ($this->relationLoaded('promos')) {
+            $activeFromPivot = $this->promos->filter(fn ($p) => $p->isCurrentlyActive());
+        } else {
+            $activeFromPivot = $this->promos()->where('is_active', true)->get()->filter(fn ($p) => $p->isCurrentlyActive());
+        }
+
+        if ($activeFromPivot->isNotEmpty()) {
+            return $activeFromPivot->values();
+        }
+
+        if ($this->promo && $this->promo->isCurrentlyActive()) {
+            return collect([$this->promo]);
+        }
+
+        return collect();
     }
 
     // Stok di bawah atau sama dengan angka ini dianggap menipis

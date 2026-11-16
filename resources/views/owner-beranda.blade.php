@@ -12,9 +12,6 @@
                     <h1 class="text-2xl font-bold text-gray-800">
                         Selamat Datang, {{ Auth::user()->name }} 👋
                     </h1>
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2B7A78] text-white">
-                        Owner
-                    </span>
                 </div>
                 <p class="text-sm text-gray-500 mt-1">
                     Overview ringkasan kinerja dan analisis keuangan Belindo Kitchen per 
@@ -52,7 +49,6 @@
         <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/60">
             <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
                 <div class="flex items-center gap-2">
-                    <span class="text-base">📅</span>
                     <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-500">
                         Akumulasi Keuangan Tahun {{ $currentYear }}
                     </h3>
@@ -87,7 +83,7 @@
         <div class="space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <span>⚡</span> Kinerja Operasional Hari Ini
+                    Kinerja Operasional Hari Ini
                 </h2>
                 <span class="text-xs font-medium text-gray-400">Pembaruan transaksi langsung</span>
             </div>
@@ -189,7 +185,6 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5 sm:p-6">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-lg">💡</span>
                     <div>
                         <h2 class="font-bold text-gray-800 text-sm sm:text-base">Saran &amp; Rekomendasi Usaha</h2>
                         <p class="text-xs text-gray-500">Insight otomatis berbasis pola data penjualan dan margin menu.</p>
@@ -207,7 +202,7 @@
         <div class="space-y-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <span>📊</span> Analitik &amp; Tren Penjualan
+                    Analitik &amp; Tren Penjualan
                 </h2>
                 <span class="text-xs font-medium text-gray-400">Analisis saluran dan pergerakan omset</span>
             </div>
@@ -218,7 +213,6 @@
                     <div>
                         <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                             <div class="flex items-center gap-2">
-                                <span class="text-base">💳</span>
                                 <h3 class="font-bold text-gray-800 text-sm">Pemasukan per Saluran</h3>
                             </div>
                             <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600">
@@ -280,7 +274,6 @@
                     <div>
                         <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                             <div class="flex items-center gap-2">
-                                <span class="text-base">📈</span>
                                 <h3 class="font-bold text-gray-800 text-sm">Tren Keuangan Bulanan</h3>
                             </div>
                             <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-700">
@@ -319,7 +312,7 @@
                             {{ $topSellingMenu->name ?? '-' }}
                         </p>
                         <p class="text-xs text-emerald-600 mt-1 font-medium">
-                            🔥 Terbanyak dipesan pelanggan
+                            Terbanyak dipesan pelanggan
                         </p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 text-xl font-bold">
@@ -334,7 +327,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 mb-4">
                 <div>
                     <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
-                        <span>🕒</span> Transaksi Keuangan Hari Ini
+                        Transaksi Keuangan Hari Ini
                     </h3>
                     <p class="text-xs text-gray-500 mt-0.5">
                         Daftar transaksi kasir dan pengeluaran pada tanggal {{ now()->format('d/m/Y') }}

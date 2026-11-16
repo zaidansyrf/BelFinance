@@ -3,35 +3,52 @@
     @include('layouts.navbar-kasir')
 
     @php
-        $menuData = $items->mapWithKeys(function ($item) {
-            $promo = $item->activePromo();
+        $formatPromo = function (?App\Models\ItemPromo $p, $itemPrice) {
+            if (! $p) return null;
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'type' => $p->discount_type,
+                'value' => (float) $p->discount_value,
+                'scope' => $p->channel_scope ?: 'all',
+                'discount_amount' => $p->calculateUnitDiscount((int) $itemPrice),
+                'label' => $p->discount_type === 'percent'
+                    ? 'Diskon ' . rtrim(rtrim(number_format($p->discount_value, 2), '0'), '.') . '%'
+                    : 'Hemat Rp ' . number_format($p->discount_value, 0, ',', '.'),
+                'scope_label' => $p->channel_scope === 'online_only'
+                    ? 'Khusus Online'
+                    : ($p->channel_scope === 'offline_only' ? 'Khusus Offline' : 'Semua Saluran'),
+            ];
+        };
+
+        $menuData = $items->mapWithKeys(function ($item) use ($formatPromo) {
+            $onlinePromo = $item->activePromoFor(isOnline: true);
+            $offlinePromo = $item->activePromoFor(isOnline: false);
+
+            $onlineFormatted = $formatPromo($onlinePromo, $item->price);
+            $offlineFormatted = $formatPromo($offlinePromo, $item->price);
+            $hasTwoPromos = ($onlinePromo && $offlinePromo && $onlinePromo->id !== $offlinePromo->id);
+
             return [$item->id => [
                 'id' => $item->id,
                 'name' => $item->name,
                 'price' => (int) $item->price,
                 'stock' => $item->stock,
                 'code' => $item->code,
-                'has_promo' => (bool) $promo,
-                'promo' => $promo ? [
-                    'id' => $promo->id,
-                    'name' => $promo->name,
-                    'type' => $promo->discount_type,
-                    'value' => (float) $promo->discount_value,
-                    'scope' => $promo->channel_scope ?: 'all', // 'all', 'online_only', 'offline_only'
-                    'discount_amount' => $promo->calculateUnitDiscount((int) $item->price),
-                    'label' => $promo->discount_type === 'percent'
-                        ? 'Diskon ' . rtrim(rtrim(number_format($promo->discount_value, 2), '0'), '.') . '%'
-                        : 'Hemat Rp ' . number_format($promo->discount_value, 0, ',', '.'),
-                    'scope_label' => $promo->channel_scope === 'online_only'
-                        ? 'Khusus Online'
-                        : ($promo->channel_scope === 'offline_only' ? 'Khusus Offline' : 'Semua Saluran'),
-                ] : null,
+                'has_promo' => (bool) ($onlineFormatted || $offlineFormatted),
+                'has_two_promos' => $hasTwoPromos,
+                'online_promo' => $onlineFormatted,
+                'offline_promo' => $offlineFormatted,
             ]];
         });
 
         $oldCart = collect(old('items', []))
             ->filter(fn ($row) => isset($row['item_id'], $menuData[$row['item_id']]))
-            ->map(fn ($row) => ['id' => (int) $row['item_id'], 'qty' => (int) $row['quantity']])
+            ->map(fn ($row) => [
+                'id' => (int) $row['item_id'],
+                'qty' => (int) $row['quantity'],
+                'applyPromo' => isset($row['apply_item_promo']) ? (bool)(int)$row['apply_item_promo'] : true,
+            ])
             ->values();
 
         $activePromosCount = $activeItemPromos->count();
@@ -89,11 +106,14 @@
                             <div class="flex items-center gap-2">
                                 <span class="text-lg">🔥</span>
                                 <div>
-                                    <h2 class="text-sm font-bold text-[#2B7A78]">
-                                        {{ $activePromosCount }} Promo Menu Sedang Aktif
+                                    <h2 class="text-sm font-bold text-[#2B7A78] flex flex-wrap items-center gap-2">
+                                        <span>{{ $activePromosCount }} Promo Menu Sedang Aktif</span>
+                                        <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                                            Menyesuaikan <span x-text="jenis"></span>
+                                        </span>
                                     </h2>
                                     <p class="text-xs text-gray-500">
-                                        Diskon otomatis terpasang pada menu bertanda promo. Klik untuk melihat daftar promo.
+                                        Promo otomatis disesuaikan sesuai jenis pesanan. Klik untuk melihat daftar & status promo.
                                     </p>
                                 </div>
                             </div>
@@ -107,9 +127,18 @@
                         
                         <div x-show="expanded" x-collapse class="mt-3 pt-3 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                             @foreach ($activeItemPromos as $promo)
-                                <div class="p-2.5 rounded-lg bg-teal-50 border border-teal-100 flex items-start justify-between">
+                                <div class="p-2.5 rounded-lg border flex items-start justify-between transition-all"
+                                    :class="isScopeApplicable('{{ $promo->channel_scope }}') ? 'bg-teal-50/80 border-teal-200' : 'bg-gray-50 border-gray-200 opacity-60'">
                                     <div>
-                                        <span class="font-bold text-teal-900">{{ $promo->name }}</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold" :class="isScopeApplicable('{{ $promo->channel_scope }}') ? 'text-teal-900' : 'text-gray-700'">
+                                                {{ $promo->name }}
+                                            </span>
+                                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                                :class="isScopeApplicable('{{ $promo->channel_scope }}') ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'"
+                                                x-text="isScopeApplicable('{{ $promo->channel_scope }}') ? '● Dipakai' : '○ Tidak Dipakai'">
+                                            </span>
+                                        </div>
                                         <div class="text-teal-700 mt-0.5">
                                             @if ($promo->discount_type === 'percent')
                                                 Diskon {{ $promo->discount_value }}%
@@ -126,8 +155,9 @@
                                             {{ $promo->items_count }} menu terdaftar
                                         </div>
                                     </div>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#2B7A78] text-white uppercase">
-                                        Aktif
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase"
+                                        :class="isScopeApplicable('{{ $promo->channel_scope }}') ? 'bg-[#2B7A78] text-white' : 'bg-gray-200 text-gray-600'">
+                                        <span x-text="isScopeApplicable('{{ $promo->channel_scope }}') ? 'Dipakai' : 'Mati'"></span>
                                     </span>
                                 </div>
                             @endforeach
@@ -154,23 +184,26 @@
                                 <div class="relative">
                                     <x-menu-image :item="$item" size="w-full h-24 sm:h-28" text="text-2xl" class="rounded-none" />
                                     
-                                    {{-- Badge Promo di sudut gambar --}}
-                                    @if ($promo)
+                                    {{-- Badge Promo di sudut gambar (Dinamis sesuai jenis pesanan) --}}
+                                    <template x-if="menu[{{ $item->id }}].has_promo">
                                         <div class="absolute top-2 left-2 flex flex-col gap-1 items-start">
-                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow bg-[#DB5461]">
-                                                🏷️ {{ $promo->discount_type === 'percent' ? $promo->discount_value.'%' : 'Hemat Rp '.number_format($promo->discount_value, 0, ',', '.') }}
-                                            </span>
-                                            @if ($promo->channel_scope === 'online_only')
-                                                <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold text-blue-800 bg-blue-100/90 shadow border border-blue-200">
-                                                    Online Saja
+                                            <template x-if="currentPromo({{ $item->id }})">
+                                                <div class="flex flex-col gap-1 items-start">
+                                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow bg-[#DB5461]">
+                                                        🏷️ <span x-text="currentPromo({{ $item->id }}).label"></span>
+                                                    </span>
+                                                    <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold text-emerald-800 bg-emerald-100 shadow border border-emerald-300">
+                                                        Dipakai (<span x-text="isOnline ? 'Online' : 'Offline'"></span>)
+                                                    </span>
+                                                </div>
+                                            </template>
+                                            <template x-if="!currentPromo({{ $item->id }})">
+                                                <span class="px-1.5 py-0.5 rounded text-[9px] font-medium text-gray-700 bg-white/95 shadow border border-gray-200">
+                                                    Promo <span x-text="isOnline ? 'Offline Saja' : 'Online Saja'"></span>
                                                 </span>
-                                            @elseif ($promo->channel_scope === 'offline_only')
-                                                <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold text-amber-800 bg-amber-100/90 shadow border border-amber-200">
-                                                    Offline Saja
-                                                </span>
-                                            @endif
+                                            </template>
                                         </div>
-                                    @endif
+                                    </template>
 
                                     {{-- Badge Qty di pojok kanan atas --}}
                                     <span x-show="qtyOf({{ $item->id }})" x-text="qtyOf({{ $item->id }})"
@@ -185,24 +218,29 @@
 
                                     {{-- Tampilan Harga & Status Promo Adaptif --}}
                                     <div class="mt-1.5">
-                                        @if ($promo)
-                                            <template x-if="isPromoApplicable({{ $item->id }})">
+                                        <template x-if="currentPromo({{ $item->id }})">
+                                            <div>
                                                 <div class="flex flex-wrap items-baseline gap-1.5">
                                                     <span class="text-sm font-bold text-[#2B7A78]" x-text="rupiah(finalPrice({{ $item->id }}))"></span>
                                                     <span class="text-xs text-gray-400 line-through">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
                                                 </div>
-                                            </template>
-                                            <template x-if="!isPromoApplicable({{ $item->id }})">
-                                                <div>
-                                                    <span class="text-sm font-semibold text-gray-800">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
-                                                    <span class="block text-[10px] text-amber-600 mt-0.5 font-medium">
-                                                        {{ $promo->channel_scope === 'online_only' ? '*Promo khusus online' : '*Promo khusus offline' }}
+                                                <template x-if="menu[{{ $item->id }}].has_two_promos">
+                                                    <span class="block text-[10px] text-teal-700 mt-0.5 font-medium">
+                                                        ✨ Promo <span x-text="isOnline ? 'Online' : 'Offline'"></span> dipakai (Ada 2 promo)
                                                     </span>
-                                                </div>
-                                            </template>
-                                        @else
-                                            <p class="text-sm font-semibold text-[#2B7A78]">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                                        @endif
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <template x-if="!currentPromo({{ $item->id }})">
+                                            <div>
+                                                <span class="text-sm font-semibold text-gray-800">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                <template x-if="menu[{{ $item->id }}].has_promo">
+                                                    <span class="block text-[10px] text-amber-600 mt-0.5 font-medium"
+                                                        x-text="isOnline ? '*Promo khusus offline' : '*Promo khusus online'">
+                                                    </span>
+                                                </template>
+                                            </div>
+                                        </template>
                                     </div>
 
                                     @if ($item->lacakStok())
@@ -246,7 +284,11 @@
                                 <div class="flex items-center gap-3">
                                     <input type="hidden" :name="`items[${index}][item_id]`" :value="row.id">
                                     <input type="hidden" :name="`items[${index}][quantity]`" :value="row.qty">
-                                    
+                                    {{-- Kirim nilai apply_item_promo: 1 jika promo aktif & dipakai, 0 jika dinonaktifkan --}}
+                                    <input type="hidden"
+                                        :name="`items[${index}][apply_item_promo]`"
+                                        :value="(currentPromo(row.id) && row.applyPromo) ? 1 : 0">
+
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-800 truncate" x-text="menu[row.id].name"></p>
                                         <div class="flex items-center gap-1.5 text-xs">
@@ -282,13 +324,47 @@
                                     </div>
                                 </div>
 
-                                {{-- Info Badge Promo di bawah nama menu --}}
-                                <template x-if="isPromoApplicable(row.id)">
-                                    <div class="mt-1 flex items-center gap-1">
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                                            🏷️ <span x-text="menu[row.id].promo.name"></span> 
-                                            (<span x-text="menu[row.id].promo.label"></span>)
-                                        </span>
+                                {{-- Toggle Promo per item + badge --}}
+                                <template x-if="menu[row.id].has_promo">
+                                    <div class="mt-1.5">
+                                        {{-- Promo eligible untuk jenis pesanan ini --}}
+                                        <template x-if="currentPromo(row.id)">
+                                            <div class="flex items-center justify-between">
+                                                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                    <div class="relative">
+                                                        <input type="checkbox" class="sr-only peer" x-model="row.applyPromo">
+                                                        <div class="w-9 h-5 rounded-full transition-colors peer-checked:bg-emerald-500 bg-gray-300 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400"></div>
+                                                        <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4"></div>
+                                                    </div>
+                                                    <span class="text-[11px] font-medium flex items-center gap-1.5"
+                                                        :class="row.applyPromo ? 'text-emerald-700' : 'text-gray-400'">
+                                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                                            :class="row.applyPromo ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-500'"
+                                                            x-text="row.applyPromo ? 'Dipakai' : 'Mati'">
+                                                        </span>
+                                                        <template x-if="row.applyPromo">
+                                                            <span>🏷️ <span x-text="currentPromo(row.id).name"></span> (<span x-text="currentPromo(row.id).label"></span>)</span>
+                                                        </template>
+                                                        <template x-if="!row.applyPromo">
+                                                            <span>Promo dinonaktifkan</span>
+                                                        </template>
+                                                    </span>
+                                                </label>
+                                                {{-- Jika menu punya 2 promo aktif --}}
+                                                <template x-if="menu[row.id].has_two_promos">
+                                                    <span class="text-[10px] text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-200 font-medium">
+                                                        ✨ 2 Promo (<span x-text="isOnline ? 'Online' : 'Offline'"></span>)
+                                                    </span>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        {{-- Promo tidak eligible untuk jenis pesanan ini --}}
+                                        <template x-if="!currentPromo(row.id)">
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                                                ⚠️ Promo tidak berlaku untuk
+                                                <span x-text="isOnline ? 'pesanan online' : 'pesanan offline'"></span>
+                                            </span>
+                                        </template>
                                     </div>
                                 </template>
                             </div>
@@ -468,18 +544,35 @@
                     return this.availablePlatformPromos.find(p => p.id === Number(this.platformPromoId)) || null;
                 },
 
-                isPromoApplicable(id) {
-                    const item = this.menu[id];
-                    if (!item || !item.has_promo || !item.promo) return false;
-                    const scope = item.promo.scope;
-                    if (scope === 'all') return true;
+                // Cek apakah cakupan promo berlaku untuk jenis pesanan saat ini (dipakai di banner)
+                isScopeApplicable(scope) {
+                    if (!scope || scope === 'all') return true;
                     if (this.isOnline && scope === 'online_only') return true;
                     if (!this.isOnline && scope === 'offline_only') return true;
                     return false;
                 },
+                // Promo aktif yang berlaku saat ini untuk item tertentu (online vs offline)
+                currentPromo(id) {
+                    const item = this.menu[id];
+                    if (!item || !item.has_promo) return null;
+                    return this.isOnline ? item.online_promo : item.offline_promo;
+                },
+                // Apakah item memiliki promo yang berlaku untuk jenis pesanan saat ini
+                isPromoEligible(id) {
+                    return this.currentPromo(id) !== null;
+                },
+                // Promo benar-benar diterapkan: ada promo yang berlaku DAN kasir tidak menonaktifkannya
+                isPromoApplicable(id) {
+                    const promo = this.currentPromo(id);
+                    if (!promo) return false;
+                    const row = this.cart.find(r => r.id === id);
+                    if (!row) return true;
+                    return row.applyPromo !== false;
+                },
                 unitDiscount(id) {
                     if (!this.isPromoApplicable(id)) return 0;
-                    return this.menu[id].promo.discount_amount || 0;
+                    const promo = this.currentPromo(id);
+                    return promo ? promo.discount_amount : 0;
                 },
                 finalPrice(id) {
                     const original = this.menu[id].price;
@@ -565,7 +658,7 @@
                     const row = this.cart.find((r) => r.id === id);
                     const max = this.menu[id]?.stock ?? 999;
                     if (row) row.qty = Math.min(row.qty + 1, 999, max);
-                    else if (max > 0) this.cart.push({ id, qty: 1 });
+                    else if (max > 0) this.cart.push({ id, qty: 1, applyPromo: true });
                 },
                 dec(id) {
                     const row = this.cart.find((r) => r.id === id);
@@ -591,6 +684,11 @@
                         this.sourceId = valid[0]?.id || null;
                     }
                     this.platformPromoId = null;
+                    // Sinkronisasi status applyPromo di keranjang:
+                    // Jika item memiliki promo yang aktif untuk jenis pesanan baru, set ke 'Dipakai' (true)
+                    this.cart.forEach(row => {
+                        row.applyPromo = Boolean(this.currentPromo(row.id));
+                    });
                 },
             };
         }

@@ -25,13 +25,31 @@
                         </div>
                         <div class="mt-4 border-t border-gray-200 pt-4 flex items-center space-x-4">
                             <img class="h-12 w-12 rounded-full"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random&color=fff"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background={{ auth()->user()->isOwner() ? '2B7A78' : '468585' }}&color=fff"
                                 alt="Profile photo">
 
                             <div>
-                                <h3 class="text-lg font-medium text-gray-900">{{ auth()->user()->name }}</h3>
-                                <p class="text-sm text-gray-500">Member since
-                                    {{ auth()->user()->created_at->format('M Y') }}</p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-lg font-medium text-gray-900">{{ auth()->user()->name }}</h3>
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Aktif
+                                    </span>
+                                    @if(auth()->user()->isOwner())
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#DEF2F1] text-[#2B7A78] border border-[#2B7A78]/30">
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                            </svg>
+                                            Mempunyai akses ke semua role
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                                            Role: {{ ucfirst(auth()->user()->role) }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <p class="text-sm text-gray-500 mt-0.5">Member since
+                                    {{ auth()->user()->created_at?->format('M Y') ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -46,6 +64,9 @@
                             <div class="px-4 py-5 sm:p-6">
                                 <form method="POST" action="{{ route('info-profile.update') }}">
                                     @csrf
+                                    @if (session('status'))
+                                        <div class="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700">{{ session('status') }}</div>
+                                    @endif
 
 
                                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">

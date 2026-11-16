@@ -126,30 +126,6 @@
                                 {{ $items->links() }}
                             </div>
                         </div>
-                        <div class="mb-4 card text-primary-content bg-white mt-4 w-full">
-                            <div class="card-body">
-                                <div class="overflow-hidden">
-                                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                                        <div class="bg-[#2B7A78] text-white p-4 rounded-lg">
-                                            <h3 class="text-sm">Total Menu Terjual</h3>
-                                            <p class="text-2xl font-bold">{{ $totalSold }} porsi</p>
-                                        </div>
-                                        <div class="bg-[#3AAFA9] text-white p-4 rounded-lg">
-                                            <h3 class="text-sm">Menu Terlaris</h3>
-                                            <p class="text-lg font-bold">{{ $topSellingMenu->name ?? '-' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex flex-col lg:flex-row gap-6">
-                                        <div class="mt-4 w-72 h-72 mx-auto">
-                                            <canvas id="menuPieChart"></canvas>
-                                        </div>
-                                        <div class="bg-white rounded-lg p-4 w-full lg:w-[48%]">
-                                        
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Modal untuk forms -->
@@ -214,56 +190,8 @@
 
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const data = {
-            labels: @json($chartData['labels']),
-            datasets: [{
-                label: 'Terjual',
-                data: @json($chartData['quantities']),
-                backgroundColor: [
-                    '#819A91',
-                    '#537D5D',
-                    '#73946B',
-                    '#9EBC8A',
-                    '#AEC8A4'
-                ],
-                borderWidth: 1
-            }]
-        };
-
-        const config = {
-            type: 'pie',
-            data: data,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 20,
-                            padding: 15
-                        }
-                    }
-                }
-            }
-        };
-
-        const myChart = new Chart(
-            document.getElementById('menuPieChart'),
-            config
-        );
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: @json(session('success')),
-                showConfirmButton: false,
-                timer: 2000
-            });
-        @endif
-
+        
         @if (session('error'))
             Swal.fire({
                 icon: 'error',

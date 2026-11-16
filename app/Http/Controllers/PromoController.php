@@ -15,7 +15,7 @@ class PromoController extends Controller
     public function index()
     {
         $promos = ItemPromo::with(['items'])->latest()->get();
-        $items = Item::with('promo')->orderBy('name')->get();
+        $items = Item::with(['promo', 'promos'])->orderBy('name')->get();
 
         return view('promo.item', compact('promos', 'items'));
     }
@@ -50,6 +50,7 @@ class PromoController extends Controller
             ]);
 
             if (! empty($validated['item_ids'])) {
+                $promo->items()->sync($validated['item_ids']);
                 Item::whereIn('id', $validated['item_ids'])->update(['item_promo_id' => $promo->id]);
             }
         });
@@ -86,13 +87,13 @@ class PromoController extends Controller
             ]);
 
             $newItemIds = $validated['item_ids'] ?? [];
+            $promo->items()->sync($newItemIds);
 
-            // Lepaskan menu yang sebelumnya terhubung tetapi tidak lagi dicentang
+            // Sinkronisasi kolom fallback item_promo_id
             Item::where('item_promo_id', $promo->id)
                 ->whereNotIn('id', $newItemIds)
                 ->update(['item_promo_id' => null]);
 
-            // Tautkan menu baru
             if (! empty($newItemIds)) {
                 Item::whereIn('id', $newItemIds)->update(['item_promo_id' => $promo->id]);
             }
@@ -118,6 +119,7 @@ class PromoController extends Controller
     public function destroy(ItemPromo $promo)
     {
         DB::transaction(function () use ($promo) {
+            $promo->items()->detach();
             Item::where('item_promo_id', $promo->id)->update(['item_promo_id' => null]);
             $promo->delete();
         });

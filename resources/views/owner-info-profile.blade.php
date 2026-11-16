@@ -1,178 +1,212 @@
+@section('title', 'Profile Settings')
 <x-app-layout>
-    <div class="h-screen w-full bg-gray-100 flex overflow-hidden">
-        <!-- Sidebar -->
-        <div class="drawer lg:drawer-open">
-            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+    <div class="min-h-screen bg-gray-50">
+        <div class="flex">
+            <!-- Sidebar Placeholder -->
 
-            <!-- Drawer Content -->
-            <div class="drawer-content flex flex-col h-screen">
-                <!-- Header Wrapper -->
-                <div class="header-wrapper bg-[#D1DDD5] px-4 py-2 lg:px-4 lg:py-2">
-                    <!-- Header -->
-                    <div
-                        class="header-box bg-white border border-gray-300 rounded-lg shadow-lg flex justify-between items-center py-4 px-6 lg:px-12">
-                        <!-- Hamburger Menu for Mobile View -->
-                        <div class="flex items-center lg:hidden">
-                            <label for="my-drawer-2" class="cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-current" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </label>
-                            <span class="text-lg lg:text-xl font-semibold ml-4 text-[#2B7A78]">Hallo, </span>
+            <!-- Main Content -->
+            <div class="flex-1 overflow-y-auto">
+                <div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+                    <!-- Page Header -->
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Profile Settings</h1>
+                                <p class="mt-2 text-sm text-gray-600">Manage your account information and security
+                                    settings</p>
+                            </div>
+
+                            <div>
+                                <a href="{{ route(auth()->user()->homeRoute()) }}"
+                                    class="text-sm bg-[#468585] hover:bg-[#468585] text-white font-medium px-4 py-2 rounded transition">
+                                    kembali
+                                </a>
+                            </div>
                         </div>
+                        <div class="mt-4 border-t border-gray-200 pt-4 flex items-center space-x-4">
+                            <img class="h-12 w-12 rounded-full"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=2B7A78&color=fff"
+                                alt="Profile photo">
 
-                        <!-- Desktop Navigation Links -->
-                        <div class="hidden lg:flex items-center w-full justify-between">
-                            <span class="text-lg lg:text-xl font-semibold text-[#2B7A78]">Hallo, </span>
-                            <!-- Profile Dropdown Menu -->
-                            <div class="dropdown dropdown-end">
-                                <div tabindex="0" role="button">
-                                    <div class="avatar">
-                                        <div class="w-12 h-12 rounded-full">
-                                            <a
-                                                class="inline-flex items-center justify-center p-2 hover:text-[#000000] mt-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                </svg>
-                                            </a>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-lg font-medium text-gray-900">{{ auth()->user()->name }}</h3>
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Aktif
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#DEF2F1] text-[#2B7A78] border border-[#2B7A78]/30">
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                        </svg>
+                                        Mempunyai akses ke semua role
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-0.5">Member since
+                                    {{ auth()->user()->created_at?->format('M Y') ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Profile Information -->
+                        <div class="bg-white shadow rounded-lg">
+                            <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900">Profile Information</h3>
+                                <p class="mt-1 text-sm text-gray-500">Update your basic account details</p>
+                            </div>
+                            <div class="px-4 py-5 sm:p-6">
+                                <form method="POST" action="{{ route('info-profile.update') }}">
+                                    @csrf
+                                    @if (session('status'))
+                                        <div class="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700">{{ session('status') }}</div>
+                                    @endif
+
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
+                                        <div class="sm:col-span-3">
+                                            <label for="name"
+                                                class="block text-sm font-medium text-gray-700">Name</label>
+                                            <input type="text" name="name" id="name"
+                                                value="{{ old('name', auth()->user()->name) }}"
+                                                class="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="email"
+                                                class="block text-sm font-medium text-gray-700">Email</label>
+                                            <input type="email" name="email" id="email"
+                                                value="{{ old('email', auth()->user()->email) }}"
+                                                class="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         </div>
                                     </div>
-                                </div>
-                                <ul tabindex="0"
-                                    class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg">
-                                    <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a></li>
-                                    <li><a class="text-red-700">Log Out</a></li>
-                                </ul>
+
+                                    <div class="mt-10 flex justify-end">
+                                        <button type="submit"
+                                            class="ml-3 bg-[#468585] hover:bg-[#468585] text-white py-2 px-4 rounded-md text-sm font-medium">
+                                            Save changes
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
-                        <!-- Mobile Profile Icon -->
-                        <div class="flex items-center lg:hidden relative">
-                            <div class="avatar">
-                                <div class="w-10 h-10 rounded-full">
-                                    <button class="inline-flex items-center justify-center p-2 hover:text-[#000000]"
-                                        id="profile-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.5"
-                                            stroke="currentColor" class="h-6 w-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </button>
-                                    <!-- Dropdown Menu -->
-                                    <ul id="mobile-profile-dropdown"
-                                        class="menu dropdown-content bg-white rounded-box z-[1] mt-6 w-40 p-2 shadow-lg hidden absolute right-0">
-                                        <li><a class="text-black" id="showInfo" onclick="showInfo()">Info Profile</a>
-                                        </li>
-                                        <li><a class="text-red-700">Log Out</a></li>
-                                    </ul>
-                                </div>
+                        <div class="bg-white shadow rounded-lg">
+                            <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900">Security</h3>
+                                <p class="mt-1 text-sm text-gray-500">Change your password</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="px-4 py-5 sm:p-6">
+                                <form method="POST" action="{{ route('info-profile.update-password') }}">
+                                    @csrf
+                                    @if (session('status'))
+                                        <div class="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700">{{ session('status') }}</div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <ul class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700 list-disc list-inside">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
 
-                <!-- Main Content -->
-                <div class="flex-1 bg-[#D1DDD5] overflow-hidden flex items-center justify-center">
-                    <div
-                        class="card text-primary-content bg-white mt-4 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-lg shadow-lg px-3 py-4">
-                        <div class="flex items-center justify-center mb-6">
-                            <div class="card text-primary-content bg-white mt-4 w-full">
-                                <div class="card-body">
-                                    <!-- Profile Picture with margin-bottom -->
-                                    <div
-                                        class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center mb-4">
-                                        <span class="text-lg font-semibold">Profile Pict</span>
+                                        <!-- Current Password -->
+                                        <div class="sm:col-span-6 relative">
+                                            <label for="current-password"
+                                                class="block text-sm font-medium text-gray-700">Current password</label>
+                                            <input type="password" id="current-password" name="current_password"
+                                                autocomplete="current-password"
+                                                class="mt-1 block w-full border rounded-md p-2 pr-10 border-gray-300 sm:text-sm" />
+                                        </div>
+
+                                        <!-- New Password -->
+                                        <div class="sm:col-span-6 relative">
+                                            <label for="new-password"
+                                                class="block text-sm font-medium text-gray-700">New password</label>
+                                            <input type="password" id="new-password" name="new_password"
+                                                class="mt-1 block w-full border rounded-md p-2 pr-10 border-gray-300 sm:text-sm" />
+                                            <button type="button"
+                                                class="absolute inset-y-0 right-2 flex items-center text-gray-500 cursor-pointer hover:text-gray-700 outline-none"
+                                                onclick="togglePassword('new-password', this)" tabindex="-1"
+                                                aria-label="Toggle new password visibility">
+                                                <!-- Eye icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-5"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <!-- Confirm Password -->
+                                        <div class="sm:col-span-6 relative">
+                                            <label for="confirm-password"
+                                                class="block text-sm font-medium text-gray-700">Confirm password</label>
+                                            <input type="password" id="confirm-password"
+                                                name="new_password_confirmation"
+                                                class="mt-1 block w-full border rounded-md p-2 pr-10 border-gray-300 sm:text-sm" />
+                                            <button type="button"
+                                                class="absolute inset-y-0 right-2 flex items-center text-gray-500 cursor-pointer hover:text-gray-700 outline-none"
+                                                onclick="togglePassword('confirm-password', this)" tabindex="-1"
+                                                aria-label="Toggle confirm password visibility">
+                                                <!-- Eye icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-5"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <!-- Section with name, email, and status -->
-                                    <div class="mb-6">
-                                        <p class="text-black text-lg">Nama: </p>
-                                        <p class="text-black text-lg">Email:</p>
-                                        <p class="text-black text-lg">Status: Owner</p>
+                                    <div class="mt-6 flex justify-end">
+                                        <button type="submit"
+                                            class="ml-3 bg-[#468585] hover:bg-[#468585] text-white py-2 px-4 rounded-md text-sm font-medium">
+                                            Update password
+                                        </button>
                                     </div>
-
-                                    <a href="{{ route('info-profile') }}"
-                                        class="bg-[#2B7A78] text-white py-3 px-6 rounded-md text-center block hover:bg-[#22665c] text-lg font-semibold">Edit</a>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+
                 </div>
-            </div>
-            <div class="drawer-side">
-                <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-                <ul class="menu text-black min-h-full w-80 p-4 bg-white">
-                    <div class="lg:hidden flex justify-end mb-4">
-                        <label for="my-drawer-2" class="cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </label>
-                    </div>
-                    <!-- Sidebar Logo -->
-                    <div class="text-[#2B7A78] text-center mb-4 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="mt-10 mb-6 h-8 w-8 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        <h1 class="mt-10 mb-6 text-xl font-bold">BelFinance</h1>
-                    </div>
-                    <!-- Sidebar Menu Links -->
-                    <li>
-                        <a href="{{ url('/owner/beranda') }}"
-                            class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2"
-                            onclick="setActiveLink(event)">Beranda</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mb-4 mt-2 block w-full px-4 py-2"
-                            onclick="setActiveLink(event)">Button</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('laporan-owner') }}"
-                            class="text-black hover:bg-[#2B7A78] hover:text-[#DEF2F1] mt-2 mb-2 block w-full px-4 py-2 text-left"
-                            onclick="setActiveLink(event)">Laporan Keuangan</a>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
 </x-app-layout>
 
 <script>
-    function setActiveLink(event) {
-        // hapus link aktif modal
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('bg-[#2B7A78]', 'text-white', 'rounded-md');
-            link.classList.add('text-gray-600', 'rounded-md');
-        });
-
-        // efek aktif pada modal
-        event.target.classList.add('bg-[#2B7A78]', 'text-white', 'rounded-md');
-        event.target.classList.remove('text-gray-600');
-    }
-
-    // Show/Hide Profile Dropdown on Mobile
-    document.getElementById('profile-icon').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent click event from bubbling up
-        const dropdown = document.getElementById('mobile-profile-dropdown');
-        dropdown.classList.toggle('hidden');
-    });
-
-    // Hide dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('mobile-profile-dropdown');
-        const profileIcon = document.getElementById('profile-icon');
-
-        if (!profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.add('hidden');
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            btn.innerHTML = `
+                <!-- Eye Off icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.955 9.955 0 012.933-4.357m2.5-1.143A9.958 9.958 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.056 10.056 0 01-1.524 2.765M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3l18 18" />
+                </svg>
+            `;
+        } else {
+            input.type = "password";
+            btn.innerHTML = `
+                <!-- Eye icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            `;
         }
-    });
+    }
 </script>

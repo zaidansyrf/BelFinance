@@ -43,9 +43,12 @@ class AdminLaporanKeuanganController extends Controller
         $displayAkhir = $tanggalAkhir ? \Carbon\Carbon::parse($tanggalAkhir)->translatedFormat('d F Y') : 'Semua Data';
 
         // Format currency
-        $formatter = new \NumberFormatter('id_ID', \NumberFormatter::CURRENCY);
-        $formatCurrency = function ($value) use ($formatter) {
-            return $formatter->formatCurrency($value, 'IDR');
+        $formatCurrency = function ($value) {
+            if (class_exists(\NumberFormatter::class)) {
+                $formatter = new \NumberFormatter('id_ID', \NumberFormatter::CURRENCY);
+                return $formatter->formatCurrency($value, 'IDR');
+            }
+            return 'Rp ' . number_format($value, 0, ',', '.');
         };
 
         $pdf = Pdf::loadView('laporan.export-pdf', [
