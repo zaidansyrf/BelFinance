@@ -100,6 +100,23 @@ class PembayaranTest extends TestCase
             ->assertViewHas('pembayarans', fn ($p) => $p->count() === 1 && $p->first()->name === 'Pesanan Online');
     }
 
+    public function test_index_filters_by_month_year_and_sorts(): void
+    {
+        Income::factory()->payment()->create(['date' => '2026-05-10', 'name' => 'Pesanan Mei']);
+        Income::factory()->payment()->create(['date' => '2026-06-15', 'name' => 'Pesanan Juni']);
+        Income::factory()->payment()->create(['date' => '2025-06-20', 'name' => 'Pesanan Tahun Lalu']);
+
+        $this->actingAs($this->keuangan)
+            ->get(route('pembayaran.index', ['bulan' => 6, 'tahun' => 2026]))
+            ->assertOk()
+            ->assertViewHas('pembayarans', fn ($p) => $p->total() === 1 && $p->first()->name === 'Pesanan Juni');
+
+        $this->actingAs($this->keuangan)
+            ->get(route('pembayaran.index', ['sort' => 'asc']))
+            ->assertOk()
+            ->assertViewHas('pembayarans', fn ($p) => $p->first()->name === 'Pesanan Tahun Lalu');
+    }
+
     public function test_destroy_soft_deletes_payment_and_reverts_item_quantity(): void
     {
         $item = Item::factory()->create(['price' => 10000, 'quantity' => 0]);

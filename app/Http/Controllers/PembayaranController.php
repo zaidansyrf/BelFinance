@@ -36,6 +36,8 @@ class PembayaranController extends Controller
         $sourceId = $request->input('source_id');
         $tanggalAwal = $request->input('tanggal_awal');
         $tanggalAkhir = $request->input('tanggal_akhir');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
         $sort = $request->input('sort', 'desc');
 
         $query = Income::with(['source', 'platformPromo'])
@@ -62,6 +64,14 @@ class PembayaranController extends Controller
 
         if ($tanggalAkhir) {
             $query->whereDate('date', '<=', $tanggalAkhir);
+        }
+
+        if ($bulan) {
+            $query->whereMonth('date', $bulan);
+        }
+
+        if ($tahun) {
+            $query->whereYear('date', $tahun);
         }
 
         if ($sort === 'asc' || $sort === 'terlama') {

@@ -7,6 +7,35 @@
     display: none !important;
 }
 
+/* Pastikan input tanggal selalu bertema terang dan ikon kalender picker terlihat jelas */
+html {
+    color-scheme: light;
+}
+
+input[type="date"],
+input[type="datetime-local"] {
+    color-scheme: light !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator {
+    cursor: pointer !important;
+    filter: invert(0) brightness(0.2) !important;
+    opacity: 0.8 !important;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover,
+input[type="month"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1 !important;
+    filter: invert(0) brightness(0) !important;
+    transform: scale(1.08);
+}
+
 /* Teks jawaban AI (Markdown yang sudah diubah ke HTML) */
 .ai-prose > * + * { margin-top: 0.6em; }
 .ai-prose ul { list-style: disc; padding-left: 1.25rem; }

@@ -100,14 +100,14 @@
                                                         {{ number_format($menu->price, 0, ',', '.') }}</td>
                                                     <td class="py-2 px-4 border-b text-black">
                                                         <a href="{{ route('menu.edit', $menu->id) }}"
-                                                            class="text-white bg-[#468585] hover:bg-[#376e6e] px-3 py-1 rounded hover:underline">Edit</a>
+                                                            class="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md hover:underline">Edit</a>
                                                         <form action="{{ route('menu.destroy', $menu->id) }}"
                                                             method="POST" class="inline-block"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?');">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 ml-2">Hapus</button>
+                                                                class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 ml-2">Hapus</button>
                                                         </form>
                                                     </td>
                                                 </tr>

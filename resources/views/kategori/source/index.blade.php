@@ -56,7 +56,7 @@
                                                     </td>
                                                     <td class="flex items-center space-x-2">
                                                         <a href="{{ route('sumber-masuk.edit', $source->id) }}"
-                                                            class="text-white px-3 py-1 rounded bg-[#2B7A78] hover:bg-[#205C5D] ml-2">Edit</a>
+                                                            class="text-white px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 ml-2">Edit</a>
                                                         <form action="{{ route('sumber-masuk.destroy', $source->id) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apa anda yakin menghapus sumber {{ $source->name }}?')"
@@ -64,7 +64,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 ml-2">Hapus</button>
+                                                                class="text-white px-3 py-1 rounded bg-red-500 hover:bg-red-600 ml-2">Hapus</button>
                                                         </form>
                                                     </td>
                                                 </tr>

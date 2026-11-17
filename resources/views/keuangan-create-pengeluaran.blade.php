@@ -84,7 +84,7 @@
                         <label for="date" class="block text-xs font-semibold text-gray-700 mb-1.5">
                             Tanggal Transaksi <span class="text-rose-500">*</span>
                         </label>
-                        <input type="date" name="date" id="date" value="{{ old('date', date('Y-m-d')) }}" max="{{ date('Y-m-d') }}" required
+                        <input type="date" style="color-scheme: light;" name="date" id="date" value="{{ old('date', date('Y-m-d')) }}" max="{{ date('Y-m-d') }}" required
                             class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] focus:border-[#2B7A78] text-gray-800 bg-white transition">
                         @error('date')
                             <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>

@@ -77,7 +77,7 @@
                                         <div class="mt-4">
                                             <label for="date"
                                                 class="block text-sm font-medium text-black">Tanggal</label>
-                                            <input type="date" name="date" id="date"
+                                            <input type="date" style="color-scheme: light;" name="date" id="date"
                                                 value="{{ old('date', \Carbon\Carbon::parse($expense->date)->format('Y-m-d')) }}"
                                                 class="text-gray-500 w-full p-2 border border-gray-300 rounded-md"
                                                 max="{{ date('Y-m-d') }}"

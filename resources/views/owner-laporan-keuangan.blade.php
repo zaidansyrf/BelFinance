@@ -6,6 +6,7 @@
     $currentType = request('type');
     $hariIni = Carbon::today()->toDateString();
     $awalBulanIni = Carbon::today()->startOfMonth()->toDateString();
+    $awalTahunIni = Carbon::today()->startOfYear()->toDateString();
     $tujuhHariLalu = Carbon::today()->subDays(6)->toDateString();
 
     // Ringkasan untuk data yang sedang tampil di halaman
@@ -46,57 +47,103 @@
 
         {{-- 2. Card Filter Periode Transaksi & Tipe --}}
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5 sm:p-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-4">
-                <div>
-                    <h3 class="text-sm sm:text-base font-bold text-gray-800 flex items-center gap-2">
-                        Filter Periode &amp; Jenis Transaksi
-                    </h3>
-                </div>
-
-                {{-- Preset Filter Cepat --}}
-                <div class="flex flex-wrap items-center gap-1.5">
-                    <a href="{{ route('laporan-owner', array_merge(request()->query(), ['tanggal_awal' => $hariIni, 'tanggal_akhir' => $hariIni])) }}"
-                        class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $hariIni && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        Hari Ini
-                    </a>
-                    <a href="{{ route('laporan-owner', array_merge(request()->query(), ['tanggal_awal' => $tujuhHariLalu, 'tanggal_akhir' => $hariIni])) }}"
-                        class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $tujuhHariLalu && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        7 Hari Terakhir
-                    </a>
-                    <a href="{{ route('laporan-owner', array_merge(request()->query(), ['tanggal_awal' => $awalBulanIni, 'tanggal_akhir' => $hariIni])) }}"
-                        class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $awalBulanIni && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        Bulan Ini
-                    </a>
-                    @if ($awal || $akhir || $currentType)
-                        <a href="{{ route('laporan-owner') }}"
-                            class="px-2.5 py-1 text-xs font-medium rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition">
-                            Reset Semua
-                        </a>
-                    @endif
-                </div>
-            </div>
-
-            {{-- Filter Tabs Jenis Transaksi (Semua, Pemasukan, Pengeluaran) --}}
-            <div class="flex items-center gap-2 mb-4 bg-slate-100 p-1 rounded-xl w-fit">
-                <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['page' => 1])) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ empty($currentType) ? 'bg-white text-[#2B7A78] shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                    Semua Transaksi
-                </a>
-                <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['type' => 'pemasukan', 'page' => 1])) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $currentType === 'pemasukan' ? 'bg-white text-emerald-700 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                    Hanya Pemasukan
-                </a>
-                <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['type' => 'pengeluaran', 'page' => 1])) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $currentType === 'pengeluaran' ? 'bg-white text-rose-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
-                    Hanya Pengeluaran
-                </a>
-            </div>
-
-            {{-- Form Filter Tanggal Custom --}}
             <form method="GET" action="{{ url()->current() }}">
                 @if ($currentType)
                     <input type="hidden" name="type" value="{{ $currentType }}">
                 @endif
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-4">
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold text-gray-800 flex items-center gap-2">
+                            Filter Periode &amp; Jenis Transaksi
+                        </h3>
+                    </div>
+
+                    {{-- Preset Filter Cepat & Dropdown Bulan/Tahun/Sort --}}
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="text-xs font-semibold text-gray-500 mr-1">Periode:</span>
+                        <a href="{{ route('laporan-owner', request()->only('type')) }}"
+                            class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ (!request('tanggal_awal') && !request('tanggal_akhir') && !request('bulan') && !request('tahun')) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            Semua
+                        </a>
+                        <a href="{{ route('laporan-owner', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $hariIni, 'tanggal_akhir' => $hariIni])) }}"
+                            class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $hariIni && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            Hari Ini
+                        </a>
+                        <a href="{{ route('laporan-owner', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $tujuhHariLalu, 'tanggal_akhir' => $hariIni])) }}"
+                            class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $tujuhHariLalu && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            7 Hari Terakhir
+                        </a>
+                        <a href="{{ route('laporan-owner', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $awalBulanIni, 'tanggal_akhir' => $hariIni])) }}"
+                            class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $awalBulanIni && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            Bulan Ini
+                        </a>
+                        <a href="{{ route('laporan-owner', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $awalTahunIni, 'tanggal_akhir' => $hariIni])) }}"
+                            class="px-2.5 py-1 text-xs font-medium rounded-lg transition {{ ($awal === $awalTahunIni && $akhir === $hariIni) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            Tahun Ini
+                        </a>
+
+                        <div class="h-4 w-px bg-gray-200 mx-1 hidden sm:block"></div>
+
+                        {{-- Dropdown Bulan, Tahun, dan Sort --}}
+                        <div class="flex items-center gap-1.5">
+                            <select name="bulan" onchange="clearCustomDates(this.form); this.form.submit()"
+                                class="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer">
+                                <option value="">Semua Bulan</option>
+                                @foreach([
+                                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                                ] as $mNum => $mName)
+                                    <option value="{{ $mNum }}" @selected(request('bulan') == $mNum)>{{ $mName }}</option>
+                                @endforeach
+                            </select>
+
+                            @php
+                                $currentYear = (int) date('Y');
+                                $years = range($currentYear, $currentYear - 4);
+                            @endphp
+                            <select name="tahun" onchange="clearCustomDates(this.form); this.form.submit()"
+                                class="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer">
+                                <option value="">Semua Tahun</option>
+                                @foreach($years as $yr)
+                                    <option value="{{ $yr }}" @selected(request('tahun') == $yr)>{{ $yr }}</option>
+                                @endforeach
+                            </select>
+
+                            <select name="sort" onchange="this.form.submit()"
+                                class="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer"
+                                title="Urutan Transaksi">
+                                <option value="desc" @selected(request('sort', 'desc') === 'desc')>Terbaru</option>
+                                <option value="asc" @selected(request('sort') === 'asc' || request('sort') === 'terlama')>Terlama</option>
+                            </select>
+                        </div>
+
+                        @if ($awal || $akhir || request('bulan') || request('tahun') || (request('sort') && request('sort') !== 'desc') || $currentType)
+                            <a href="{{ route('laporan-owner') }}"
+                                class="px-2.5 py-1 text-xs font-medium rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition">
+                                Reset Semua
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Filter Tabs Jenis Transaksi (Semua, Pemasukan, Pengeluaran) --}}
+                <div class="flex items-center gap-2 mb-4 bg-slate-100 p-1 rounded-xl w-fit">
+                    <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['page' => 1])) }}"
+                        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ empty($currentType) ? 'bg-white text-[#2B7A78] shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
+                        Semua Transaksi
+                    </a>
+                    <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['type' => 'pemasukan', 'page' => 1])) }}"
+                        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $currentType === 'pemasukan' ? 'bg-white text-emerald-700 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
+                        Hanya Pemasukan
+                    </a>
+                    <a href="{{ route('laporan-owner', array_merge(request()->except('type'), ['type' => 'pengeluaran', 'page' => 1])) }}"
+                        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $currentType === 'pengeluaran' ? 'bg-white text-rose-600 shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">
+                        Hanya Pengeluaran
+                    </a>
+                </div>
+
+                {{-- Form Filter Tanggal Custom --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
                     <div class="lg:col-span-5">
                         <label for="tanggal_awal" class="block text-xs font-semibold text-gray-700 mb-1.5">
@@ -104,7 +151,9 @@
                         </label>
                         <div class="relative">
                             <input type="date" name="tanggal_awal" id="tanggal_awal"
-                                class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2B7A78] focus:border-[#2B7A78] transition text-gray-800 bg-white"
+                                class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2B7A78] focus:border-[#2B7A78] transition text-gray-800 bg-white cursor-pointer"
+                                style="color-scheme: light;"
+                                onchange="clearMonthYear(this.form)"
                                 max="{{ date('Y-m-d') }}"
                                 value="{{ request('tanggal_awal') }}">
                         </div>
@@ -116,7 +165,9 @@
                         </label>
                         <div class="relative">
                             <input type="date" name="tanggal_akhir" id="tanggal_akhir"
-                                class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2B7A78] focus:border-[#2B7A78] transition text-gray-800 bg-white"
+                                class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2B7A78] focus:border-[#2B7A78] transition text-gray-800 bg-white cursor-pointer"
+                                style="color-scheme: light;"
+                                onchange="clearMonthYear(this.form)"
                                 max="{{ date('Y-m-d') }}"
                                 value="{{ request('tanggal_akhir') }}">
                         </div>
@@ -132,9 +183,9 @@
                             <span>Terapkan</span>
                         </button>
 
-                        @if(request('tanggal_awal') || request('tanggal_akhir'))
+                        @if(request('tanggal_awal') || request('tanggal_akhir') || request('bulan') || request('tahun') || (request('sort') && request('sort') !== 'desc') || $currentType)
                             <a href="{{ route('laporan-owner', request()->only('type')) }}"
-                                title="Reset Rentang Tanggal"
+                                title="Reset Filter"
                                 class="inline-flex justify-center items-center px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
                                 ✕
                             </a>
@@ -212,16 +263,29 @@
                         Periode:
                     </span>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                        @if ($awal === $hariIni && $akhir === $hariIni)
+                        @php
+                            $namaBulan = [
+                                1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                            ];
+                        @endphp
+                        @if (request('bulan') && request('tahun'))
+                            {{ $namaBulan[(int)request('bulan')] ?? request('bulan') }} {{ request('tahun') }}
+                        @elseif (request('bulan'))
+                            Bulan {{ $namaBulan[(int)request('bulan')] ?? request('bulan') }}
+                        @elseif (request('tahun'))
+                            Tahun {{ request('tahun') }}
+                        @elseif ($awal === $hariIni && $akhir === $hariIni)
                             Hari Ini ({{ Carbon::parse($awal)->translatedFormat('d F Y') }})
                         @elseif ($awal && $akhir)
                             {{ Carbon::parse($awal)->translatedFormat('d M Y') }} s/d {{ Carbon::parse($akhir)->translatedFormat('d M Y') }}
                         @elseif ($awal)
-                            Mulai {{ Carbon::parse($awal)->translatedFormat('d M Y') }}
+                            Dari {{ Carbon::parse($awal)->translatedFormat('d M Y') }}
                         @elseif ($akhir)
                             Sampai {{ Carbon::parse($akhir)->translatedFormat('d M Y') }}
                         @else
-                            Semua Periode Transaksi
+                            Semua Data
                         @endif
                     </span>
 
@@ -370,5 +434,15 @@
         </div>
 
     </div>
+    <script>
+        function clearCustomDates(form) {
+            if (form.tanggal_awal) form.tanggal_awal.value = '';
+            if (form.tanggal_akhir) form.tanggal_akhir.value = '';
+        }
+        function clearMonthYear(form) {
+            if (form.bulan) form.bulan.value = '';
+            if (form.tahun) form.tahun.value = '';
+        }
+    </script>
 </x-panel>
 </x-app-layout>

@@ -9,28 +9,11 @@ use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
-    public function chartExpense()
-    {
-        $monthlyExpense = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
-
-    $months = [];
-    for ($i = 1; $i <= 12; $i++) {
-        $months[] = [
-            'month' => $i,
-            'total' => $monthlyExpense[$i]->total ?? 0  // tidak ada transaksi, nilai = 0
-        ];
-    }
-
-    return response()->json($months);
-    }
     public function index(Request $request)
     {
         return $this->search($request);
     }
+
     public function search(Request $request)
     {
         $search = $request->input('search');
@@ -38,6 +21,8 @@ class ExpenseController extends Controller
         $billId = $request->input('bill_id');
         $tanggalAwal = $request->input('tanggal_awal');
         $tanggalAkhir = $request->input('tanggal_akhir');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
         $sort = $request->input('sort', 'desc');
 
         $query = Expense::with(['source', 'bill']);
@@ -68,6 +53,14 @@ class ExpenseController extends Controller
             $query->whereDate('date', '<=', $tanggalAkhir);
         }
 
+        if ($bulan) {
+            $query->whereMonth('date', $bulan);
+        }
+
+        if ($tahun) {
+            $query->whereYear('date', $tahun);
+        }
+
         if ($sort === 'asc' || $sort === 'terlama') {
             $query->orderBy('date', 'asc')->orderBy('id', 'asc');
         } else {
@@ -93,66 +86,51 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'source_id' => 'required|exists:sources,id',
-            'bill_id' => 'required|exists:bills,id',
-            'amount' => 'required|numeric|min:1',
-            'description' => 'nullable|string|max:255',
+            'source_id' => 'required',
+            'bill_id' => 'required',
             'date' => 'required|date|before_or_equal:today',
+            'amount' => 'required|numeric',
+            'description' => 'nullable|string',
         ]);
 
-        try {
-            Expense::create($validatedData);
+        Expense::create($validatedData);
 
-            return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil ditambahkan!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran!');
-        }
+        return redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil ditambahkan');
     }
 
-    public function show(string $id)
+    public function edit(Expense $expense)
     {
-        $expense = Expense::with(['source', 'bill'])->findOrFail($id);
         $sources = Source::all();
         $bills = Bill::all();
 
         return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
-
     }
 
-    public function edit(string $id)
+    public function update(Request $request, Expense $expense)
     {
-        $expense = Expense::with(['source', 'bill'])->findOrFail($id);
-        $bills = Bill::all();
-        $sources = Source::all();
-
-        return view('keuangan-pengeluaran-edit', compact('expense', 'sources', 'bills'));
-    }
-
-    public function update(Request $request, string $id)
-    {
-        $validatedData = $request->validate([
-            'source_id' => 'required|exists:sources,id',
-            'bill_id' => 'required|exists:bills,id',
-            'amount' => 'required|numeric|min:1',
-            'description' => 'nullable|string|max:255',
+        $request->validate([
+            'source_id' => 'required',
+            'bill_id' => 'required',
             'date' => 'required|date|before_or_equal:today',
+            'amount' => 'required|numeric',
+            'description' => 'nullable|string',
         ]);
 
-        try {
-            $expense = Expense::findOrFail($id);
-            $expense->update($validatedData);
+        $expense->update([
+            'source_id' => $request->source_id,
+            'bill_id' => $request->bill_id,
+            'date' => $request->date,
+            'amount' => $request->amount,
+            'description' => $request->description,
+        ]);
 
-            return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil diperbarui!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui data pengeluaran!');
-        }
+        return redirect()->route('expenses.index')->with('success', 'Data berhasil diperbarui');
     }
 
-    public function destroy($id)
+    public function destroy(Expense $expense)
     {
-        $expense = Expense::findOrFail($id);
-        $expense->delete();
+        $expense->hapus();
 
-        return redirect()->route('expenses.search')->with('success', 'Data pengeluaran berhasil dihapus!');
+        return redirect()->route('expenses.index')->with('success', 'Data berhasil dihapus');
     }
 }

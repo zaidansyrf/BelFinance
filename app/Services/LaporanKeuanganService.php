@@ -14,9 +14,18 @@ class LaporanKeuanganService
 {
     /**
      * @param  string|null  $jenis  'pemasukan', 'pengeluaran', atau null untuk keduanya
+     * @param  int|null  $bulan  1-12
+     * @param  int|null  $tahun  tahun 4 digit
+     * @param  string  $sort  'desc' atau 'asc'
      */
-    public function query(?string $tanggalAwal = null, ?string $tanggalAkhir = null, ?string $jenis = null): Builder
-    {
+    public function query(
+        ?string $tanggalAwal = null,
+        ?string $tanggalAkhir = null,
+        ?string $jenis = null,
+        ?int $bulan = null,
+        ?int $tahun = null,
+        string $sort = 'desc'
+    ): Builder {
         $incomeQuery = Income::with('source')
             ->selectRaw("'pemasukan' as jenis, name as nama, source_id, amount as jumlah, date as tanggal, description as keterangan, NULL as bill_id");
 
@@ -39,12 +48,24 @@ class LaporanKeuanganService
             $expenseQuery->whereDate('expenses.date', '<=', $tanggalAkhir);
         }
 
+        if ($bulan) {
+            $incomeQuery->whereMonth('date', $bulan);
+            $expenseQuery->whereMonth('expenses.date', $bulan);
+        }
+
+        if ($tahun) {
+            $incomeQuery->whereYear('date', $tahun);
+            $expenseQuery->whereYear('expenses.date', $tahun);
+        }
+
         $query = match ($jenis) {
             'pemasukan' => $incomeQuery,
             'pengeluaran' => $expenseQuery,
             default => $incomeQuery->unionAll($expenseQuery),
         };
 
-        return $query->orderBy('tanggal', 'desc');
+        $sortDirection = ($sort === 'asc' || $sort === 'terlama') ? 'asc' : 'desc';
+
+        return $query->orderBy('tanggal', $sortDirection);
     }
 }

@@ -50,7 +50,7 @@
                                                     <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">
                                                         Tanggal Transaksi *
                                                     </label>
-                                                    <input type="date" name="date" id="date"
+                                                    <input type="date" style="color-scheme: light;" name="date" id="date"
                                                         value="{{ old('date', date('Y-m-d')) }}" required
                                                         max="{{ date('Y-m-d') }}"
                                                         class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-[#2B7A78] focus:border-[#2B7A78]">

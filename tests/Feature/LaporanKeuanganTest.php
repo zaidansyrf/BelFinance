@@ -44,6 +44,47 @@ class LaporanKeuanganTest extends TestCase
             });
     }
 
+    public function test_laporan_filters_by_month_and_year(): void
+    {
+        $this->actingAs(User::factory()->keuangan()->create())
+            ->get(route('laporan-keuangan', ['bulan' => 10, 'tahun' => 2026]))
+            ->assertViewHas('laporan', function ($laporan) {
+                $rows = collect($laporan->items());
+
+                return $rows->count() === 3
+                    && $rows->where('jenis', 'pemasukan')->count() === 2
+                    && $rows->where('jenis', 'pengeluaran')->count() === 1;
+            });
+
+        $this->actingAs(User::factory()->keuangan()->create())
+            ->get(route('laporan-keuangan', ['bulan' => 11, 'tahun' => 2026]))
+            ->assertViewHas('laporan', function ($laporan) {
+                $rows = collect($laporan->items());
+
+                return $rows->count() === 1
+                    && $rows->first()->jenis === 'pengeluaran';
+            });
+    }
+
+    public function test_laporan_sorts_by_date_asc_and_desc(): void
+    {
+        $this->actingAs(User::factory()->keuangan()->create())
+            ->get(route('laporan-keuangan', ['sort' => 'asc']))
+            ->assertViewHas('laporan', function ($laporan) {
+                $rows = collect($laporan->items());
+
+                return $rows->first()->tanggal === '2026-10-01';
+            });
+
+        $this->actingAs(User::factory()->keuangan()->create())
+            ->get(route('laporan-keuangan', ['sort' => 'desc']))
+            ->assertViewHas('laporan', function ($laporan) {
+                $rows = collect($laporan->items());
+
+                return $rows->first()->tanggal === '2026-11-02';
+            });
+    }
+
     public function test_owner_laporan_filters_by_type(): void
     {
         $this->actingAs(User::factory()->owner()->create())
@@ -57,6 +98,11 @@ class LaporanKeuanganTest extends TestCase
     {
         $this->actingAs(User::factory()->owner()->create())
             ->get(route('laporan.export-pdf', ['tanggal_awal' => '2026-10-01', 'tanggal_akhir' => '2026-10-31']))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+
+        $this->actingAs(User::factory()->owner()->create())
+            ->get(route('laporan.export-pdf', ['bulan' => 10, 'tahun' => 2026]))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
     }

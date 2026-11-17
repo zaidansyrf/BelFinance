@@ -126,7 +126,7 @@
     </div>
     <hr style="border: 1px solid #2B7A78; margin-bottom: 15px;">
     <div class="info-period">
-        <p>Periode: {{ $tanggalAwal }} s/d {{ $tanggalAkhir }}</p>
+        <p>Periode: {{ $displayPeriode ?? ($tanggalAwal . " s/d " . $tanggalAkhir) }}</p>
         <p>Tanggal Cetak: {{ date('d F Y') }}</p>
         <p>Dicetak oleh: {{ $user->name }}</p>
     </div>

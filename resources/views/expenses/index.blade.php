@@ -3,6 +3,7 @@
     use Carbon\Carbon;
     $hariIniStr = Carbon::today()->toDateString();
     $awalBulanIniStr = Carbon::today()->startOfMonth()->toDateString();
+    $awalTahunIniStr = Carbon::today()->startOfYear()->toDateString();
     $tujuhHariLaluStr = Carbon::today()->subDays(6)->toDateString();
 @endphp
 <x-app-layout>
@@ -34,21 +35,61 @@
                         <div class="flex flex-wrap items-center gap-1.5">
                             <span class="text-xs font-semibold text-gray-500 mr-1">Periode:</span>
                             <a href="{{ route('expenses.search') }}"
-                                class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (!request('tanggal_awal') && !request('tanggal_akhir')) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                                class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (!request('tanggal_awal') && !request('tanggal_akhir') && !request('bulan') && !request('tahun')) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                                 Semua
                             </a>
-                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir']), ['tanggal_awal' => $hariIniStr, 'tanggal_akhir' => $hariIniStr])) }}"
+                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $hariIniStr, 'tanggal_akhir' => $hariIniStr])) }}"
                                 class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (request('tanggal_awal') === $hariIniStr && request('tanggal_akhir') === $hariIniStr) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                                 Hari Ini
                             </a>
-                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir']), ['tanggal_awal' => $tujuhHariLaluStr, 'tanggal_akhir' => $hariIniStr])) }}"
+                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $tujuhHariLaluStr, 'tanggal_akhir' => $hariIniStr])) }}"
                                 class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (request('tanggal_awal') === $tujuhHariLaluStr && request('tanggal_akhir') === $hariIniStr) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                                 7 Hari Terakhir
                             </a>
-                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir']), ['tanggal_awal' => $awalBulanIniStr, 'tanggal_akhir' => $hariIniStr])) }}"
+                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $awalBulanIniStr, 'tanggal_akhir' => $hariIniStr])) }}"
                                 class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (request('tanggal_awal') === $awalBulanIniStr && request('tanggal_akhir') === $hariIniStr) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                                 Bulan Ini
                             </a>
+                            <a href="{{ route('expenses.search', array_merge(request()->except(['page', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun']), ['tanggal_awal' => $awalTahunIniStr, 'tanggal_akhir' => $hariIniStr])) }}"
+                                class="px-3 py-1.5 text-xs font-medium rounded-lg transition {{ (request('tanggal_awal') === $awalTahunIniStr && request('tanggal_akhir') === $hariIniStr) ? 'bg-[#2B7A78] text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                                Tahun Ini
+                            </a>
+
+                            <div class="h-4 w-px bg-gray-200 mx-1 hidden sm:block"></div>
+
+                            {{-- Dropdown Bulan, Tahun, dan Sort --}}
+                            <div class="flex items-center gap-1.5">
+                                <select name="bulan" onchange="clearCustomDates(this.form); this.form.submit()"
+                                    class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer">
+                                    <option value="">Semua Bulan</option>
+                                    @foreach([
+                                        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                                    ] as $mNum => $mName)
+                                        <option value="{{ $mNum }}" @selected(request('bulan') == $mNum)>{{ $mName }}</option>
+                                    @endforeach
+                                </select>
+
+                                @php
+                                    $currentYear = (int) date('Y');
+                                    $years = range($currentYear, $currentYear - 4);
+                                @endphp
+                                <select name="tahun" onchange="clearCustomDates(this.form); this.form.submit()"
+                                    class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer">
+                                    <option value="">Semua Tahun</option>
+                                    @foreach($years as $yr)
+                                        <option value="{{ $yr }}" @selected(request('tahun') == $yr)>{{ $yr }}</option>
+                                    @endforeach
+                                </select>
+
+                                <select name="sort" onchange="this.form.submit()"
+                                    class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-[#2B7A78] focus:outline-none focus:ring-1 focus:ring-[#2B7A78] transition cursor-pointer"
+                                    title="Urutan Transaksi">
+                                    <option value="desc" @selected(request('sort', 'desc') === 'desc')>Terbaru</option>
+                                    <option value="asc" @selected(request('sort') === 'asc' || request('sort') === 'terlama')>Terlama</option>
+                                </select>
+                            </div>
                         </div>
 
                         {{-- Search Box di dalam Container Filter --}}
@@ -103,22 +144,22 @@
                         {{-- Tanggal Mulai --}}
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai Tanggal</label>
-                            <input type="date" name="tanggal_awal" value="{{ request('tanggal_awal') }}" max="{{ date('Y-m-d') }}"
-                                class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] bg-white text-gray-800">
+                            <input type="date" name="tanggal_awal" value="{{ request('tanggal_awal') }}" max="{{ date('Y-m-d') }}" onchange="clearMonthYear(this.form)" style="color-scheme: light;"
+                                class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] bg-white text-gray-800 cursor-pointer">
                         </div>
 
                         {{-- Tanggal Selesai & Action --}}
                         <div class="flex items-center gap-2">
                             <div class="flex-1">
                                 <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai Tanggal</label>
-                                <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" max="{{ date('Y-m-d') }}"
-                                    class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] bg-white text-gray-800">
+                                <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" max="{{ date('Y-m-d') }}" onchange="clearMonthYear(this.form)" style="color-scheme: light;"
+                                    class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2B7A78] bg-white text-gray-800 cursor-pointer">
                             </div>
                             <button type="submit"
                                 class="mt-5 px-4 py-2 bg-[#2B7A78] hover:bg-[#205C5D] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition shrink-0">
                                 Filter
                             </button>
-                            @if(request()->hasAny(['search', 'bill_id', 'source_id', 'tanggal_awal', 'tanggal_akhir']))
+                            @if(request()->hasAny(['search', 'bill_id', 'source_id', 'tanggal_awal', 'tanggal_akhir', 'bulan', 'tahun', 'sort']))
                                 <a href="{{ route('expenses.search') }}"
                                     class="mt-5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-xl transition shrink-0" title="Reset filter">
                                     Reset
@@ -199,12 +240,12 @@
                                         {{-- Aksi --}}
                                         <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                             <a href="{{ route('expenses.show', $expense->id) }}"
-                                                class="text-white px-3 py-1 rounded bg-[#2B7A78] hover:bg-[#205C5D] ml-2">Edit</a>
+                                                class="text-white px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 ml-2">Edit</a>
                                             <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"
-                                                    class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 ml-2">Hapus</button>
+                                                    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 ml-2">Hapus</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -263,7 +304,16 @@
         });
     @endif
 
-    function initAjaxPagination() {
+    function clearCustomDates(form) {
+            if (form.tanggal_awal) form.tanggal_awal.value = '';
+            if (form.tanggal_akhir) form.tanggal_akhir.value = '';
+        }
+        function clearMonthYear(form) {
+            if (form.bulan) form.bulan.value = '';
+            if (form.tahun) form.tahun.value = '';
+        }
+
+        function initAjaxPagination() {
         const container = document.getElementById('tableContainer');
         if (!container) return;
 
