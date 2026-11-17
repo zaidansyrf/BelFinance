@@ -40,9 +40,9 @@
 
 | Role | Hak Akses |
 |------|-----------|
-| **Owner** | Akses penuh ke seluruh fitur, manajemen pegawai, Laporan Untung Rugi, dan Saran Usaha |
+| **Owner** | Akses penuh seluruh fitur aplikasi, manajemen pegawai, Saran Usaha berbasis AI |
 | **Keuangan** | Dashboard, Pemasukan, Pengeluaran, Laporan Keuangan, Menu & Stok, serta Promo |
-| **Kasir** | Akses khusus sistem Kasir (POS) dan manajemen Shift Kasir |
+| **Kasir** | Akses khusus sistem Kasir (POS) |
 
 ---
 
