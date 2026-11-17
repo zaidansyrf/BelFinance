@@ -19,7 +19,7 @@
 **BelFinance** membantu pemilik bisnis kuliner & retail mengelola operasional harian dan arus kas secara terpusat:
 
 - **Kasir (POS) & Shift** — Pencatatan transaksi penjualan dengan manajemen shift kasir.
-- **Pencatatan Arus Kas** — Kelola pemasukan (POS & non-kasir) serta pengeluaran berdasarkan kategori tagihan (dilengkapi *soft-delete*).
+- **Pencatatan Arus Kas** — Kelola pemasukan (POS & non-kasir) serta pengeluaran berdasarkan kategori tagihan.
 - **Laporan Keuangan & Ekspor PDF** — Ringkasan pemasukan, pengeluaran, dan laporan untung rugi dengan filter periode fleksibel.
 - **Manajemen Operasional** — Kelola menu, stok, promo (item & platform online), serta akun pegawai.
 - **Saran Usaha AI** — Rekomendasi bisnis berbasis AI untuk mendukung pengambilan keputusan.
@@ -40,7 +40,7 @@
 
 | Role | Hak Akses |
 |------|-----------|
-| **Owner** | Akses penuh ke seluruh fitur, manajemen pegawai, dan Laporan Untung Rugi |
+| **Owner** | Akses penuh ke seluruh fitur, manajemen pegawai, Laporan Untung Rugi, dan Saran Usaha |
 | **Keuangan** | Dashboard, Pemasukan, Pengeluaran, Laporan Keuangan, Menu & Stok, serta Promo |
 | **Kasir** | Akses khusus sistem Kasir (POS) dan manajemen Shift Kasir |
 
